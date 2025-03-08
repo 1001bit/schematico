@@ -3,7 +3,7 @@ package main
 import (
 	"log/slog"
 
-	"github.com/1001bit/schematico/services/gateway/server"
+	"github.com/1001bit/schematico/services/user/server"
 )
 
 func init() {
@@ -13,9 +13,7 @@ func init() {
 func main() {
 	s := server.New()
 
-	port := "80"
-	userAddr := "http://user:80"
-	if err := s.Run(port, userAddr); err != nil {
+	if err := s.Run("80"); err != nil {
 		slog.Error("server run error", "err", err)
 	}
 }

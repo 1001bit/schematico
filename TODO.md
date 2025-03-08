@@ -6,6 +6,8 @@
         [ ] Reverse proxy to user api
         [ ] Special page for both signing in and up
     [ ] User microservice
+        [X] Microservice
+        [X] Dummy endpoint
         [ ] Register
             [ ] Endpoint
             [ ] User creation

@@ -12,6 +12,14 @@ services:
             - ./static:/app/static
         restart: always
 
+    user:
+        build: ./services/user
+        environment:
+            PORT: ${SERVER_PORT}
+        networks:
+            - network
+        restart: always
+
 networks:
     network:
         driver: bridge
