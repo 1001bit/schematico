@@ -1,0 +1,17 @@
+services:
+    gateway:
+        build: ./services/gateway
+        environment:
+            PORT: ${SERVER_PORT}
+        ports:
+            - 80:${SERVER_PORT}
+        networks:
+            - network
+        volumes:
+            - ./html:/app/html
+            - ./static:/app/static
+        restart: always
+
+networks:
+    network:
+        driver: bridge
