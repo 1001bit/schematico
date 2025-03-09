@@ -3,7 +3,7 @@
 
 [ ] Authentication
     [ ] Gateway
-        [ ] Reverse proxy to user api
+        [X] Reverse proxy to user api
         [ ] Special page for both signing in and up
     [ ] User microservice
         [X] Microservice
@@ -32,8 +32,8 @@
             [ ] Endpoint
             [ ] JWT-validation
             [ ] refresh-UUID removing
-    [ ] PostgreSQL service
-    [ ] Redis service
+    [X] PostgreSQL service
+    [X] Redis service
 
 [ ] HTML + CSS for home page with your projects
 [ ] Backend for project creation
