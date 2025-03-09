@@ -3,6 +3,7 @@
 :root {
 	--acc1: #58d320;
 	--acc1-dim: #59d320b6;
+	--err: #ff0000;
 	--main1: #ffffff;
 	--main1-dim: #ffffff8f;
 	--main2: #000000;
@@ -44,6 +45,7 @@ body {
 a {
 	color: var(--acc1);
 	text-decoration: none;
+	font: inherit;
 }
 
 a:hover {
@@ -53,7 +55,7 @@ a:hover {
 
 h1 {
 	font-weight: 500;
-	font-size: 2.25rem;
+	font-size: 2.5rem;
 }
 
 h2 {
@@ -63,20 +65,16 @@ h2 {
 
 h3 {
 	font-weight: 500;
-	font-size: 1.75rem;
+	font-size: 1.5rem;
 }
 
 p {
 	font-weight: 400;
-	font-size: 1.25rem;
+	font-size: 1rem;
 }
 
 p.bold {
 	font-weight: 500;
-}
-
-a {
-	font: inherit;
 }
 
 h3.bold,
