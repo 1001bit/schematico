@@ -66,15 +66,17 @@ h3 {
 	font-size: 1.75rem;
 }
 
-p,
-a {
+p {
 	font-weight: 400;
 	font-size: 1.25rem;
 }
 
-p.bold,
-a {
+p.bold {
 	font-weight: 500;
+}
+
+a {
+	font: inherit;
 }
 
 h3.bold,
@@ -100,4 +102,33 @@ a.tiny {
 
 .no-padding {
 	padding: 0 !important;
+}
+
+/* input */
+input,
+textarea,
+button {
+	border: var(--main1-dim) 2px solid;
+	background: none;
+	color: var(--main1);
+	outline: none;
+	border-radius: 0.2rem;
+	padding: 0 0.4rem;
+	font: inherit;
+}
+
+input:hover,
+textarea:hover,
+input:focus,
+textarea:focus {
+	border-color: var(--main1);
+}
+
+button {
+	border-color: var(--acc1-dim);
+	cursor: pointer;
+}
+
+button:hover {
+	border-color: var(--acc1);
 }

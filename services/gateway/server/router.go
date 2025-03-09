@@ -23,8 +23,10 @@ func (s *Server) NewRouter(userAddr string) (*chi.Mux, error) {
 		return nil, err
 	}
 
-	r.Get("/", handler.HandleHome)
 	r.Get("/static/*", http.StripPrefix("/static/", staticHandler()).ServeHTTP)
+
+	r.Get("/", handler.HandleHome)
+	r.Get("/signin", handler.HandleSignIn)
 
 	r.Route("/api", func(r chi.Router) {
 		r.Get("/user/*", userProxy.ProxyHandler("/api/user").ServeHTTP)

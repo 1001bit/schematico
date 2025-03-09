@@ -5,6 +5,8 @@
     [ ] Gateway
         [X] Reverse proxy to user api
         [ ] Special page for both signing in and up
+            [X] HTML + CSS
+            [ ] Script
     [ ] User microservice
         [X] Microservice
         [X] Dummy endpoint
