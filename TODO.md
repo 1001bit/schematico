@@ -19,7 +19,7 @@
                     [X] Store new user in database
                 [X] Sign in
                     [X] Credentials validation
-            [ ] access-JWT generation and provision
+            [X] access-JWT generation and provision
             [ ] refresh-UUID generation, provision and saving
         [ ] Refresh
             [ ] Endpoint

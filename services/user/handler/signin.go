@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"net/http"
 
+	"github.com/1001bit/schematico/services/user/accessjwt"
 	"github.com/1001bit/schematico/services/user/usermodel"
 )
 
@@ -35,6 +36,43 @@ type signInRequest struct {
 	Password string `json:"password"`
 }
 
+func writeServerError(w http.ResponseWriter, err error, errTitle string) {
+	w.WriteHeader(http.StatusInternalServerError)
+	fmt.Fprintf(w, `{"message": "internal server error"}`)
+	slog.Error(errTitle, "err", err)
+}
+
+func validateInputs(username, password string) string {
+	usernameErr := validateUsername(username)
+	if usernameErr != "" {
+		return usernameErr
+	}
+	return validatePassword(password)
+}
+
+func createOrSignIn(w http.ResponseWriter, r *http.Request, userstorage *usermodel.UserStorage, req signInRequest) (string, error) {
+	var err error
+	userId := ""
+
+	if req.Type == "create" {
+		userId, err = userstorage.AddUser(r.Context(), req.Username, req.Password)
+		if err == usermodel.ErrAlreadyExists {
+			w.WriteHeader(http.StatusConflict)
+			fmt.Fprintf(w, `{"message": "user already exists"}`)
+			return "", nil
+		}
+	} else {
+		userId, err = userstorage.Login(r.Context(), req.Username, req.Password)
+		if err == usermodel.ErrInvalidCredentials || err == usermodel.ErrNotFound {
+			w.WriteHeader(http.StatusUnauthorized)
+			fmt.Fprintf(w, `{"message": "invalid credentials"}`)
+			return "", nil
+		}
+	}
+
+	return userId, err
+}
+
 func (h *Handler) HandleSignIn(w http.ResponseWriter, r *http.Request) {
 	req := signInRequest{}
 
@@ -44,44 +82,29 @@ func (h *Handler) HandleSignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	usernameErr := validateUsername(req.Username)
-	if usernameErr != "" {
+	errMsg := validateInputs(req.Username, req.Password)
+	if errMsg != "" {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, `{"message": "%s"}`, usernameErr)
+		fmt.Fprintf(w, `{"message": "%s"}`, errMsg)
 		return
 	}
 
-	passwordErr := validatePassword(req.Password)
-	if passwordErr != "" {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, `{"message": "%s"}`, passwordErr)
-		return
-	}
-
-	if req.Type == "create" {
-		err = h.userstorage.AddUser(r.Context(), req.Username, req.Password)
-		if err == usermodel.ErrAlreadyExists {
-			w.WriteHeader(http.StatusConflict)
-			fmt.Fprintf(w, `{"message": "user already exists"}`)
-			return
-		}
-	} else {
-		err = h.userstorage.Login(r.Context(), req.Username, req.Password)
-		if err == usermodel.ErrInvalidCredentials || err == usermodel.ErrNotFound {
-			w.WriteHeader(http.StatusUnauthorized)
-			fmt.Fprintf(w, `{"message": "invalid credentials"}`)
-			return
-		}
-	}
-
+	userId, err := createOrSignIn(w, r, h.userstorage, req)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(w, `{"message": "internal server error"}`)
-		slog.Error("error adding user", "err", err)
+		writeServerError(w, err, "error signing in")
+		return
+	} else if userId == "" {
 		return
 	}
 
-	// TODO: Generate UUID and JWT
+	cookie, err := accessjwt.GenerateCookie(userId)
+	if err != nil {
+		writeServerError(w, err, "error generating jwt")
+		return
+	}
+	http.SetCookie(w, cookie)
+
+	// TODO: Generate UUID
 
 	w.WriteHeader(http.StatusNotImplemented)
 	fmt.Fprintf(w, `{"message": "TODO"}`)
