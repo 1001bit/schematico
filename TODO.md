@@ -2,27 +2,23 @@
 [X] Dummy home page
 
 [ ] Authentication
-    [ ] Gateway
+    [X] Gateway
         [X] Reverse proxy to user api
-        [X] Special page for both signing in and up
-            [X] HTML + CSS
-            [X] Script
+    [X] Special page for both signing in and up
+        [X] HTML + CSS
+        [X] Script
     [ ] User microservice
         [X] Microservice
         [X] Dummy endpoint
-        [ ] Register
+        [ ] Sign in
             [ ] Endpoint
-            [ ] User creation
-                [ ] Username validation
+            [ ] Inputs validation
+            [ ] Username find in database
+            [ ] Sign in
+                [ ] Password validation
+            [ ] Acc creation
                 [ ] Password hashing
-                [ ] New user storing
-            [ ] access-JWT generation and provision
-            [ ] refresh-UUID generation, provision and saving
-        [ ] Login
-            [ ] Endpoint
-            [ ] Credentials validation
-                [ ] finding username
-                [ ] password validation
+                [ ] Store new user in database
             [ ] access-JWT generation and provision
             [ ] refresh-UUID generation, provision and saving
         [ ] Refresh
