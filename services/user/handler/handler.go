@@ -1,9 +1,13 @@
 package handler
 
-type Handler struct {
+import "github.com/1001bit/schematico/services/user/usermodel"
 
+type Handler struct {
+	userstorage *usermodel.UserStorage
 }
 
-func New() *Handler {
-	return &Handler{}
+func New(us *usermodel.UserStorage) *Handler {
+	return &Handler{
+		userstorage: us,
+	}
 }

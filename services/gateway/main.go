@@ -2,12 +2,13 @@ package main
 
 import (
 	"log/slog"
+	"os"
 
 	"github.com/1001bit/schematico/services/gateway/server"
 )
 
 func init() {
-	slog.SetDefault(slog.New(slog.NewJSONHandler(nil, &slog.HandlerOptions{Level: slog.LevelDebug})))
+	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug})))
 }
 
 func main() {

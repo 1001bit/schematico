@@ -3,7 +3,10 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
+
+	"github.com/1001bit/schematico/services/user/usermodel"
 )
 
 func validateUsername(username string) string {
@@ -55,7 +58,19 @@ func (h *Handler) HandleSignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: put data in the model
+	err = h.userstorage.AddUser(req.Username, req.Password)
+	if err == usermodel.ErrUserAlreadyExists {
+		w.WriteHeader(http.StatusConflict)
+		fmt.Fprintf(w, `{"message": "user already exists"}`)
+		return
+	} else if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, `{"message": "internal server error"}`)
+		slog.Error("error adding user", "err", err)
+		return
+	}
+
+	// TODO: Generate UUID and JWT
 
 	w.WriteHeader(http.StatusNotImplemented)
 	fmt.Fprintf(w, `{"message": "TODO"}`)
