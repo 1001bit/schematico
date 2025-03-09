@@ -5,15 +5,8 @@ import (
 	"net/http"
 )
 
-type Server struct {
-}
-
-func New() *Server {
-	return &Server{}
-}
-
-func (s *Server) Run(port string, userAddr string) error {
-	r, err := s.NewRouter(userAddr)
+func Run(port string, userAddr string) error {
+	r, err := newRouter(userAddr)
 	if err != nil {
 		return err
 	}

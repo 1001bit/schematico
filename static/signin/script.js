@@ -21,8 +21,13 @@ function validateUsername(username) {
     }
     return "";
 }
-function setMessage(msg) {
+function setErrorMessage(msg) {
+    messageElem.style.color = "var(--err)";
     messageElem.textContent = msg;
+    setTimeout(resetMessageColor, 1000);
+}
+function resetMessageColor() {
+    messageElem.style.color = "var(--main1)";
 }
 function validatePassword(password) {
     if (password.length > 32) {
@@ -34,7 +39,7 @@ function validatePassword(password) {
     return "";
 }
 function submit(type, username, password) {
-    return fetch("/api/signin", {
+    return fetch("/api/user/signin", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -62,20 +67,18 @@ function validateAndSubmit(type, username, password) {
     let msg = validateUsername(username);
     if (msg !== "") {
         setBorderColor(usernameInput, "err");
-        setMessage(msg);
+        setErrorMessage(msg);
         return;
     }
     msg = validatePassword(password);
     if (msg !== "") {
         setBorderColor(passwordInput, "err");
-        setMessage(msg);
+        setErrorMessage(msg);
         return;
     }
     submit(type, username, password).then((msg) => {
         if (msg !== "") {
-            setBorderColor(passwordInput, "err");
-            setBorderColor(usernameInput, "err");
-            setMessage(msg);
+            setErrorMessage(msg);
             return;
         }
         window.location.href = "/";

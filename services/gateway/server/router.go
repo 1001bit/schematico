@@ -13,10 +13,11 @@ func staticHandler() http.Handler {
 	return http.FileServer(http.Dir("static"))
 }
 
-func (s *Server) NewRouter(userAddr string) (*chi.Mux, error) {
+func newRouter(userAddr string) (*chi.Mux, error) {
 	r := chi.NewRouter()
 
 	r.Use(chimw.CleanPath)
+	r.Use(chimw.Logger)
 
 	userProxy, err := httpproxy.New(userAddr)
 	if err != nil {
@@ -29,7 +30,7 @@ func (s *Server) NewRouter(userAddr string) (*chi.Mux, error) {
 	r.Get("/signin", handler.HandleSignIn)
 
 	r.Route("/api", func(r chi.Router) {
-		r.Get("/user/*", userProxy.ProxyHandler("/api/user").ServeHTTP)
+		r.Handle("/user/*", userProxy.ProxyHandler("/api/user"))
 	})
 
 	return r, nil

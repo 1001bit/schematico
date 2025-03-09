@@ -3,17 +3,14 @@ package server
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/1001bit/schematico/services/user/handler"
 )
 
-type Server struct {
-}
+func Run(port string) error {
+	h := handler.New()
 
-func New() *Server {
-	return &Server{}
-}
-
-func (s *Server) Run(port string) error {
-	r := s.NewRouter()
+	r := newRouter(h)
 
 	addr := fmt.Sprintf(":%s", port)
 	return http.ListenAndServe(addr, r)

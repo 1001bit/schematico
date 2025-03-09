@@ -25,8 +25,14 @@ function validateUsername(username: string): string {
 	return "";
 }
 
-function setMessage(msg: string) {
+function setErrorMessage(msg: string) {
+	messageElem.style.color = "var(--err)";
 	messageElem.textContent = msg;
+	setTimeout(resetMessageColor, 1000);
+}
+
+function resetMessageColor() {
+	messageElem.style.color = "var(--main1)";
 }
 
 function validatePassword(password: string): string {
@@ -44,7 +50,7 @@ function submit(
 	username: string,
 	password: string
 ): Promise<string> {
-	return fetch("/api/signin", {
+	return fetch("/api/user/signin", {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
@@ -77,22 +83,20 @@ function validateAndSubmit(
 	let msg = validateUsername(username);
 	if (msg !== "") {
 		setBorderColor(usernameInput, "err");
-		setMessage(msg);
+		setErrorMessage(msg);
 		return;
 	}
 
 	msg = validatePassword(password);
 	if (msg !== "") {
 		setBorderColor(passwordInput, "err");
-		setMessage(msg);
+		setErrorMessage(msg);
 		return;
 	}
 
 	submit(type, username, password).then((msg) => {
 		if (msg !== "") {
-			setBorderColor(passwordInput, "err");
-			setBorderColor(usernameInput, "err");
-			setMessage(msg);
+			setErrorMessage(msg);
 			return;
 		}
 		window.location.href = "/";

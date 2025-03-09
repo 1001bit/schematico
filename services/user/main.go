@@ -11,9 +11,7 @@ func init() {
 }
 
 func main() {
-	s := server.New()
-
-	if err := s.Run("80"); err != nil {
+	if err := server.Run("80"); err != nil {
 		slog.Error("server run error", "err", err)
 	}
 }

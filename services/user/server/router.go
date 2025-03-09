@@ -1,17 +1,16 @@
 package server
 
 import (
-	"net/http"
-
+	"github.com/1001bit/schematico/services/user/handler"
 	"github.com/go-chi/chi/v5"
+	chimw "github.com/go-chi/chi/v5/middleware"
 )
 
-func (s *Server) NewRouter() *chi.Mux {
+func newRouter(h *handler.Handler) *chi.Mux {
 	r := chi.NewRouter()
+	r.Use(chimw.Logger)
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("hello world"))
-	})
+	r.Post("/signin", h.HandleSignIn)
 
 	return r
 }

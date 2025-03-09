@@ -11,11 +11,9 @@ func init() {
 }
 
 func main() {
-	s := server.New()
-
 	port := "80"
 	userAddr := "http://user:80"
-	if err := s.Run(port, userAddr); err != nil {
+	if err := server.Run(port, userAddr); err != nil {
 		slog.Error("server run error", "err", err)
 	}
 }

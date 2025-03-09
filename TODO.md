@@ -11,7 +11,7 @@
         [X] Microservice
         [X] Dummy endpoint
         [ ] Sign in
-            [ ] Endpoint
+            [X] Dummy Endpoint
             [ ] Inputs validation
             [ ] Username find in database
             [ ] Sign in
