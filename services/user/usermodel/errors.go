@@ -1,24 +1,25 @@
 package usermodel
 
 import (
+	"database/sql"
 	"errors"
 
 	"github.com/lib/pq"
 )
 
 var (
-	ErrUserAlreadyExists = errors.New("user already exists")
+	ErrAlreadyExists      = errors.New("already exists")
+	ErrInvalidCredentials = errors.New("invalid credentials")
+	ErrNotFound           = errors.New("not found")
 )
 
-func getError(err error) error {
+func getErrFromSql(err error) error {
 	pqErr, ok := err.(*pq.Error)
-	if !ok {
-		return err
-	}
-
-	switch pqErr.Code.Name() {
-	case "unique_violation":
-		return ErrUserAlreadyExists
+	switch {
+	case err == sql.ErrNoRows:
+		return ErrNotFound
+	case ok && pqErr.Code.Name() == "unique_violation":
+		return ErrAlreadyExists
 	default:
 		return err
 	}

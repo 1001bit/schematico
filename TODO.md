@@ -12,13 +12,13 @@
         [ ] Sign in
             [X] Endpoint
             [X] Inputs validation
-            [ ] Model
+            [X] Model
                 [X] Database connection
                 [X] Acc creation
                     [X] Password hashing
                     [X] Store new user in database
-                [ ] Sign in
-                    [ ] Credentials validation
+                [X] Sign in
+                    [X] Credentials validation
             [ ] access-JWT generation and provision
             [ ] refresh-UUID generation, provision and saving
         [ ] Refresh

@@ -58,12 +58,23 @@ func (h *Handler) HandleSignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.userstorage.AddUser(req.Username, req.Password)
-	if err == usermodel.ErrUserAlreadyExists {
-		w.WriteHeader(http.StatusConflict)
-		fmt.Fprintf(w, `{"message": "user already exists"}`)
-		return
-	} else if err != nil {
+	if req.Type == "create" {
+		err = h.userstorage.AddUser(r.Context(), req.Username, req.Password)
+		if err == usermodel.ErrAlreadyExists {
+			w.WriteHeader(http.StatusConflict)
+			fmt.Fprintf(w, `{"message": "user already exists"}`)
+			return
+		}
+	} else {
+		err = h.userstorage.Login(r.Context(), req.Username, req.Password)
+		if err == usermodel.ErrInvalidCredentials || err == usermodel.ErrNotFound {
+			w.WriteHeader(http.StatusUnauthorized)
+			fmt.Fprintf(w, `{"message": "invalid credentials"}`)
+			return
+		}
+	}
+
+	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(w, `{"message": "internal server error"}`)
 		slog.Error("error adding user", "err", err)
