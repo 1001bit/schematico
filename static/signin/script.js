@@ -13,11 +13,14 @@ createButton.addEventListener("click", () => {
     validateAndSubmit("create", usernameInput.value, passwordInput.value);
 });
 function validateUsername(username) {
-    if (username.length > 32) {
-        return "username too long";
-    }
-    if (username.length < 1) {
+    if (username.length == 0) {
         return "username field empty";
+    }
+    return "";
+}
+function validatePassword(password) {
+    if (password.length == 0) {
+        return "password field empty";
     }
     return "";
 }
@@ -27,16 +30,7 @@ function setErrorMessage(msg) {
     setTimeout(resetMessageColor, 1000);
 }
 function resetMessageColor() {
-    messageElem.style.color = "var(--main1)";
-}
-function validatePassword(password) {
-    if (password.length > 32) {
-        return "password too long";
-    }
-    if (password.length < 8) {
-        return "password too short";
-    }
-    return "";
+    messageElem.style.color = "";
 }
 function submit(type, username, password) {
     return fetch("/api/user/signin", {

@@ -9,16 +9,17 @@
         [X] Script
     [ ] User microservice
         [X] Microservice
-        [X] Dummy endpoint
         [ ] Sign in
             [X] Dummy Endpoint
-            [ ] Inputs validation
-            [ ] Username find in database
-            [ ] Sign in
-                [ ] Password validation
-            [ ] Acc creation
-                [ ] Password hashing
-                [ ] Store new user in database
+            [X] Inputs validation
+            [ ] Model
+                [ ] Database connection
+                    [ ] Acc creation
+                        [ ] Find username duplicates
+                        [ ] Password hashing
+                        [ ] Store new user in database
+                    [ ] Sign in
+                        [ ] Credentials validation
             [ ] access-JWT generation and provision
             [ ] refresh-UUID generation, provision and saving
         [ ] Refresh

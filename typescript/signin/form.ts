@@ -16,11 +16,15 @@ createButton.addEventListener("click", () => {
 });
 
 function validateUsername(username: string): string {
-	if (username.length > 32) {
-		return "username too long";
-	}
-	if (username.length < 1) {
+	if (username.length == 0) {
 		return "username field empty";
+	}
+	return "";
+}
+
+function validatePassword(password: string): string {
+	if (password.length == 0) {
+		return "password field empty";
 	}
 	return "";
 }
@@ -32,17 +36,7 @@ function setErrorMessage(msg: string) {
 }
 
 function resetMessageColor() {
-	messageElem.style.color = "var(--main1)";
-}
-
-function validatePassword(password: string): string {
-	if (password.length > 32) {
-		return "password too long";
-	}
-	if (password.length < 8) {
-		return "password too short";
-	}
-	return "";
+	messageElem.style.color = "";
 }
 
 function submit(
