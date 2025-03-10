@@ -33,7 +33,7 @@ func GenerateCookie(userId string) (*http.Cookie, error) {
 		Path:     "/api",
 		SameSite: http.SameSiteStrictMode,
 		HttpOnly: true,
-		MaxAge:   int(expTime),
+		MaxAge:   int(expTime.Seconds()),
 		Secure:   secure, // NOT SECURE
 	}, nil
 }

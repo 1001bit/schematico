@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/1001bit/schematico/services/user/database"
+	"github.com/1001bit/schematico/services/user/refreshuuid"
 	"github.com/1001bit/schematico/services/user/server"
 	"github.com/1001bit/schematico/services/user/usermodel"
 )
@@ -30,9 +31,10 @@ func main() {
 	}
 	defer db.Close()
 
-	us := usermodel.NewUserStorage(db)
+	userstorage := usermodel.NewUserStorage(db)
+	uuidstorage := refreshuuid.NewStorage("user-redis:6379")
 
-	if err := server.Run(port, us); err != nil {
+	if err := server.Run(port, userstorage, uuidstorage); err != nil {
 		slog.Error("server run error", "err", err)
 	}
 }

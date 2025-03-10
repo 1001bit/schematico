@@ -76,12 +76,14 @@ func createOrSignIn(w http.ResponseWriter, r *http.Request, userstorage *usermod
 func (h *Handler) HandleSignIn(w http.ResponseWriter, r *http.Request) {
 	req := signInRequest{}
 
+	// decode request body
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
+	// validate inputs
 	errMsg := validateInputs(req.Username, req.Password)
 	if errMsg != "" {
 		w.WriteHeader(http.StatusBadRequest)
@@ -89,6 +91,7 @@ func (h *Handler) HandleSignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// create account or sign in
 	userId, err := createOrSignIn(w, r, h.userstorage, req)
 	if err != nil {
 		writeServerError(w, err, "error signing in")
@@ -97,6 +100,7 @@ func (h *Handler) HandleSignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// generate and set jwt cookie
 	cookie, err := accessjwt.GenerateCookie(userId)
 	if err != nil {
 		writeServerError(w, err, "error generating jwt")
@@ -104,8 +108,13 @@ func (h *Handler) HandleSignIn(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, cookie)
 
-	// TODO: Generate UUID
+	// generate and set refresh uuid cookie
+	cookie, err = h.uuidstorage.GenerateUUIDCookie(r.Context(), userId)
+	if err != nil {
+		writeServerError(w, err, "error generating uuid")
+		return
+	}
+	http.SetCookie(w, cookie)
 
-	w.WriteHeader(http.StatusNotImplemented)
-	fmt.Fprintf(w, `{"message": "TODO"}`)
+	w.WriteHeader(http.StatusOK)
 }

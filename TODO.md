@@ -9,7 +9,7 @@
         [X] Script
     [ ] User microservice
         [X] Microservice
-        [ ] Sign in
+        [X] Sign in
             [X] Endpoint
             [X] Inputs validation
             [X] Model
@@ -20,7 +20,7 @@
                 [X] Sign in
                     [X] Credentials validation
             [X] access-JWT generation and provision
-            [ ] refresh-UUID generation, provision and saving
+            [X] refresh-UUID generation, provision and saving
         [ ] Refresh
             [ ] Endpoint
             [ ] refresh-UUID validation
@@ -28,7 +28,7 @@
             [ ] refresh-UUID generation, provision and saving
         [ ] Logout
             [ ] Endpoint
-            [ ] JWT-validation
+            [ ] UUID-validation
             [ ] refresh-UUID removing
     [X] PostgreSQL service
     [X] Redis service
