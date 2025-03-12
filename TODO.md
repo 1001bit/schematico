@@ -22,7 +22,7 @@
             [X] access-JWT generation and provision
             [X] refresh-UUID generation, provision and saving
         [ ] Refresh
-            [ ] Endpoint
+            [X] Endpoint
             [ ] refresh-UUID validation
             [ ] access-JWT generation and provision
             [ ] refresh-UUID generation, provision and saving

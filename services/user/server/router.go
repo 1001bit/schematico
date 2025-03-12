@@ -11,6 +11,7 @@ func newRouter(h *handler.Handler) *chi.Mux {
 	r.Use(chimw.Logger)
 
 	r.Post("/signin", h.HandleSignIn)
+	r.Post("/refresh", h.HandleRefresh)
 
 	return r
 }
