@@ -37,8 +37,11 @@
 [ ] Projects microservice
     [X] Microservice
     [X] HTTP Server
-    [ ] Database
-    [ ] Project creation
+    [X] Database
+    [ ] Project model
+        [ ] Project creation
+    [ ] Passing jwt claims from cookie to context 
+    [ ] Project creation endpoint
 [ ] Projects render on frontend
 [ ] Project page frontend
 [ ] Drawing
