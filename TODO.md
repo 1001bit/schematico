@@ -33,8 +33,10 @@
     [X] PostgreSQL service
     [X] Redis service
 
-[ ] HTML + CSS for home page with your projects
+[X] HTML + CSS for home page with your projects
 [ ] Backend for project creation
+    [ ] Database
+    [ ] Logic
 [ ] Project page frontend
 [ ] Drawing
 [ ] Authorization

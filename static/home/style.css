@@ -1,0 +1,25 @@
+.project {
+	border: 2px solid var(--main1-dim);
+	border-radius: 0.25rem;
+	padding: 0.5rem 1rem;
+	display: flex;
+	flex-direction: column;
+	width: fit-content;
+	align-items: center;
+}
+
+#projects {
+	display: flex;
+	gap: 1rem;
+	flex-wrap: wrap;
+}
+
+main {
+	display: flex;
+	gap: 2rem;
+	flex-direction: column;
+}
+
+.sample {
+	display: none;
+}
