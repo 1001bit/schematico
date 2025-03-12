@@ -1,13 +1,13 @@
 [X] Basic file layout
 [X] Dummy home page
 
-[ ] Authentication
+[X] Authentication
     [X] Gateway
         [X] Reverse proxy to user api
     [X] Special page for both signing in and up
         [X] HTML + CSS
         [X] Script
-    [ ] User microservice
+    [X] User microservice
         [X] Microservice
         [X] Sign in
             [X] Endpoint
@@ -26,10 +26,10 @@
             [X] refresh-UUID validation
             [X] access-JWT generation and provision
             [X] refresh-UUID generation, provision and saving
-        [ ] Logout
-            [ ] Endpoint
-            [ ] UUID-validation
-            [ ] refresh-UUID removing
+        [X] Logout
+            [X] Endpoint
+            [X] Cookeis removing
+            [X] refresh-UUID removing
     [X] PostgreSQL service
     [X] Redis service
 

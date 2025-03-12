@@ -41,7 +41,7 @@ func (s *Storage) GenerateUUIDCookie(ctx context.Context, userId string) (*http.
 	return &http.Cookie{
 		Name:     "uuid",
 		Value:    uuid,
-		Path:     "/api/user/refresh",
+		Path:     "/api/user",
 		SameSite: http.SameSiteStrictMode,
 		HttpOnly: true,
 		MaxAge:   int(uuidLifeTime.Seconds()),

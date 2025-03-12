@@ -12,6 +12,7 @@ func newRouter(h *handler.Handler) *chi.Mux {
 
 	r.Post("/signin", h.HandleSignIn)
 	r.Post("/refresh", h.HandleRefresh)
+	r.Post("/logout", h.HandleLogout)
 
 	return r
 }
