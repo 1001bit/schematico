@@ -21,11 +21,11 @@
                     [X] Credentials validation
             [X] access-JWT generation and provision
             [X] refresh-UUID generation, provision and saving
-        [ ] Refresh
+        [X] Refresh
             [X] Endpoint
-            [ ] refresh-UUID validation
-            [ ] access-JWT generation and provision
-            [ ] refresh-UUID generation, provision and saving
+            [X] refresh-UUID validation
+            [X] access-JWT generation and provision
+            [X] refresh-UUID generation, provision and saving
         [ ] Logout
             [ ] Endpoint
             [ ] UUID-validation
