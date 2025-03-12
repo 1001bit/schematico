@@ -4,9 +4,9 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/1001bit/schematico/services/user/database"
 	"github.com/1001bit/schematico/services/user/refreshuuid"
 	"github.com/1001bit/schematico/services/user/server"
+	"github.com/1001bit/schematico/services/user/shared/database"
 	"github.com/1001bit/schematico/services/user/usermodel"
 )
 
