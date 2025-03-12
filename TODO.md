@@ -34,9 +34,12 @@
     [X] Redis service
 
 [X] HTML + CSS for home page with your projects
-[ ] Backend for project creation
+[ ] Projects microservice
+    [X] Microservice
+    [X] HTTP Server
     [ ] Database
-    [ ] Logic
+    [ ] Project creation
+[ ] Projects render on frontend
 [ ] Project page frontend
 [ ] Drawing
 [ ] Authorization

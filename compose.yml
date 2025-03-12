@@ -35,7 +35,7 @@ services:
         networks:
             - network
         volumes:
-            - ./sql/user/:/docker-entrypoint-initdb.d/:ro
+            - ./sql/user-init.sql:/docker-entrypoint-initdb.d/init.sql:ro
             - user-postgres-data:/var/lib/postgresql/data
         restart: always
 
@@ -45,6 +45,16 @@ services:
             - user-redis-data:/data
         networks:
             - network
+
+    # PROJECT
+    project:
+        build: ./services/project
+        environment:
+            PORT: ${SERVER_PORT}
+            JWT_SECRET: ${JWT_SECRET}
+        networks:
+            - network
+        restart: always
 
     # ADMIN
     adminer:

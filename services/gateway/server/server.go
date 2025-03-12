@@ -5,8 +5,8 @@ import (
 	"net/http"
 )
 
-func Run(port string, userAddr string) error {
-	r, err := newRouter(userAddr)
+func Run(port string, userAddr, projAddr string) error {
+	r, err := newRouter(userAddr, projAddr)
 	if err != nil {
 		return err
 	}
