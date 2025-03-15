@@ -1,17 +1,14 @@
 package server
 
 import (
-	"net/http"
-
+	"github.com/1001bit/schematico/services/project/handler"
 	"github.com/go-chi/chi/v5"
 )
 
-func newRouter() *chi.Mux {
+func newRouter(h *handler.Handler) *chi.Mux {
 	r := chi.NewRouter()
 
-	r.Post("/new", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusNotImplemented)
-	})
+	r.Post("/new", h.HandleNewProject)
 
 	return r
 }
