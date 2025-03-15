@@ -8,6 +8,7 @@ import (
 func newRouter(h *handler.Handler) *chi.Mux {
 	r := chi.NewRouter()
 
+	r.Use(claimsToContextMW)
 	r.Post("/new", h.HandleNewProject)
 
 	return r

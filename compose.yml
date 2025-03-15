@@ -24,6 +24,8 @@ services:
             JWT_SECRET: ${JWT_SECRET}
         networks:
             - network
+        depends_on:
+            - user-postgres
         restart: always
 
     user-postgres:
@@ -57,6 +59,8 @@ services:
             POSTGRES_DB: ${POSTGRES_DB}
         networks:
             - network
+        depends_on:
+            - project-postgres
         restart: always
 
     project-postgres:
