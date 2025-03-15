@@ -34,14 +34,15 @@
     [X] Redis service
 
 [X] HTML + CSS for home page with your projects
-[ ] Projects microservice
+[ ] Project creation
     [X] Microservice
-    [X] HTTP Server
-    [X] Database
-    [ ] Project model
-        [ ] Project creation
-    [ ] Passing jwt claims from cookie to context 
-    [ ] Project creation endpoint
+        [X] HTTP Server
+        [X] Database
+        [X] Project model
+            [X] Project creation
+        [ ] Project creation endpoint
+        [ ] Passing JWT claims from cookie to context
+        [ ] Adding project to database and responding with ID
 [ ] Projects render on frontend
 [ ] Project page frontend
 [ ] Drawing

@@ -1,6 +1,6 @@
 CREATE TABLE projects (
     id SERIAL PRIMARY KEY,
-    title VARCHAR(64) NOT NULL,
+    title VARCHAR(64) NOT NULL DEFAULT 'New Project',
     public BOOLEAN NOT NULL DEFAULT false
 );
 
