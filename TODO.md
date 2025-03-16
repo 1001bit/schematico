@@ -42,7 +42,8 @@
             [X] Project creation
         [X] Project creation endpoint
         [X] Passing JWT claims from cookie to context
-        [ ] Adding project to database and responding with ID
+        [X] Adding project to database and responding with ID
+    [ ] Frontend
 [ ] Projects render on frontend
 [ ] Project page frontend
 [ ] Drawing
