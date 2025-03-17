@@ -1,66 +1,44 @@
 "use strict";
 const newProjButton = document.getElementById("new-project");
-var ServerResponse;
-(function (ServerResponse) {
-    ServerResponse[ServerResponse["Ok"] = 0] = "Ok";
-    ServerResponse[ServerResponse["Unauth"] = 1] = "Unauth";
-    ServerResponse[ServerResponse["Error"] = 2] = "Error";
-})(ServerResponse || (ServerResponse = {}));
+const projectsDiv = document.getElementById("projects");
 function postNewProject() {
     return fetch("/api/project/new", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-    }).then((res) => {
-        if (res.ok) {
-            return res.json().then((data) => {
-                return [ServerResponse.Ok, data.id];
-            });
-        }
-        else if (res.status === 401) {
-            return [ServerResponse.Unauth, ""];
-        }
-        return [ServerResponse.Error, ""];
     });
 }
+newProjButton.addEventListener("click", () => {
+    refreshIfUnauth(postNewProject).then((res) => {
+        if (res.status === 401) {
+            window.location.href = "/signin";
+        }
+        if (res.ok) {
+            res.json().then((data) => {
+                console.log(data);
+            });
+        }
+    });
+});
 function refreshTokens() {
     return fetch("/api/user/refresh", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-    }).then((res) => {
-        if (res.ok) {
-            return ServerResponse.Ok;
-        }
-        else if (res.status === 401) {
-            return ServerResponse.Unauth;
-        }
-        return ServerResponse.Error;
     });
 }
-newProjButton.addEventListener("click", () => {
-    postNewProject().then((res) => {
-        if (res[0] === ServerResponse.Ok) {
-            console.log(res[1]);
-            return;
-        }
-        if (res[0] == ServerResponse.Error) {
-            console.log("Error creating project");
-            return;
-        }
-        refreshTokens().then((res) => {
-            if (res !== ServerResponse.Ok) {
-                return;
-            }
-            postNewProject().then((res) => {
-                if (res[0] !== ServerResponse.Ok) {
-                    console.log("Error creating project");
-                    return;
+function refreshIfUnauth(fetchFunc) {
+    return fetchFunc().then((res) => {
+        if (res.status === 401) {
+            return refreshTokens().then((res) => {
+                if (!res.ok) {
+                    return res;
                 }
-                console.log(res[1]);
+                return fetchFunc();
             });
-        });
+        }
+        return res;
     });
-});
+}
