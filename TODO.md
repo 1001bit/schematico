@@ -23,13 +23,14 @@
             [X] refresh-UUID generation, provision and saving
         [X] Refresh
             [X] Endpoint
+            [ ] Stop if JWT is presented
             [X] refresh-UUID validation
             [X] access-JWT generation and provision
             [X] refresh-UUID generation, provision and saving
         [X] Logout
             [X] Endpoint
-            [X] Cookeis removing
-            [X] refresh-UUID removing
+            [X] Cookies removing
+            [X] refresh-UUID removing from redis
     [X] PostgreSQL service
     [X] Redis service
 
@@ -45,6 +46,9 @@
         [X] Adding project to database and responding with ID
     [X] Script
 [ ] Projects render on home page
+    [X] Backend
+    [X] Fetch on frontend side
+    [ ] Render
 [ ] Project page
 [ ] Drawing
 [ ] Authorization

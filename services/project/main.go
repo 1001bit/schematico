@@ -23,7 +23,7 @@ func main() {
 		Password: os.Getenv("POSTGRES_PASSWORD"),
 		DBName:   os.Getenv("POSTGRES_DB"),
 	})
-	// TODO: restart database connection if it fails
+	// TODO: try to reconnect on error
 	if err != nil {
 		slog.Error("error creating database", "err", err)
 	}

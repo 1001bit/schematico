@@ -10,6 +10,7 @@ func newRouter(h *handler.Handler) *chi.Mux {
 
 	r.Use(claimsToContextMW)
 	r.Post("/new", h.HandleNewProject)
+	r.Get("/mylist", h.HandleProjectsList)
 
 	return r
 }

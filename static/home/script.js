@@ -21,6 +21,17 @@ newProjButton.addEventListener("click", () => {
         }
     });
 });
+function handleProjectsData(data) {
+    console.log(data);
+}
+refreshIfUnauth(() => fetch("/api/project/mylist")).then((res) => {
+    if (!res.ok) {
+        return;
+    }
+    res.json().then((data) => {
+        handleProjectsData(data);
+    });
+});
 function refreshTokens() {
     return fetch("/api/user/refresh", {
         method: "POST",
@@ -29,15 +40,18 @@ function refreshTokens() {
         },
     });
 }
+function refreshBefore(fetchFunc) {
+    return refreshTokens().then((res) => {
+        if (!(res.ok || res.status === 401)) {
+            return res;
+        }
+        return fetchFunc();
+    });
+}
 function refreshIfUnauth(fetchFunc) {
     return fetchFunc().then((res) => {
         if (res.status === 401) {
-            return refreshTokens().then((res) => {
-                if (!res.ok) {
-                    return res;
-                }
-                return fetchFunc();
-            });
+            return refreshBefore(fetchFunc);
         }
         return res;
     });
