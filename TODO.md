@@ -45,10 +45,10 @@
         [X] Passing JWT claims from cookie to context
         [X] Adding project to database and responding with ID
     [X] Script
-[ ] Projects render on home page
+[X] Projects render on home page
     [X] Backend
     [X] Fetch on frontend side
-    [ ] Render
+    [X] Render
 [ ] Project page
 [ ] Drawing
 [ ] Authorization

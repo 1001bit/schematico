@@ -1,17 +1,11 @@
 function refreshTokens(): Promise<Response> {
 	return fetch("/api/user/refresh", {
 		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-		},
 	});
 }
 
 function refreshBefore(fetchFunc: () => Promise<Response>): Promise<Response> {
-	return refreshTokens().then((res) => {
-		if (!(res.ok || res.status === 401)) {
-			return res;
-		}
+	return refreshTokens().then((_res) => {
 		return fetchFunc();
 	});
 }

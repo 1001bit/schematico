@@ -5,7 +5,7 @@ CREATE TABLE projects (
 );
 
 CREATE TABLE project_access (
-    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL,
     project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
     role VARCHAR(6) NOT NULL CHECK (role IN ('owner', 'editor', 'viewer')) DEFAULT 'viewer',
     PRIMARY KEY (user_id, project_id)
