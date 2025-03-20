@@ -33,6 +33,7 @@ func newRouter(userAddr, projAddr string) (*chi.Mux, error) {
 
 	r.Get("/", handler.HandleHome)
 	r.Get("/signin", handler.HandleSignIn)
+	r.Get("/project/{id}", handler.HandleProject)
 
 	r.Route("/api", func(r chi.Router) {
 		r.Handle("/user/*", userProxy.ProxyHandler("/api/user"))
