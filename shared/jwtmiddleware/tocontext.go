@@ -1,4 +1,4 @@
-package server
+package jwtmiddleware
 
 import (
 	"context"
@@ -8,7 +8,11 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func claimsToContextMW(next http.Handler) http.Handler {
+const (
+	UserIdKey = "userId"
+)
+
+func ClaimsToContext(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		jwtCookie, err := r.Cookie("jwt")
 		if err != nil {
@@ -24,13 +28,13 @@ func claimsToContextMW(next http.Handler) http.Handler {
 			return
 		}
 
-		userId, ok := token.Claims.(jwt.MapClaims)["userId"].(string)
+		userId, ok := token.Claims.(jwt.MapClaims)[UserIdKey].(string)
 		if !ok {
 			next.ServeHTTP(w, r)
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), "userId", userId)
+		ctx := context.WithValue(r.Context(), UserIdKey, userId)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

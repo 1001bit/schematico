@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/1001bit/schematico/services/user/accessjwt"
+	"github.com/1001bit/schematico/services/user/shared/jwtmiddleware"
 	"github.com/1001bit/schematico/services/user/usermodel"
 )
 
@@ -74,12 +75,21 @@ func createOrSignIn(w http.ResponseWriter, r *http.Request, userstorage *usermod
 }
 
 func (h *Handler) HandleSignIn(w http.ResponseWriter, r *http.Request) {
+	_, ok := r.Context().Value(jwtmiddleware.UserIdKey).(string)
+	if ok {
+		// HACK: wont work if jwt is expired though
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w, `{"message": "%s"}`, "already signed in")
+		return
+	}
+
 	req := signInRequest{}
 
 	// decode request body
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w, `{"message": "%s"}`, "bad inputs")
 		return
 	}
 

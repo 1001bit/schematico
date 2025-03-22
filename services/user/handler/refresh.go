@@ -5,10 +5,18 @@ import (
 	"net/http"
 
 	"github.com/1001bit/schematico/services/user/accessjwt"
+	"github.com/1001bit/schematico/services/user/shared/jwtmiddleware"
 	"github.com/redis/go-redis/v9"
 )
 
 func (h *Handler) HandleRefresh(w http.ResponseWriter, r *http.Request) {
+	_, ok := r.Context().Value(jwtmiddleware.UserIdKey).(string)
+	if ok {
+		// HACK: maybe use another status
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
 	// get uuid cookie
 	cookie, err := r.Cookie("uuid")
 	if err != nil {

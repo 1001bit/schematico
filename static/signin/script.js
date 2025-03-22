@@ -1,4 +1,11 @@
 "use strict";
+refreshTokens()
+    .then((res) => {
+    if (res.ok) {
+        window.location.replace("/");
+    }
+})
+    .catch();
 const usernameInput = document.getElementById("username");
 const passwordInput = document.getElementById("password");
 const signinButton = document.getElementById("signin");
@@ -85,4 +92,22 @@ function setRemoveBorderColorOnEdit(input) {
 }
 function setBorderColor(input, colorVar) {
     input.style.setProperty("border-color", `var(--${colorVar})`);
+}
+function refreshTokens() {
+    return fetch("/api/user/refresh", {
+        method: "POST",
+    });
+}
+function refreshBefore(fetchFunc) {
+    return refreshTokens().then((_res) => {
+        return fetchFunc();
+    });
+}
+function refreshIfUnauth(fetchFunc) {
+    return fetchFunc().then((res) => {
+        if (res.status === 401) {
+            return refreshBefore(fetchFunc);
+        }
+        return res;
+    });
 }

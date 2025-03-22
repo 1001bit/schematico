@@ -3,5 +3,5 @@
 	"compilerOptions": {
 		"outFile": "../../static/signin/script.js"
 	},
-	"include": ["*.ts", "../input/input.ts"]
+	"include": ["*.ts", "../input/input.ts", "../refresh/refresh.ts"]
 }

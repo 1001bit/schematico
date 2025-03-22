@@ -4,14 +4,15 @@
 [X] Authentication
     [X] Gateway
         [X] Reverse proxy to user api
-    [ ] Special page for both signing in and up
+    [X] Special page for both signing in and up
         [X] HTML + CSS
         [X] Script
-        [ ] Redirect from the page if authenticated
+        [X] Redirect from the page if authenticated
     [X] User microservice
         [X] Microservice
         [X] Sign in
             [X] Endpoint
+            [X] Stop if authenticated
             [X] Inputs validation
             [X] Model
                 [X] Database connection
@@ -22,9 +23,9 @@
                     [X] Credentials validation
             [X] access-JWT generation and provision
             [X] refresh-UUID generation, provision and saving
-        [ ] Refresh
+        [X] Refresh
             [X] Endpoint
-            [ ] Stop if JWT is presented
+            [X] Stop if JWT is presented
             [X] refresh-UUID validation
             [X] access-JWT generation and provision
             [X] refresh-UUID generation, provision and saving
