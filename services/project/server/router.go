@@ -12,6 +12,7 @@ func newRouter(h *handler.Handler) *chi.Mux {
 	r.Use(jwtmiddleware.ClaimsToContext)
 	r.Post("/new", h.HandleNewProject)
 	r.Get("/mylist", h.HandleProjectsList)
+	r.Get("/info/{id}", h.HandleProjectInfo)
 
 	return r
 }

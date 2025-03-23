@@ -53,8 +53,8 @@
     [X] Render
 [ ] Project page
     [X] Endpoint with html
-[ ] Drawing
-[ ] Authorization
-[ ] Websocket connection
-[ ] Autosaving
-[ ] Circuit logic
+    [X] Authorization
+    [X] Project title render
+    [ ] Design + HTML + CSS for the page
+    [ ] Canvas
+    ... Client logic and server logic

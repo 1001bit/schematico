@@ -1,1 +1,2 @@
 - user places gates (drawn as vector images) and connects them by wiring using non-tile lines/curves
+- some kind of projects version control, like git
