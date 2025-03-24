@@ -8,9 +8,23 @@
 		<title>Home</title>
 	</head>
 	<body>
-		<h2 id="title">project page</h2>
+		<div id="topbar">
+			<h2><a href="/">schematico</a></h2>
+			<h2 id="title">project</h2>
+		</div>
 
-		<main></main>
+		<canvas id="canvas"></canvas>
+
+		<div id="bottombar">
+			<h2><a id="settings-button">settings</a></h2>
+			<div id="toolbar">
+				<div class="tool" id="wire-tool"></div>
+				<div class="tool" id="or-tool"></div>
+				<div class="tool" id="and-tool"></div>
+				<div class="tool" id="not-tool"></div>
+			</div>
+			<h2><a id="play-button">play</a></h2>
+		</div>
 
 		<script src="/static/project/script.js"></script>
 	</body>

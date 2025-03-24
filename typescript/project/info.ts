@@ -5,9 +5,13 @@ interface ProjectInfoResp {
 	role: "owner" | "editor" | "viewer";
 }
 
+function setTitle(title: string) {
+	titleElem.textContent = title;
+	window.document.title = title;
+}
+
 function handleProjectResp(resp: ProjectInfoResp) {
-	titleElem.textContent = resp.title;
-	window.document.title = resp.title;
+	setTitle(resp.title);
 }
 
 refreshBefore(() => {

@@ -55,6 +55,6 @@
     [X] Endpoint with html
     [X] Authorization
     [X] Project title render
-    [ ] Design + HTML + CSS for the page
-    [ ] Canvas
-    ... Client logic and server logic
+    [X] Design + HTML + CSS for the page
+    [ ] Design circuit drawing
+    [ ] Drawing on frontend

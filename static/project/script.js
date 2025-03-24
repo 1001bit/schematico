@@ -1,9 +1,12 @@
 "use strict";
 const titleElem = document.getElementById("title");
 const getLastItem = (path) => path.substring(path.lastIndexOf("/") + 1);
+function setTitle(title) {
+    titleElem.textContent = title;
+    window.document.title = title;
+}
 function handleProjectResp(resp) {
-    titleElem.textContent = resp.title;
-    window.document.title = resp.title;
+    setTitle(resp.title);
 }
 refreshBefore(() => {
     return fetch("/api/project/info/" + getLastItem(window.location.pathname));

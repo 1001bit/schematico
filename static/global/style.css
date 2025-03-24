@@ -14,6 +14,8 @@ html {
 	overflow-x: hidden;
 	scrollbar-width: thin;
 	scrollbar-color: var(--acc1-dim) var(--main2);
+	width: 100%;
+	height: 100%;
 }
 
 @media (max-width: 768px) {
@@ -46,6 +48,8 @@ a {
 	color: var(--acc1);
 	text-decoration: none;
 	font: inherit;
+	/* can't select text */
+	user-select: none;
 }
 
 a:hover {
