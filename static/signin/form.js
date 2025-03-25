@@ -1,24 +1,19 @@
-"use strict";
-refreshTokens()
-    .then((res) => {
-    if (res.ok) {
-        window.location.replace("/");
-    }
-})
-    .catch();
+import * as input from "../input/input.js";
 const usernameInput = document.getElementById("username");
 const passwordInput = document.getElementById("password");
 const signinButton = document.getElementById("signin");
 const createButton = document.getElementById("create");
 const messageElem = document.getElementById("message");
-setRemoveBorderColorOnEdit(usernameInput);
-setRemoveBorderColorOnEdit(passwordInput);
-signinButton.addEventListener("click", () => {
-    validateAndSubmit("signin", usernameInput.value, passwordInput.value);
-});
-createButton.addEventListener("click", () => {
-    validateAndSubmit("create", usernameInput.value, passwordInput.value);
-});
+export function init() {
+    input.setRemoveBorderColorOnEdit(usernameInput);
+    input.setRemoveBorderColorOnEdit(passwordInput);
+    signinButton.addEventListener("click", () => {
+        validateAndSubmit("signin", usernameInput.value, passwordInput.value);
+    });
+    createButton.addEventListener("click", () => {
+        validateAndSubmit("create", usernameInput.value, passwordInput.value);
+    });
+}
 function validateUsername(username) {
     if (username.length == 0) {
         return "username field empty";
@@ -67,13 +62,13 @@ function submit(type, username, password) {
 function validateAndSubmit(type, username, password) {
     let msg = validateUsername(username);
     if (msg !== "") {
-        setBorderColor(usernameInput, "err");
+        input.setBorderColor(usernameInput, "err");
         setErrorMessage(msg);
         return;
     }
     msg = validatePassword(password);
     if (msg !== "") {
-        setBorderColor(passwordInput, "err");
+        input.setBorderColor(passwordInput, "err");
         setErrorMessage(msg);
         return;
     }
@@ -83,31 +78,5 @@ function validateAndSubmit(type, username, password) {
             return;
         }
         window.location.href = "/";
-    });
-}
-function setRemoveBorderColorOnEdit(input) {
-    input.addEventListener("input", () => {
-        input.style.removeProperty("border-color");
-    });
-}
-function setBorderColor(input, colorVar) {
-    input.style.setProperty("border-color", `var(--${colorVar})`);
-}
-function refreshTokens() {
-    return fetch("/api/user/refresh", {
-        method: "POST",
-    });
-}
-function refreshBefore(fetchFunc) {
-    return refreshTokens().then((_res) => {
-        return fetchFunc();
-    });
-}
-function refreshIfUnauth(fetchFunc) {
-    return fetchFunc().then((res) => {
-        if (res.status === 401) {
-            return refreshBefore(fetchFunc);
-        }
-        return res;
     });
 }

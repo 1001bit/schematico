@@ -1,19 +1,23 @@
+import * as input from "../input/input.js";
+
 const usernameInput = document.getElementById("username") as HTMLInputElement;
 const passwordInput = document.getElementById("password") as HTMLInputElement;
 const signinButton = document.getElementById("signin") as HTMLButtonElement;
 const createButton = document.getElementById("create") as HTMLButtonElement;
 const messageElem = document.getElementById("message") as HTMLParagraphElement;
 
-setRemoveBorderColorOnEdit(usernameInput);
-setRemoveBorderColorOnEdit(passwordInput);
+export function init() {
+	input.setRemoveBorderColorOnEdit(usernameInput);
+	input.setRemoveBorderColorOnEdit(passwordInput);
 
-signinButton.addEventListener("click", () => {
-	validateAndSubmit("signin", usernameInput.value, passwordInput.value);
-});
+	signinButton.addEventListener("click", () => {
+		validateAndSubmit("signin", usernameInput.value, passwordInput.value);
+	});
 
-createButton.addEventListener("click", () => {
-	validateAndSubmit("create", usernameInput.value, passwordInput.value);
-});
+	createButton.addEventListener("click", () => {
+		validateAndSubmit("create", usernameInput.value, passwordInput.value);
+	});
+}
 
 function validateUsername(username: string): string {
 	if (username.length == 0) {
@@ -76,14 +80,14 @@ function validateAndSubmit(
 ) {
 	let msg = validateUsername(username);
 	if (msg !== "") {
-		setBorderColor(usernameInput, "err");
+		input.setBorderColor(usernameInput, "err");
 		setErrorMessage(msg);
 		return;
 	}
 
 	msg = validatePassword(password);
 	if (msg !== "") {
-		setBorderColor(passwordInput, "err");
+		input.setBorderColor(passwordInput, "err");
 		setErrorMessage(msg);
 		return;
 	}

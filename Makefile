@@ -1,7 +1,6 @@
 # Variables
 DOCKER_COMPOSE = docker compose
-TSCOMPILER = python3 typescript/tscompiler.py
-TS_PATH = typescript
+TSC = tsc
 SHARED_SCRIPT = python3 shared/shared.py
 SHARED_PATH = shared
 
@@ -16,7 +15,7 @@ start:
 # Compile typescript
 tscompile:
 	@echo "\nCompiling typescript..."
-	$(TSCOMPILER) $(TS_PATH)
+	$(TSCOMPILER)
 
 # Copy packages from shared to their destinations
 copyshared:

@@ -1,1 +1,1 @@
-const titleElem = document.getElementById("title") as HTMLHeadingElement;
+export const title = document.getElementById("title") as HTMLHeadingElement;

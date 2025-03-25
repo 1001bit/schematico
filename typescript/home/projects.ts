@@ -1,11 +1,17 @@
+import * as elem from "./elems.js";
+import * as refresh from "../refresh/refresh.js";
+
 interface ListProject {
 	id: string;
 	title: string;
 }
+interface Data {
+	projects: ListProject[];
+}
 
 function renderProjectsList(projects: ListProject[]) {
 	for (const project of projects) {
-		const newProjectElem = sampleProjectElem.cloneNode(
+		const newProjectElem = elem.sampleProject.cloneNode(
 			true
 		) as HTMLDivElement;
 		newProjectElem.classList.remove("sample");
@@ -20,22 +26,26 @@ function renderProjectsList(projects: ListProject[]) {
 		titleElem.textContent = project.title;
 		projectEditElem.href = `/project/${project.id}`;
 
-		projectsDiv.appendChild(newProjectElem);
+		elem.projectsDiv.appendChild(newProjectElem);
 	}
 }
 
-function handleProjectsData(data: any) {
+function handleProjectsData(data: Data) {
 	if ("projects" in data) {
 		renderProjectsList(data.projects);
 	}
 }
 
-refreshIfUnauth(() => fetch("/api/project/mylist")).then((res) => {
-	if (!res.ok) {
-		return;
-	}
+export function init() {
+	refresh
+		.refreshIfUnauth(() => fetch("/api/project/mylist"))
+		.then((res: Response) => {
+			if (!res.ok) {
+				return;
+			}
 
-	res.json().then((data) => {
-		handleProjectsData(data);
-	});
-});
+			res.json().then((data: Data) => {
+				handleProjectsData(data);
+			});
+		});
+}

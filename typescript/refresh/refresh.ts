@@ -1,16 +1,18 @@
-function refreshTokens(): Promise<Response> {
+export function refreshTokens(): Promise<Response> {
 	return fetch("/api/user/refresh", {
 		method: "POST",
 	});
 }
 
-function refreshBefore(fetchFunc: () => Promise<Response>): Promise<Response> {
+export function refreshBefore(
+	fetchFunc: () => Promise<Response>
+): Promise<Response> {
 	return refreshTokens().then((_res) => {
 		return fetchFunc();
 	});
 }
 
-function refreshIfUnauth(
+export function refreshIfUnauth(
 	fetchFunc: () => Promise<Response>
 ): Promise<Response> {
 	return fetchFunc().then((res) => {

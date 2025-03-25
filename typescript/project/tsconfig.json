@@ -1,7 +1,0 @@
-{
-	"extends": "../tsconfig.json",
-	"compilerOptions": {
-		"outFile": "../../static/project/script.js"
-	},
-	"include": ["*.ts", "../refresh/refresh.ts"]
-}

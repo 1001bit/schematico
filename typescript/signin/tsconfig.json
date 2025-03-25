@@ -1,7 +1,0 @@
-{
-	"extends": "../tsconfig.json",
-	"compilerOptions": {
-		"outFile": "../../static/signin/script.js"
-	},
-	"include": ["*.ts", "../input/input.ts", "../refresh/refresh.ts"]
-}
