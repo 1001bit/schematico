@@ -13,6 +13,18 @@ services:
             - ./static:/app/static
         restart: always
 
+    # FRONTEND
+    frontend:
+        build: ./services/frontend
+        volumes:
+            - ./services/frontend/src:/app/src:ro
+            - ./services/frontend/public:/app/public:ro
+        ports:
+            - 3000:3000
+        networks:
+            - network
+        restart: always
+
     # USER
     user:
         build: ./services/user

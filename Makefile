@@ -12,6 +12,8 @@ start:
 	@echo "\nStarting Docker containers..."
 	$(DOCKER_COMPOSE) up --build -d
 
+restart: down start
+
 # Compile typescript
 tscompile:
 	@echo "\nCompiling typescript..."
