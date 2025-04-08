@@ -7,7 +7,9 @@ export interface ProjectListData {
 }
 
 export default function ProjectList(props: ProjectListData) {
-  return (
+  return props.projects.length === 0 ? (
+    <p>no projects</p>
+  ) : (
     <div className="flex gap-4 flex-wrap">
       {props.projects.map((proj) => {
         return (

@@ -3,13 +3,13 @@ import { Link, Outlet } from "react-router";
 function Layout() {
   return (
     <>
-      <div className="flex flex-row ps-1">
+      <div className="flex flex-row ps-2">
         <Link to="/">
           <h3>schematico</h3>
         </Link>
       </div>
 
-      <main className="ps-1">
+      <main className="ps-2">
         <Outlet />
       </main>
     </>

@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import Layout from "./pages/Layout";
-import Home, { loader as homeLoader } from "./pages/Home";
+import Index, { loader as indexLoader } from "./pages/Index";
 
 const router = createBrowserRouter([
   {
@@ -9,8 +9,8 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        Component: Home,
-        loader: homeLoader,
+        Component: Index,
+        loader: indexLoader,
         errorElement: <div>Unexpected error</div>,
       },
       {

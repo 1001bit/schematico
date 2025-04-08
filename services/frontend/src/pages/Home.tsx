@@ -1,37 +1,34 @@
-import { useLoaderData } from "react-router";
-import { fetchHomeProjects } from "../api/homeProjects";
 import ProjectList, {
   ProjectListData,
 } from "../components/ProjectList/ProjectList";
+import { postNewProject } from "../api/newProject";
+import { useState } from "react";
 
-async function loaderDev(): Promise<ProjectListData> {
-  return {
-    projects: [
-      { id: "1", title: "Project 1" },
-      { id: "2", title: "Project 2" },
-      { id: "3", title: "Project 3" },
-      { id: "4", title: "Project 4" },
-    ],
+import { useNavigate } from "react-router";
+
+export default function Home(props: ProjectListData) {
+  const navigate = useNavigate();
+
+  const [msg, setMsg] = useState("new project");
+
+  const newProject = async () => {
+    postNewProject()
+      .then((newProj) => {
+        newProj.authorized
+          ? navigate(`/project/${newProj.id}`)
+          : navigate("/signin");
+      })
+      .catch((_err) => {
+        setMsg("an error occurred");
+      });
   };
-}
-
-export async function loader(): Promise<ProjectListData> {
-  if (import.meta.env.MODE === "development") {
-    return loaderDev();
-  }
-
-  return await fetchHomeProjects();
-}
-
-export default function Home() {
-  const data = useLoaderData() as ProjectListData;
 
   return (
     <div className="flex flex-col gap-4">
       <h3>Projects:</h3>
-      <ProjectList projects={data.projects} />
+      <ProjectList projects={props.projects} />
       <p>
-        <a>new project</a>
+        <a onClick={newProject}>{msg}</a>
       </p>
     </div>
   );
