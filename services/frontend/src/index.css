@@ -1,5 +1,44 @@
 @import "tailwindcss";
 
-/* body {
-  @apply bg-black;
-} */
+@layer base {
+  html {
+    font-size: 20px;
+    font-family: "DM Mono", monospace;
+    background-color: #000000;
+    color: #ffffff;
+  }
+
+  @media (max-width: 768px) {
+    html {
+      font-size: 16px;
+    }
+  }
+
+  body {
+    @apply min-h-screen overflow-x-hidden;
+  }
+
+  * {
+    @apply m-0 p-0 box-border max-w-full;
+  }
+
+  h1 {
+    @apply text-6xl font-bold leading-tight;
+  }
+
+  h2 {
+    @apply text-4xl font-semibold leading-snug;
+  }
+
+  h3 {
+    @apply text-2xl font-medium leading-normal;
+  }
+
+  p {
+    @apply text-lg leading-relaxed;
+  }
+
+  a {
+    @apply text-lime-500 hover:underline hover:cursor-pointer;
+  }
+}
