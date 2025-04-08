@@ -1,17 +1,28 @@
+import { createBrowserRouter, RouterProvider } from "react-router";
+import Layout from "./pages/Layout";
+import Home, { loader as homeLoader } from "./pages/Home";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    Component: Layout,
+    children: [
+      {
+        index: true,
+        Component: Home,
+        loader: homeLoader,
+        errorElement: <div>Unexpected error</div>,
+      },
+      {
+        path: "*",
+        Component: () => <div>Not found</div>,
+      },
+    ],
+  },
+]);
+
 function App() {
-  return (
-    <>
-      <h3>schematico</h3>
-      <h1>This is h1</h1>
-      <h2>This is h2</h2>
-      <h3>This is h3</h3>
-      <p>This is p</p>
-      <a>This is a</a>
-      <a>
-        <h3>This is h1</h3>
-      </a>
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

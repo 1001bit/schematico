@@ -2,7 +2,7 @@
 
 @layer base {
   html {
-    font-size: 20px;
+    font-size: 16px;
     font-family: "DM Mono", monospace;
     background-color: #000000;
     color: #ffffff;
@@ -10,7 +10,7 @@
 
   @media (max-width: 768px) {
     html {
-      font-size: 16px;
+      font-size: 12px;
     }
   }
 
@@ -39,6 +39,6 @@
   }
 
   a {
-    @apply text-lime-500 hover:underline hover:cursor-pointer;
+    @apply text-lime-500 hover:underline hover:cursor-pointer select-none;
   }
 }

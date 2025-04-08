@@ -15,7 +15,8 @@ func main() {
 	port := "80"
 	userAddr := "http://user:80"
 	projAddr := "http://project:80"
-	if err := server.Run(port, userAddr, projAddr); err != nil {
+	frontAddr := "http://frontend:3000"
+	if err := server.Run(port, userAddr, projAddr, frontAddr); err != nil {
 		slog.Error("server run error", "err", err)
 	}
 }
