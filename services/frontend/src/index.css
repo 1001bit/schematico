@@ -2,20 +2,15 @@
 
 @layer base {
   html {
-    font-size: 16px;
-    font-family: "DM Mono", monospace;
-    background-color: #000000;
-    color: #ffffff;
-  }
-
-  @media (max-width: 768px) {
-    html {
-      font-size: 12px;
-    }
+    @apply h-full lg:text-lg text-sm font-[DM_Mono] dark:bg-black dark:text-white;
   }
 
   body {
-    @apply min-h-screen overflow-x-hidden;
+    @apply h-full overflow-x-hidden;
+  }
+
+  #root {
+    @apply h-full flex flex-col;
   }
 
   * {
@@ -39,6 +34,15 @@
   }
 
   a {
-    @apply text-lime-500 hover:underline hover:cursor-pointer select-none;
+    @apply text-acc hover:underline hover:cursor-pointer select-none;
   }
+}
+
+/* custom colors */
+@theme {
+  --color-acc: hsl(110, 100%, 50%);
+  --color-acc-dim: hsl(110, 100%, 30%);
+  --color-white-dim: hsl(0, 0%, 70%);
+  --color-err: hsl(0, 100%, 50%);
+  --color-err-dim: hsl(0, 100%, 30%);
 }

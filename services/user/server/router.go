@@ -13,7 +13,7 @@ func newRouter(h *handler.Handler) *chi.Mux {
 
 	r.Group(func(r chi.Router) {
 		r.Use(jwtmiddleware.ClaimsToContext)
-		r.Post("/signin", h.HandleSignIn)
+		r.Post("/login", h.HandleLogin)
 		r.Post("/refresh", h.HandleRefresh)
 	})
 	r.Post("/logout", h.HandleLogout)

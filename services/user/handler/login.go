@@ -51,15 +51,15 @@ func validateInputs(username, password string) string {
 	return validatePassword(password)
 }
 
-func createOrSignIn(w http.ResponseWriter, r *http.Request, userstorage *usermodel.UserStorage, req signInRequest) (string, error) {
+func registerOrLogin(w http.ResponseWriter, r *http.Request, userstorage *usermodel.UserStorage, req signInRequest) (string, error) {
 	var err error
 	userId := ""
 
-	if req.Type == "create" {
+	if req.Type == "register" {
 		userId, err = userstorage.AddUser(r.Context(), req.Username, req.Password)
 		if err == usermodel.ErrAlreadyExists {
 			w.WriteHeader(http.StatusConflict)
-			fmt.Fprintf(w, `{"message": "user already exists"}`)
+			fmt.Fprintf(w, `{"message": "%s already exists"}`, req.Username)
 			return "", nil
 		}
 	} else {
@@ -74,7 +74,7 @@ func createOrSignIn(w http.ResponseWriter, r *http.Request, userstorage *usermod
 	return userId, err
 }
 
-func (h *Handler) HandleSignIn(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 	_, ok := r.Context().Value(jwtmiddleware.UserIdKey).(string)
 	if ok {
 		// HACK: wont work if jwt is expired though
@@ -102,7 +102,7 @@ func (h *Handler) HandleSignIn(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// create account or sign in
-	userId, err := createOrSignIn(w, r, h.userstorage, req)
+	userId, err := registerOrLogin(w, r, h.userstorage, req)
 	if err != nil {
 		writeServerError(w, err, "error signing in")
 		return

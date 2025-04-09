@@ -12,15 +12,14 @@ export default function Home(props: ProjectListData) {
   const [msg, setMsg] = useState("new project");
 
   const newProject = async () => {
-    postNewProject()
-      .then((newProj) => {
-        newProj.authorized
-          ? navigate(`/project/${newProj.id}`)
-          : navigate("/signin");
-      })
-      .catch((_err) => {
-        setMsg("an error occurred");
-      });
+    try {
+      const newProj = await postNewProject();
+      newProj.authorized
+        ? navigate(`/project/${newProj.id}`)
+        : navigate("/signin");
+    } catch {
+      setMsg("an error occurred");
+    }
   };
 
   return (
