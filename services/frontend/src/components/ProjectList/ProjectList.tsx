@@ -10,7 +10,7 @@ export default function ProjectList(props: ProjectListData) {
   return props.projects.length === 0 ? (
     <p>no projects</p>
   ) : (
-    <div className="flex gap-4 flex-wrap">
+    <div className="flex gap-6 flex-wrap">
       {props.projects.map((proj) => {
         return (
           <ProjectCard

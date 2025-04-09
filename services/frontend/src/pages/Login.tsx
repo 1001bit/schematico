@@ -3,8 +3,12 @@ import Button from "../components/Button/Button";
 import TextInput from "../components/TextInput/TextInput";
 import { submitLogin } from "../api/login";
 import { useNavigate } from "react-router";
+import { useTitle } from "../hooks/title/TitleContext";
 
 export default function Login() {
+  const title = useTitle();
+  title.setTitle("login");
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 

@@ -1,6 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import Layout from "./pages/Layout";
 import Index, { loader as indexLoader } from "./pages/Index";
+import Project, { loader as projectLoader } from "./pages/Project";
+import { TitleProvider } from "./hooks/title/TitleContext";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +16,12 @@ const router = createBrowserRouter([
         errorElement: <div>Unexpected error</div>,
       },
       {
+        path: "project/:projectId",
+        Component: Project,
+        loader: projectLoader,
+        errorElement: <div>Unexpected error</div>,
+      },
+      {
         path: "*",
         Component: () => <div>Not found</div>,
       },
@@ -22,7 +30,12 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <TitleProvider>
+      {" "}
+      <RouterProvider router={router} />
+    </TitleProvider>
+  );
 }
 
 export default App;

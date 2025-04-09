@@ -6,7 +6,7 @@ import Home from "./Home";
 
 async function loaderDev(): Promise<HomeProjectsData> {
   return {
-    authorized: false,
+    authorized: true,
     projectsListData: {
       projects: [
         { id: "1", title: "Project 1" },

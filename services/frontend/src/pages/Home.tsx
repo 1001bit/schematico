@@ -5,8 +5,12 @@ import { postNewProject } from "../api/newProject";
 import { useState } from "react";
 
 import { useNavigate } from "react-router";
+import { useTitle } from "../hooks/title/TitleContext";
 
 export default function Home(props: ProjectListData) {
+  const title = useTitle();
+  title.setTitle("home");
+
   const navigate = useNavigate();
 
   const [msg, setMsg] = useState("new project");
