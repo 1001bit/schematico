@@ -66,7 +66,7 @@ func registerOrLogin(w http.ResponseWriter, r *http.Request, userstorage *usermo
 		userId, err = userstorage.Login(r.Context(), req.Username, req.Password)
 		if err == usermodel.ErrInvalidCredentials || err == usermodel.ErrNotFound {
 			w.WriteHeader(http.StatusUnauthorized)
-			fmt.Fprintf(w, `{"message": "invalid credentials"}`)
+			fmt.Fprintf(w, `{"message": "invalid username or password"}`)
 			return "", nil
 		}
 	}

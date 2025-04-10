@@ -19,7 +19,7 @@ func newRouter(h *handler.Handler) http.Handler {
 	r.Use(chimw.RedirectSlashes)
 	r.Use(chimw.Timeout(10 * time.Second))
 	r.Use(chimw.CleanPath)
-	r.Use(httprate.LimitByIP(100, 1*time.Minute))
+	r.Use(httprate.LimitByIP(50, 1*time.Minute))
 
 	r.Group(func(r chi.Router) {
 		r.Use(jwtmiddleware.ClaimsToContext)
