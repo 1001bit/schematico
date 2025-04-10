@@ -58,3 +58,5 @@
     [X] Design + HTML + CSS for the page
     [ ] Design circuit drawing
     [ ] Drawing on frontend
+
+[ ] Enable tls for redis and postgres

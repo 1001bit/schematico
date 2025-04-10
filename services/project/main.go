@@ -16,13 +16,7 @@ func init() {
 func main() {
 	port := os.Getenv("PORT")
 
-	db, err := database.New(database.DBConf{
-		Host:     "project-postgres",
-		Port:     "5432",
-		User:     os.Getenv("POSTGRES_USER"),
-		Password: os.Getenv("POSTGRES_PASSWORD"),
-		DBName:   os.Getenv("POSTGRES_DB"),
-	})
+	db, err := database.New(os.Getenv("POSTGRES_URL"))
 	// TODO: try to reconnect on error
 	if err != nil {
 		slog.Error("error creating database", "err", err)
