@@ -1,13 +1,16 @@
 package server
 
 import (
+	"net/http"
+
 	"github.com/1001bit/schematico/services/user/handler"
 	"github.com/1001bit/schematico/services/user/shared/jwtmiddleware"
 	"github.com/go-chi/chi/v5"
 	chimw "github.com/go-chi/chi/v5/middleware"
+	"github.com/rs/cors"
 )
 
-func newRouter(h *handler.Handler) *chi.Mux {
+func newRouter(h *handler.Handler) http.Handler {
 	r := chi.NewRouter()
 	r.Use(chimw.Logger)
 
@@ -18,5 +21,12 @@ func newRouter(h *handler.Handler) *chi.Mux {
 	})
 	r.Post("/logout", h.HandleLogout)
 
-	return r
+	handler := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+		AllowedHeaders:   []string{"Authorization", "Content-Type"},
+		AllowCredentials: true,
+	}).Handler(r)
+
+	return handler
 }
