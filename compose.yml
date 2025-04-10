@@ -1,16 +1,13 @@
 services:
-  # GATEWAY
-  gateway:
-    build: ./services/gateway
-    environment:
-      PORT: ${SERVER_PORT}
+  # NGINX
+  nginx:
+    image: nginx:latest
     ports:
-      - 80:${SERVER_PORT}
+      - 80:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
       - network
-    volumes:
-      - ./html:/app/html
-      - ./static:/app/static
     restart: always
 
   # FRONTEND
