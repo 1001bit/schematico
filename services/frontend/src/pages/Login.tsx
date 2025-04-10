@@ -38,9 +38,9 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center h-9/12 gap-3">
+    <div className="flex flex-col justify-center items-center h-10/12 gap-4">
       <h3>{msg}</h3>
-      <div className="w-60 flex flex-col gap-3">
+      <div className="w-60 flex flex-col gap-2">
         <div className="flex flex-col gap-2">
           <TextInput
             placeholder="username"
@@ -62,7 +62,7 @@ export default function Login() {
             error={passwordErr}
           ></TextInput>
         </div>
-        <div className="flex justify-between gap-1">
+        <div className="flex justify-between gap-2">
           <Button onClick={() => submit("login")}>log in</Button>
           <Button onClick={() => submit("register")}>register</Button>
         </div>

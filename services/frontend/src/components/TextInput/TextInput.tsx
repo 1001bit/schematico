@@ -26,13 +26,12 @@ export default function TextInput(props: TextInputProps) {
       name={props.name}
       required
       className={`
-        border-2
-        rounded-sm 
+        border-1
         px-2 py-1 
         placeholder:text-lg 
         placeholder:text-white-dim 
         outline-hidden
-        transition-all duration-100
+        transition-all duration-150 ease-in-out
         
         ${
           props.error
