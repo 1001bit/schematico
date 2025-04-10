@@ -11,6 +11,7 @@ var (
 	ErrAlreadyExists      = errors.New("already exists")
 	ErrInvalidCredentials = errors.New("invalid credentials")
 	ErrNotFound           = errors.New("not found")
+	ErrNoDb               = errors.New("no database connection")
 )
 
 func getErrFromSql(err error) error {

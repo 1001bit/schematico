@@ -32,7 +32,7 @@ func main() {
 	defer db.Close()
 
 	userstorage := usermodel.NewUserStorage(db)
-	uuidstorage := refreshuuid.NewStorage("user-redis:6379")
+	uuidstorage := refreshuuid.NewStorage("user-redis:6379", os.Getenv("REDIS_PASSWORD"))
 
 	if err := server.Run(port, userstorage, uuidstorage); err != nil {
 		slog.Error("server run error", "err", err)

@@ -10,7 +10,7 @@ import (
 
 const (
 	expTime = 5 * time.Minute
-	secure  = false
+	secure  = true
 )
 
 func generate(userId string) (string, error) {
@@ -34,6 +34,6 @@ func GenerateCookie(userId string) (*http.Cookie, error) {
 		SameSite: http.SameSiteStrictMode,
 		HttpOnly: true,
 		MaxAge:   int(expTime.Seconds()),
-		Secure:   secure, // NOT SECURE
+		Secure:   secure,
 	}, nil
 }

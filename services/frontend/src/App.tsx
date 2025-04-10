@@ -13,12 +13,14 @@ const router = createBrowserRouter([
         index: true,
         Component: Index,
         loader: indexLoader,
+        HydrateFallback: () => <div>Loading...</div>,
         errorElement: <div>Unexpected error</div>,
       },
       {
         path: "project/:projectId",
         Component: Project,
         loader: projectLoader,
+        HydrateFallback: () => <div>Loading...</div>,
         errorElement: <div>Unexpected error</div>,
       },
       {

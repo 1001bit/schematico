@@ -3,7 +3,8 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App";
 
-createRoot(document.getElementById("root")!).render(
+const root = document.getElementById("root") as HTMLDivElement;
+createRoot(root).render(
   <StrictMode>
     <App />
   </StrictMode>

@@ -7,6 +7,11 @@ import (
 )
 
 func (us *UserStorage) Login(ctx context.Context, username string, password string) (string, error) {
+	db := us.db
+	if db == nil {
+		return "", ErrNoDb
+	}
+
 	hash := ""
 	id := ""
 	err := us.db.QueryRowContext(ctx, "SELECT passhash, id FROM users WHERE LOWER(username) = LOWER($1)", username).Scan(&hash, &id)

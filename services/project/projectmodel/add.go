@@ -3,7 +3,12 @@ package projectmodel
 import "context"
 
 func (s *ProjectStorage) Add(ctx context.Context, userId string) (string, error) {
-	tx, err := s.db.BeginTx(ctx, nil)
+	db := s.db
+	if db == nil {
+		return "", ErrNoDb
+	}
+
+	tx, err := db.BeginTx(ctx, nil)
 	if err != nil {
 		return "", err
 	}

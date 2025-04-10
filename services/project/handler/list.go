@@ -19,6 +19,10 @@ func (h *Handler) HandleProjectsList(w http.ResponseWriter, r *http.Request) {
 	if err == sql.ErrNoRows {
 		fmt.Fprint(w, `{"projects": []}`)
 		return
+	} else if err != nil {
+		slog.Error("error getting projects list", "err", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	msg, err := json.Marshal(map[string]any{

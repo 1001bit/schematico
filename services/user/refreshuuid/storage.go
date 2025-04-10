@@ -12,17 +12,18 @@ import (
 const (
 	uuidKeyPrefix = "refreshuuid:"
 	uuidLifeTime  = 14 * (24 * time.Hour)
+	secure        = true
 )
 
 type Storage struct {
 	redisclient *redis.Client
 }
 
-func NewStorage(addr string) *Storage {
+func NewStorage(addr, pass string) *Storage {
 	return &Storage{
 		redisclient: redis.NewClient(&redis.Options{
 			Addr:     addr,
-			Password: "",
+			Password: pass,
 			DB:       0,
 		}),
 	}
@@ -45,7 +46,7 @@ func (s *Storage) GenerateUUIDCookie(ctx context.Context, userId string) (*http.
 		SameSite: http.SameSiteStrictMode,
 		HttpOnly: true,
 		MaxAge:   int(uuidLifeTime.Seconds()),
-		Secure:   false, // NOT SECURE
+		Secure:   secure,
 	}, nil
 }
 

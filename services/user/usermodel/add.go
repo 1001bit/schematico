@@ -7,6 +7,11 @@ import (
 )
 
 func (us *UserStorage) AddUser(ctx context.Context, username string, password string) (string, error) {
+	db := us.db
+	if db == nil {
+		return "", ErrNoDb
+	}
+
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err

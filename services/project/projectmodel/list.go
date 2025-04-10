@@ -8,6 +8,11 @@ type ListProject struct {
 }
 
 func (s *ProjectStorage) GetProjectList(ctx context.Context, userId string) ([]ListProject, error) {
+	db := s.db
+	if db == nil {
+		return nil, ErrNoDb
+	}
+
 	list := make([]ListProject, 0)
 
 	rows, err := s.db.QueryContext(ctx, `

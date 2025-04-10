@@ -18,8 +18,9 @@ export async function fetchHomeProjects(): Promise<HomeProjectsData> {
   } else if (!res.ok) {
     throw new Error("Failed to fetch projects");
   }
+  const json = await res.json();
   return {
     authorized: true,
-    projectsListData: (await res.json()) as ProjectListData,
+    projectsListData: json as ProjectListData,
   };
 }

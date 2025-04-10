@@ -8,6 +8,11 @@ type ProjectInfo struct {
 }
 
 func (s *ProjectStorage) GetProjectInfo(ctx context.Context, userId, projId string) (*ProjectInfo, error) {
+	db := s.db
+	if db == nil {
+		return nil, ErrNoDb
+	}
+
 	info := &ProjectInfo{}
 
 	err := s.db.QueryRowContext(ctx, `
