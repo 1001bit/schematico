@@ -2,14 +2,16 @@ import ProjectList, {
   ProjectListData,
 } from "../components/ProjectList/ProjectList";
 import { postNewProject } from "../api/newProject";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router";
 import { useTitle } from "../hooks/title/TitleContext";
 
 export default function Home(props: ProjectListData) {
   const title = useTitle();
-  title.setTitle("home");
+  useEffect(() => {
+    title.setTitle("home");
+  }, []);
 
   const navigate = useNavigate();
 
@@ -27,7 +29,7 @@ export default function Home(props: ProjectListData) {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 px-2">
       <h3>Projects:</h3>
       <ProjectList projects={props.projects} />
       <p>

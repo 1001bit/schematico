@@ -3,6 +3,8 @@ import { fetchProjectInfo, ProjectInfo } from "../api/projectInfo";
 import { useTitle } from "../hooks/title/TitleContext";
 import { isDev } from "../utils/isDev";
 import Toolbar from "../components/Toolbar/Toolbar";
+import { useEffect } from "react";
+import { Game } from "../Game/Game";
 
 async function loaderDev(): Promise<ProjectInfo> {
   return {
@@ -17,14 +19,17 @@ export async function loader({ params }: any): Promise<ProjectInfo> {
 }
 
 export default function Project() {
+  const title = useTitle();
   const data = useLoaderData() as ProjectInfo;
 
-  const title = useTitle();
-  title.setTitle(data.title);
+  useEffect(() => {
+    title.setTitle(data.title);
+  }, []);
 
   return (
-    <div className="w-full h-full flex">
-      <div className="flex justify-between w-full fixed left-0 bottom-0 px-2 py-1 items-end">
+    <>
+      <Game></Game>
+      <div className="flex justify-between w-full fixed left-0 bottom-0 px-2 py-1 z-10 items-end">
         <a>
           <h3>settings</h3>
         </a>
@@ -33,6 +38,6 @@ export default function Project() {
           <h3>play</h3>
         </a>
       </div>
-    </div>
+    </>
   );
 }

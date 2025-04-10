@@ -11,16 +11,14 @@ function Layout() {
 
   return (
     <>
-      <div className="flex flex-row px-2 justify-between">
+      <div className="flex flex-row px-2 justify-between z-10">
         <Link to="/">
           <h3>schematico</h3>
         </Link>
         <h3>{title.title}</h3>
       </div>
 
-      <main className="px-2 flex-auto">
-        <Outlet />
-      </main>
+      <Outlet />
     </>
   );
 }
