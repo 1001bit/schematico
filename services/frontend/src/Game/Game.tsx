@@ -1,7 +1,5 @@
-import { Application } from "@pixi/react";
-import { Rect } from "./Rect";
-import { Grid } from "./Grid";
 import { useEffect, useState } from "react";
+import { Layer, Rect, Stage } from "react-konva";
 
 export function Game() {
   const [ww, setWw] = useState(window.innerWidth);
@@ -15,13 +13,10 @@ export function Game() {
   }, []);
 
   return (
-    <Application
-      backgroundColor={0x000000}
-      resizeTo={window}
-      className="fixed left-0 top-0"
-    >
-      <Rect></Rect>
-      <Grid w={ww} h={wh} tile={25}></Grid>
-    </Application>
+    <Stage width={ww} height={wh} className="fixed left-0 top-0" draggable>
+      <Layer>
+        <Rect x={20} y={20} width={100} height={100} fill="red"></Rect>
+      </Layer>
+    </Stage>
   );
 }
