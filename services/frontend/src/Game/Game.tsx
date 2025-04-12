@@ -3,7 +3,7 @@ import { Layer, Rect, Stage } from "react-konva";
 import GridLines from "./Grid";
 import { KonvaEventObject, Node, NodeConfig } from "konva/lib/Node";
 import Toolbar, { ToolType } from "./Toolbar/Toolbar";
-import Locator from "./Locator/Locator";
+import Locator from "./Locator";
 
 export function Game() {
   const tileSize = 30;
