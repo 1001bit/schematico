@@ -23,7 +23,7 @@ export default function GridLines(props: GridLinesProps) {
         key={`v-${col}`}
         points={[col, camY, col, height + camY]}
         stroke={color}
-        strokeWidth={1}
+        strokeWidth={0.5}
       />
     );
   }
@@ -35,7 +35,7 @@ export default function GridLines(props: GridLinesProps) {
         key={`h-${row}`}
         points={[camX, row, width + camX, row]}
         stroke={color}
-        strokeWidth={1}
+        strokeWidth={0.5}
       />
     );
   }

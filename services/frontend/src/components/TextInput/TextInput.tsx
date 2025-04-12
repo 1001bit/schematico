@@ -29,21 +29,23 @@ export default function TextInput(props: TextInputProps) {
         border-1
         px-2 py-1 
         placeholder:text-lg 
-        placeholder:text-white-dim 
         outline-hidden
         transition-all duration-150 ease-in-out
-        
+        placeholder:text-acc-dim
+
         ${
           props.error
             ? `
             border-err-dim 
             focus:border-err 
             hover:border-err 
+            bg-err-bg
+            placeholder:text-err-dim
             `
             : `
-            border-white-dim 
-            focus:border-white 
-            hover:border-white 
+            border-acc-dim
+            focus:border-acc
+            hover:border-acc
             `
         }
       `}

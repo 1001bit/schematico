@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "konva": "^9.3.20",
-    "pixi-viewport": "^6.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-konva": "^19.0.3",

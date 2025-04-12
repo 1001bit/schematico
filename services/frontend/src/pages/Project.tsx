@@ -34,11 +34,15 @@ export default function Project() {
   return (
     <>
       <Game tool={tool}></Game>
-      <div className="flex justify-between w-full fixed left-0 bottom-0 px-2 py-1 z-10 items-end">
+      <div className="flex justify-between w-full fixed left-0 bottom-0 px-5 py-2 z-1 items-end">
         <a>
           <h3>settings</h3>
         </a>
-        <Toolbar onSelect={(t) => handleSelectTool(t)}></Toolbar>
+        <Toolbar
+          currTool={tool}
+          setCurrTool={setTool}
+          onSelect={(t) => handleSelectTool(t)}
+        ></Toolbar>
         <a>
           <h3>play</h3>
         </a>

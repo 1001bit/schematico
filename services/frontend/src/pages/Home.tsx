@@ -1,13 +1,17 @@
-import ProjectList, {
-  ProjectListData,
-} from "../components/ProjectList/ProjectList";
 import { postNewProject } from "../api/newProject";
 import { useEffect, useState } from "react";
-
 import { useNavigate } from "react-router";
 import { useTitle } from "../hooks/title/TitleContext";
+import Button from "../components/Button/Button";
+import AnimatedBackground from "../components/Background/Background";
+import { CardData } from "../components/ProjectList/ProjectCard";
+import ProjectList from "../components/ProjectList/ProjectList";
 
-export default function Home(props: ProjectListData) {
+interface HomeProps {
+  projects: CardData[];
+}
+
+export default function Home(props: HomeProps) {
   const title = useTitle();
   useEffect(() => {
     title.setTitle("home");
@@ -29,12 +33,26 @@ export default function Home(props: ProjectListData) {
   };
 
   return (
-    <div className="flex flex-col gap-4 px-2">
+    <div
+      className="
+        flex flex-col
+        gap-8 
+        px-5
+        py-15
+        items-center
+        md:px-15
+        md:items-start
+      "
+    >
+      <AnimatedBackground></AnimatedBackground>
       <h3>Projects:</h3>
-      <ProjectList projects={props.projects} />
-      <p>
-        <a onClick={newProject}>{msg}</a>
-      </p>
+      <ProjectList
+        projects={props.projects}
+        className="justify-center md:justify-start"
+      />
+      <Button onClick={newProject} className="w-40">
+        {msg}
+      </Button>
     </div>
   );
 }

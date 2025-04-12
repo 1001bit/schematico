@@ -52,7 +52,7 @@ export default function Login() {
             error={usernameErr}
           ></TextInput>
           <TextInput
-            placeholder="password"
+            placeholder="********"
             length={72}
             password
             onChange={(t) => {
@@ -63,8 +63,15 @@ export default function Login() {
           ></TextInput>
         </div>
         <div className="flex justify-between gap-2">
-          <Button onClick={() => submit("login")}>log in</Button>
-          <Button onClick={() => submit("register")}>register</Button>
+          <Button onClick={() => submit("login")} className="w-full bg-black">
+            log in
+          </Button>
+          <Button
+            onClick={() => submit("register")}
+            className="w-full bg-black"
+          >
+            register
+          </Button>
         </div>
       </div>
     </div>

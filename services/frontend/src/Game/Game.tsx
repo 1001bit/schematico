@@ -13,6 +13,9 @@ export function Game(props: GameProps) {
   const [height, setHeight] = useState(window.innerHeight);
 
   const [scale, setScale] = useState(1);
+  const maxScale = 5;
+  const noGridScale = 0.4;
+  const minScale = 0.1;
 
   const [pos, setPos] = useState({ x: 0, y: 0 });
 
@@ -52,12 +55,14 @@ export function Game(props: GameProps) {
     const pointer = e.target.getStage()?.getPointerPosition();
     if (!pointer) return;
 
+    const newScale = e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy;
+    if (newScale > maxScale || newScale < minScale) return;
+
     const zoomTo = {
       x: (-pos.x + pointer.x) / oldScale,
-      y: (-pos.x + pointer.y) / oldScale,
+      y: (-pos.y + pointer.y) / oldScale,
     };
 
-    const newScale = e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy;
     setScale(newScale);
 
     const newPos = {
@@ -89,14 +94,16 @@ export function Game(props: GameProps) {
         y={pos.y}
       >
         <Layer>
+          {scale > noGridScale && (
+            <GridLines
+              width={width / scale}
+              height={height / scale}
+              tile={30}
+              camX={-pos.x / scale}
+              camY={-pos.y / scale}
+            ></GridLines>
+          )}
           <Rect x={10} y={10} width={100} height={100} fill={"red"}></Rect>
-          <GridLines
-            width={width / scale}
-            height={height / scale}
-            tile={30}
-            camX={-pos.x / scale}
-            camY={-pos.y / scale}
-          ></GridLines>
         </Layer>
       </Stage>
     </div>
