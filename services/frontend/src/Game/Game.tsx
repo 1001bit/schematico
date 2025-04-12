@@ -3,8 +3,11 @@ import { Layer, Rect, Stage } from "react-konva";
 import GridLines from "./Grid";
 import { KonvaEventObject, Node, NodeConfig } from "konva/lib/Node";
 import Toolbar, { ToolType } from "./Toolbar/Toolbar";
+import Locator from "./Locator/Locator";
 
 export function Game() {
+  const tileSize = 30;
+
   const [width, setWidth] = useState(window.innerWidth);
   const [height, setHeight] = useState(window.innerHeight);
 
@@ -13,15 +16,21 @@ export function Game() {
   const noGridScale = 0.4;
   const minScale = 0.1;
 
-  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [camPos, setCamPos] = useState({ x: 0, y: 0 });
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const mouseWorldPos = {
+    x: (-camPos.x + mousePos.x) / scale,
+    y: (-camPos.y + mousePos.y) / scale,
+  };
+  const mouseWorldTile = {
+    x: mouseWorldPos.x / tileSize,
+    y: mouseWorldPos.y / tileSize,
+  };
 
   const [tool, setTool] = useState<ToolType>(ToolType.Drag);
   const canDrag = tool === ToolType.Drag;
 
   const [dragging, setDragging] = useState(false);
-  function setDraggingState(dragging: boolean) {
-    setDragging(dragging);
-  }
 
   useEffect(() => {
     window.addEventListener("resize", () => {
@@ -42,38 +51,50 @@ export function Game() {
     const x = node.x();
     const y = node.y();
 
-    setPos({ x, y });
+    setCamPos({ x, y });
   }
 
   function handleWheel(e: KonvaEventObject<WheelEvent, Node<NodeConfig>>) {
     e.evt.preventDefault();
-    const oldScale = scale;
     const ampl = Math.abs(e.evt.deltaY / 100);
     const scaleBy = 1.1 * ampl;
-    const pointer = e.target.getStage()?.getPointerPosition();
-    if (!pointer) return;
 
-    const newScale = e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy;
+    const newScale = e.evt.deltaY < 0 ? scale * scaleBy : scale / scaleBy;
     if (newScale > maxScale || newScale < minScale) return;
 
-    const zoomTo = {
-      x: (-pos.x + pointer.x) / oldScale,
-      y: (-pos.y + pointer.y) / oldScale,
+    const newPos = {
+      x: -(mouseWorldPos.x - mousePos.x / newScale) * newScale,
+      y: -(mouseWorldPos.y - mousePos.y / newScale) * newScale,
     };
 
     setScale(newScale);
+    setCamPos(newPos);
+  }
 
-    const newPos = {
-      x: -(zoomTo.x - pointer.x / newScale) * newScale,
-      y: -(zoomTo.y - pointer.y / newScale) * newScale,
-    };
-
-    setPos(newPos);
+  function handleMouseMove(e: KonvaEventObject<MouseEvent, Node<NodeConfig>>) {
+    const pointer = e.target.getStage()?.getPointerPosition();
+    if (!pointer) return;
+    setMousePos({ x: pointer?.x, y: pointer?.y });
   }
 
   return (
     <>
-      <Toolbar currTool={tool} onSelect={setTool} className="bottom-0 py-2" />
+      <Toolbar
+        currTool={tool}
+        onSelect={setTool}
+        className="
+          bottom-0 py-2
+          absolute left-1/2 z-6 -translate-x-1/2
+        "
+      />
+      <Locator
+        x={mouseWorldTile.x}
+        y={mouseWorldTile.y}
+        className="
+          top-0 py-2
+          absolute left-1/2 z-6 -translate-x-1/2
+        "
+      />
       <div
         className={`
           fixed left-0 top-0 z-0
@@ -84,23 +105,27 @@ export function Game() {
           width={width}
           height={height}
           draggable={canDrag}
-          onDragStart={(_e) => setDraggingState(true)}
-          onDragMove={(e) => handleDragMove(e)}
-          onDragEnd={(_e) => setDraggingState(false)}
+          onMouseMove={(e) => handleMouseMove(e)}
+          onDragStart={(_e) => setDragging(true)}
+          onDragMove={(e) => {
+            handleDragMove(e);
+            handleMouseMove(e);
+          }}
+          onDragEnd={(_e) => setDragging(false)}
           onWheel={(e) => handleWheel(e)}
           scaleX={scale}
           scaleY={scale}
-          x={pos.x}
-          y={pos.y}
+          x={camPos.x}
+          y={camPos.y}
         >
           <Layer>
             {scale > noGridScale && (
               <GridLines
                 width={width / scale}
                 height={height / scale}
-                tile={30}
-                camX={-pos.x / scale}
-                camY={-pos.y / scale}
+                tile={tileSize}
+                camX={-camPos.x / scale}
+                camY={-camPos.y / scale}
               ></GridLines>
             )}
             <Rect x={10} y={10} width={100} height={100} fill={"red"}></Rect>

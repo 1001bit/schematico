@@ -18,7 +18,7 @@ export default function Toolbar(props: ToolbarProps) {
   return (
     <div
       className={`
-      flex flex-row gap-6 absolute left-1/2 z-6 -translate-x-1/2
+      flex flex-row gap-6
       ${props.className}
     `}
     >

@@ -19,14 +19,14 @@ export default function AnimatedBackground() {
     window.addEventListener("resize", resizeCanvas);
 
     const particles: { x: number; y: number; vx: number; vy: number }[] = [];
-    const maxParticles = (canvas.width * canvas.height) / 40000;
+    const maxParticles = (canvas.width * canvas.height) / 100000;
 
     for (let i = 0; i < maxParticles; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.5, // Reduced velocity
-        vy: (Math.random() - 0.5) * 0.5, // Reduced velocity
+        vx: (Math.random() - 0.5) * 0.8, // Reduced velocity
+        vy: (Math.random() - 0.5) * 0.8, // Reduced velocity
       });
     }
 
@@ -54,12 +54,13 @@ export default function AnimatedBackground() {
           const dy = particles[i].y - particles[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < 200) {
+          if (distance < 400) {
             // Increased connection distance
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             ctx.strokeStyle = `rgba(0, 255, 0, 0.2)`; // Adjusted opacity
+            ctx.lineWidth = 2; // Increased line width
             ctx.stroke();
           }
         }
@@ -75,5 +76,5 @@ export default function AnimatedBackground() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="fixed left-0 top-0 z-0" />;
+  return <canvas ref={canvasRef} className="fixed left-0 top-0 -z-1" />;
 }
