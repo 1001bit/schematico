@@ -17,7 +17,7 @@ export default function GridLines(props: GridLinesProps) {
   const color = "#707070";
 
   const verticalLines = [];
-  for (let col = x; col <= width + x; col += tile) {
+  for (let col = x - tile; col <= width + x + tile; col += tile) {
     verticalLines.push(
       <Line
         key={`v-${col}`}
@@ -29,7 +29,7 @@ export default function GridLines(props: GridLinesProps) {
   }
 
   const horizontalLines = [];
-  for (let row = y; row <= height + y; row += tile) {
+  for (let row = y - tile; row <= height + y + tile; row += tile) {
     horizontalLines.push(
       <Line
         key={`h-${row}`}

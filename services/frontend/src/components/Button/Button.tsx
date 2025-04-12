@@ -21,6 +21,7 @@ export default function Button(props: ButtonProps) {
         hover:cursor-pointer 
         px-2 py-1
         transition-all duration-75 ease-in-out
+        select-none
         ${props.className}
       `}
       onClick={props.onClick}

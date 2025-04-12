@@ -1,10 +1,5 @@
 import { Rect } from "react-konva";
-
-export enum TileType {
-  Or,
-  And,
-  Not,
-}
+import { Tile } from "./tile";
 
 interface TileMapProps {
   width: number;
@@ -12,7 +7,7 @@ interface TileMapProps {
   camX: number;
   camY: number;
   tile: number;
-  map: Map<{ x: number; y: number }, TileType>;
+  map: Map<{ x: number; y: number }, Tile>;
 }
 
 export default function TileMap(props: TileMapProps) {
@@ -29,25 +24,15 @@ export default function TileMap(props: TileMapProps) {
     if (key.x < xStart || key.x > xEnd || key.y < yStart || key.y > yEnd) {
       continue;
     }
-    let color = "white";
-    switch (val) {
-      case TileType.Or:
-        color = "red";
-        break;
-      case TileType.And:
-        color = "cyan";
-        break;
-      case TileType.Not:
-        color = "pink";
-        break;
-    }
+    const a = Math.floor((val.state ? 1 : 0.5) * 255).toString(16);
     tiles.push(
       <Rect
+        key={`${key.x}-${key.y}`}
         x={key.x * tile}
         y={key.y * tile}
         width={tile}
         height={tile}
-        fill={color}
+        fill={val.type + a}
       />
     );
   }

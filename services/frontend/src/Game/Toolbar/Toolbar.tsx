@@ -1,16 +1,8 @@
-import Tool from "./Tool";
-
-export enum ToolType {
-  Wire = "wire",
-  Or = "or",
-  And = "and",
-  Not = "not",
-  Drag = "drag",
-}
+import Tool, { ToolTypeColors } from "./Tool";
 
 interface ToolbarProps {
-  onSelect: (t: ToolType) => void;
-  currTool: ToolType;
+  onSelect: (t: ToolTypeColors) => void;
+  currTool: ToolTypeColors;
   className?: string;
 }
 
@@ -23,37 +15,32 @@ export default function Toolbar(props: ToolbarProps) {
     `}
     >
       <Tool
-        className="border-white border-dashed"
         text="drag"
-        type={ToolType.Drag}
+        type={ToolTypeColors.Drag}
         onSelect={props.onSelect}
         choseTool={props.currTool}
       ></Tool>
       <Tool
-        className="border-lime-600"
         text="Wire"
-        type={ToolType.Wire}
+        type={ToolTypeColors.Wire}
         onSelect={props.onSelect}
         choseTool={props.currTool}
       ></Tool>
       <Tool
-        className="border-red-600"
         text="<OR>"
-        type={ToolType.Or}
+        type={ToolTypeColors.Or}
         onSelect={props.onSelect}
         choseTool={props.currTool}
       ></Tool>
       <Tool
-        className="border-cyan-500"
         text="<AND>"
-        type={ToolType.And}
+        type={ToolTypeColors.And}
         onSelect={props.onSelect}
         choseTool={props.currTool}
       ></Tool>
       <Tool
-        className="border-pink-500"
         text="<NOT>"
-        type={ToolType.Not}
+        type={ToolTypeColors.Not}
         onSelect={props.onSelect}
         choseTool={props.currTool}
       ></Tool>
