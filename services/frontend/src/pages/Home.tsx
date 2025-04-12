@@ -1,35 +1,24 @@
-import { postNewProject } from "../api/newProject";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useEffect } from "react";
+import { useLoaderData } from "react-router";
 import { useTitle } from "../hooks/title/TitleContext";
 import Button from "../components/Button/Button";
 import AnimatedBackground from "../components/Background/Background";
-import { CardData } from "../components/ProjectList/ProjectCard";
 import ProjectList from "../components/ProjectList/ProjectList";
 
-interface HomeProps {
-  projects: CardData[];
+export async function loader({ params }: any): Promise<void> {
+  params;
+  // TODO
 }
 
-export default function Home(props: HomeProps) {
+export default function Home() {
+  const data = useLoaderData();
   const title = useTitle();
   useEffect(() => {
     title.setTitle("home");
   }, []);
 
-  const navigate = useNavigate();
-
-  const [msg, setMsg] = useState("new project");
-
   const newProject = async () => {
-    try {
-      const newProj = await postNewProject();
-      newProj.authorized
-        ? navigate(`/project/${newProj.id}`)
-        : navigate("/signin");
-    } catch {
-      setMsg("an error occurred");
-    }
+    // TODO
   };
 
   return (
@@ -47,11 +36,12 @@ export default function Home(props: HomeProps) {
       <AnimatedBackground></AnimatedBackground>
       <h3>Projects:</h3>
       <ProjectList
-        projects={props.projects}
+        // TODO
+        projects={[]}
         className="justify-center md:justify-start"
       />
       <Button onClick={newProject} className="w-40">
-        {msg}
+        new project
       </Button>
     </div>
   );

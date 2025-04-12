@@ -1,8 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import Layout from "./pages/Layout";
-import Index, { loader as indexLoader } from "./pages/Index";
 import Project, { loader as projectLoader } from "./pages/Project";
 import { TitleProvider } from "./hooks/title/TitleContext";
+import Home, { loader as homeLoader } from "./pages/Home";
 
 const router = createBrowserRouter([
   {
@@ -11,8 +11,8 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        Component: Index,
-        loader: indexLoader,
+        Component: Home,
+        loader: homeLoader,
         HydrateFallback: () => <div>Loading...</div>,
         errorElement: <div>Unexpected error</div>,
       },
