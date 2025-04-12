@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Layer, Rect, Stage } from "react-konva";
+import { Layer, Stage } from "react-konva";
 import GridLines from "./Grid";
 import { KonvaEventObject, Node, NodeConfig } from "konva/lib/Node";
 import Toolbar, { ToolType } from "./Toolbar/Toolbar";
 import Locator from "./Locator";
+import TileMap, { TileType } from "./TileMap";
 
 export function Game() {
   const tileSize = 30;
@@ -77,6 +78,10 @@ export function Game() {
     setMousePos({ x: pointer?.x, y: pointer?.y });
   }
 
+  const map: Map<{ x: number; y: number }, TileType> = new Map([
+    [{ x: 1, y: 1 }, TileType.And],
+  ]);
+
   return (
     <>
       <Toolbar
@@ -119,6 +124,14 @@ export function Game() {
           y={camPos.y}
         >
           <Layer>
+            <TileMap
+              width={width / scale}
+              height={height / scale}
+              tile={tileSize}
+              camX={-camPos.x / scale}
+              camY={-camPos.y / scale}
+              map={map}
+            ></TileMap>
             {scale > noGridScale && (
               <GridLines
                 width={width / scale}
@@ -128,7 +141,6 @@ export function Game() {
                 camY={-camPos.y / scale}
               ></GridLines>
             )}
-            <Rect x={10} y={10} width={100} height={100} fill={"red"}></Rect>
           </Layer>
         </Stage>
       </div>
