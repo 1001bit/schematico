@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from "react";
 import Tool from "./Tool";
 
 export enum ToolType {
@@ -12,49 +11,50 @@ export enum ToolType {
 interface ToolbarProps {
   onSelect: (t: ToolType) => void;
   currTool: ToolType;
-  setCurrTool: Dispatch<SetStateAction<ToolType>>;
+  className?: string;
 }
 
 export default function Toolbar(props: ToolbarProps) {
-  function onSelect(t: ToolType) {
-    props.setCurrTool(t);
-  }
-
   return (
-    <div className="flex flex-row gap-6 absolute left-1/2 -translate-x-1/2">
+    <div
+      className={`
+      flex flex-row gap-6 absolute left-1/2 z-6 -translate-x-1/2
+      ${props.className}
+    `}
+    >
       <Tool
         className="border-white border-dashed"
         text="drag"
         type={ToolType.Drag}
-        onSelect={onSelect}
+        onSelect={props.onSelect}
         choseTool={props.currTool}
       ></Tool>
       <Tool
         className="border-lime-600"
         text="Wire"
         type={ToolType.Wire}
-        onSelect={onSelect}
+        onSelect={props.onSelect}
         choseTool={props.currTool}
       ></Tool>
       <Tool
         className="border-red-600"
         text="<OR>"
         type={ToolType.Or}
-        onSelect={onSelect}
+        onSelect={props.onSelect}
         choseTool={props.currTool}
       ></Tool>
       <Tool
         className="border-cyan-500"
         text="<AND>"
         type={ToolType.And}
-        onSelect={onSelect}
+        onSelect={props.onSelect}
         choseTool={props.currTool}
       ></Tool>
       <Tool
         className="border-pink-500"
         text="<NOT>"
         type={ToolType.Not}
-        onSelect={onSelect}
+        onSelect={props.onSelect}
         choseTool={props.currTool}
       ></Tool>
     </div>

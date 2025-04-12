@@ -11,7 +11,7 @@ function Layout() {
 
   return (
     <>
-      <div className="flex flex-row px-5 py-2 justify-between z-1">
+      <div className="flex flex-row px-5 py-2 justify-between">
         <Link to="/">
           <h3>schematico</h3>
         </Link>

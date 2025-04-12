@@ -23,6 +23,7 @@ export default function Tool(props: ToolProps) {
       flex
       justify-center
       items-center
+      select-none
       ${props.type == props.choseTool ? "scale-110" : "hover:scale-105"}
       ${props.className}
       `}

@@ -2,13 +2,9 @@ import { useEffect, useState } from "react";
 import { Layer, Rect, Stage } from "react-konva";
 import GridLines from "./Grid";
 import { KonvaEventObject, Node, NodeConfig } from "konva/lib/Node";
-import { ToolType } from "../components/Toolbar/Toolbar";
+import Toolbar, { ToolType } from "./Toolbar/Toolbar";
 
-interface GameProps {
-  tool: ToolType;
-}
-
-export function Game(props: GameProps) {
+export function Game() {
   const [width, setWidth] = useState(window.innerWidth);
   const [height, setHeight] = useState(window.innerHeight);
 
@@ -19,7 +15,9 @@ export function Game(props: GameProps) {
 
   const [pos, setPos] = useState({ x: 0, y: 0 });
 
-  const canDrag = props.tool === ToolType.Drag;
+  const [tool, setTool] = useState<ToolType>(ToolType.Drag);
+  const canDrag = tool === ToolType.Drag;
+
   const [dragging, setDragging] = useState(false);
   function setDraggingState(dragging: boolean) {
     setDragging(dragging);
@@ -74,38 +72,41 @@ export function Game(props: GameProps) {
   }
 
   return (
-    <div
-      className={`
-      fixed left-0 top-0
-      ${canDrag ? (dragging ? "cursor-grabbing" : "cursor-grab") : "cursor-default"}
-    `}
-    >
-      <Stage
-        width={width}
-        height={height}
-        draggable={canDrag}
-        onDragStart={(_e) => setDraggingState(true)}
-        onDragMove={(e) => handleDragMove(e)}
-        onDragEnd={(_e) => setDraggingState(false)}
-        onWheel={(e) => handleWheel(e)}
-        scaleX={scale}
-        scaleY={scale}
-        x={pos.x}
-        y={pos.y}
+    <>
+      <Toolbar currTool={tool} onSelect={setTool} className="bottom-0 py-2" />
+      <div
+        className={`
+          fixed left-0 top-0 z-0
+          ${canDrag ? (dragging ? "cursor-grabbing" : "cursor-grab") : "cursor-default"}
+        `}
       >
-        <Layer>
-          {scale > noGridScale && (
-            <GridLines
-              width={width / scale}
-              height={height / scale}
-              tile={30}
-              camX={-pos.x / scale}
-              camY={-pos.y / scale}
-            ></GridLines>
-          )}
-          <Rect x={10} y={10} width={100} height={100} fill={"red"}></Rect>
-        </Layer>
-      </Stage>
-    </div>
+        <Stage
+          width={width}
+          height={height}
+          draggable={canDrag}
+          onDragStart={(_e) => setDraggingState(true)}
+          onDragMove={(e) => handleDragMove(e)}
+          onDragEnd={(_e) => setDraggingState(false)}
+          onWheel={(e) => handleWheel(e)}
+          scaleX={scale}
+          scaleY={scale}
+          x={pos.x}
+          y={pos.y}
+        >
+          <Layer>
+            {scale > noGridScale && (
+              <GridLines
+                width={width / scale}
+                height={height / scale}
+                tile={30}
+                camX={-pos.x / scale}
+                camY={-pos.y / scale}
+              ></GridLines>
+            )}
+            <Rect x={10} y={10} width={100} height={100} fill={"red"}></Rect>
+          </Layer>
+        </Stage>
+      </div>
+    </>
   );
 }
