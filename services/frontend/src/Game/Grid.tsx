@@ -14,7 +14,7 @@ export default function GridLines(props: GridLinesProps) {
 
   const x = camX - (camX % tile);
   const y = camY - (camY % tile);
-  const color = "#405040";
+  const color = "#707070";
 
   const verticalLines = [];
   for (let col = x; col <= width + x; col += tile) {

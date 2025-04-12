@@ -4,6 +4,7 @@ import { useTitle } from "../hooks/title/TitleContext";
 import { isDev } from "../utils/isDev";
 import { useEffect } from "react";
 import { Game } from "../Game/Game";
+import Button from "../components/Button/Button";
 
 async function loaderDev(): Promise<ProjectInfo> {
   return {
@@ -28,14 +29,10 @@ export default function Project() {
   return (
     <>
       <Game></Game>
-      <div className="flex justify-between w-full fixed left-0 bottom-0 px-5 py-2 items-end">
-        <a>
-          <h3>settings</h3>
-        </a>
+      <div className="flex justify-between w-full fixed left-0 bottom-0 px-3 py-2 items-end">
+        <Button onClick={() => {}}>settings</Button>
 
-        <a>
-          <h3>play</h3>
-        </a>
+        <Button onClick={() => {}}>play</Button>
       </div>
     </>
   );

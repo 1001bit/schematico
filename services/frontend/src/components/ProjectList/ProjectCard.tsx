@@ -18,7 +18,7 @@ export default function ProjectCard(props: CardData) {
       hover:no-underline
       bg-acc-bg
       backdrop-blur-[0px] hover:backdrop-blur-[2px]
-      transition-all duration-150 ease-in-out
+      transition-all duration-100 ease-in-out
     "
     >
       <h3>{props.title}</h3>

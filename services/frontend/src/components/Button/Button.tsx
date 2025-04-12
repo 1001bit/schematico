@@ -20,7 +20,7 @@ export default function Button(props: ButtonProps) {
         backdrop-blur-[1px]
         hover:cursor-pointer 
         px-2 py-1
-        transition-all duration-150 ease-in-out
+        transition-all duration-75 ease-in-out
         ${props.className}
       `}
       onClick={props.onClick}
