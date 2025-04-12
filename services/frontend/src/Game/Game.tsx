@@ -4,7 +4,7 @@ import GridLines from "./Grid";
 import { KonvaEventObject, Node, NodeConfig } from "konva/lib/Node";
 import Toolbar from "./Toolbar/Toolbar";
 import Locator from "./Locator";
-import TileMap from "./TileMap/TileMap";
+import TileMap, { TileMapType } from "./TileMap/TileMap";
 import { Tile, TileTypeColors } from "./TileMap/tile";
 import { ToolTypeColors } from "./Toolbar/Tool";
 
@@ -80,11 +80,11 @@ export function Game() {
     setMousePos({ x: pointer?.x, y: pointer?.y });
   }
 
-  const map: Map<{ x: number; y: number }, Tile> = new Map([
+  const map: TileMapType = [
     [{ x: 1, y: 1 }, new Tile(TileTypeColors.Or, [])],
     [{ x: 2, y: 1 }, new Tile(TileTypeColors.And, [])],
     [{ x: 3, y: 1 }, new Tile(TileTypeColors.Not, [])],
-  ]);
+  ];
 
   return (
     <>
@@ -131,7 +131,7 @@ export function Game() {
             <TileMap
               width={width / scale}
               height={height / scale}
-              tile={tileSize}
+              tileSize={tileSize}
               camX={-camPos.x / scale}
               camY={-camPos.y / scale}
               map={map}
