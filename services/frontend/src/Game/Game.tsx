@@ -6,9 +6,13 @@ import Toolbar from "./Toolbar/Toolbar";
 import Locator from "./Locator";
 import TileMap from "./TileMap/TileMap";
 import { ToolType } from "./Toolbar/Tool";
-import { TileMapType, TileType } from "../project/interfaces";
+import { TileMapType } from "../project/interfaces";
 
-export function Game() {
+interface GameProps {
+  map: TileMapType;
+}
+
+export function Game(props: GameProps) {
   const tileSize = 30;
 
   const [width, setWidth] = useState(window.innerWidth);
@@ -80,21 +84,6 @@ export function Game() {
     setMousePos({ x: pointer?.x, y: pointer?.y });
   }
 
-  const map: TileMapType = [
-    [
-      { x: 1, y: 1 },
-      { type: TileType.And, connections: [] },
-    ],
-    [
-      { x: 2, y: 1 },
-      { type: TileType.Or, connections: [] },
-    ],
-    [
-      { x: 3, y: 1 },
-      { type: TileType.Not, connections: [] },
-    ],
-  ];
-
   return (
     <>
       <Toolbar
@@ -143,7 +132,7 @@ export function Game() {
               tileSize={tileSize}
               camX={-camPos.x / scale}
               camY={-camPos.y / scale}
-              map={map}
+              map={props.map}
             ></TileMap>
             {scale > noGridScale && (
               <GridLines

@@ -25,7 +25,7 @@ const router = createBrowserRouter([
       },
       {
         path: "*",
-        Component: () => <div>Not found</div>,
+        Component: () => <div className="px-5">Not found</div>,
       },
     ],
   },
