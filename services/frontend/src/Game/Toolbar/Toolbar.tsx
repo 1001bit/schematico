@@ -1,8 +1,8 @@
-import Tool, { ToolTypeColors } from "./Tool";
+import Tool, { ToolType } from "./Tool";
 
 interface ToolbarProps {
-  onSelect: (t: ToolTypeColors) => void;
-  currTool: ToolTypeColors;
+  onSelect: (t: ToolType) => void;
+  currTool: ToolType;
   className?: string;
 }
 
@@ -16,31 +16,31 @@ export default function Toolbar(props: ToolbarProps) {
     >
       <Tool
         text="drag"
-        type={ToolTypeColors.Drag}
+        type={ToolType.Drag}
         onSelect={props.onSelect}
         choseTool={props.currTool}
       ></Tool>
       <Tool
         text="Wire"
-        type={ToolTypeColors.Wire}
+        type={ToolType.Wire}
         onSelect={props.onSelect}
         choseTool={props.currTool}
       ></Tool>
       <Tool
         text="<OR>"
-        type={ToolTypeColors.Or}
+        type={ToolType.Or}
         onSelect={props.onSelect}
         choseTool={props.currTool}
       ></Tool>
       <Tool
         text="<AND>"
-        type={ToolTypeColors.And}
+        type={ToolType.And}
         onSelect={props.onSelect}
         choseTool={props.currTool}
       ></Tool>
       <Tool
         text="<NOT>"
-        type={ToolTypeColors.Not}
+        type={ToolType.Not}
         onSelect={props.onSelect}
         choseTool={props.currTool}
       ></Tool>

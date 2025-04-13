@@ -1,27 +1,38 @@
-import { TileTypeColors } from "../TileMap/tile";
+import { TileType } from "../../project/interfaces";
+import { TileColors } from "../TileMap/Tile";
 
 interface ToolProps {
-  onSelect: (type: ToolTypeColors) => void;
+  onSelect: (type: ToolType) => void;
   text: string;
 
-  type: ToolTypeColors;
-  choseTool: ToolTypeColors;
+  type: ToolType;
+  choseTool: ToolType;
 }
 
-export enum ToolTypeColors {
-  Drag = "#ffffff",
-  Wire = "#00ff00",
-  Or = TileTypeColors.Or,
-  And = TileTypeColors.And,
-  Not = TileTypeColors.Not,
+export enum ToolType {
+  Or = TileType.Or,
+  And = TileType.And,
+  Not = TileType.Not,
+  Drag = 4,
+  Wire = 5,
 }
+
+export const ToolColors: Record<ToolType, string> = {
+  [ToolType.Or]: TileColors[ToolType.Or],
+  [ToolType.And]: TileColors[ToolType.And],
+  [ToolType.Not]: TileColors[ToolType.Not],
+  [ToolType.Drag]: "#ffffff",
+  [ToolType.Wire]: "#00ff00",
+};
 
 export default function Tool(props: ToolProps) {
+  console.log(ToolColors[props.type]);
+
   return (
     <div
       onClick={() => props.onSelect(props.type)}
       style={{
-        borderColor: props.type,
+        borderColor: ToolColors[props.type],
       }}
       className={`
       border-1

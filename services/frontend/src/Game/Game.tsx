@@ -4,9 +4,9 @@ import GridLines from "./Grid";
 import { KonvaEventObject, Node, NodeConfig } from "konva/lib/Node";
 import Toolbar from "./Toolbar/Toolbar";
 import Locator from "./Locator";
-import TileMap, { TileMapType } from "./TileMap/TileMap";
-import { Tile, TileTypeColors } from "./TileMap/tile";
-import { ToolTypeColors } from "./Toolbar/Tool";
+import TileMap from "./TileMap/TileMap";
+import { ToolType } from "./Toolbar/Tool";
+import { TileMapType, TileType } from "../project/interfaces";
 
 export function Game() {
   const tileSize = 30;
@@ -30,8 +30,8 @@ export function Game() {
     y: mouseWorldPos.y / tileSize,
   };
 
-  const [tool, setTool] = useState<ToolTypeColors>(ToolTypeColors.Drag);
-  const canDrag = tool === ToolTypeColors.Drag;
+  const [tool, setTool] = useState<ToolType>(ToolType.Drag);
+  const canDrag = tool === ToolType.Drag;
 
   const [dragging, setDragging] = useState(false);
 
@@ -81,9 +81,18 @@ export function Game() {
   }
 
   const map: TileMapType = [
-    [{ x: 1, y: 1 }, new Tile(TileTypeColors.Or, [])],
-    [{ x: 2, y: 1 }, new Tile(TileTypeColors.And, [])],
-    [{ x: 3, y: 1 }, new Tile(TileTypeColors.Not, [])],
+    [
+      { x: 1, y: 1 },
+      { type: TileType.And, connections: [] },
+    ],
+    [
+      { x: 2, y: 1 },
+      { type: TileType.Or, connections: [] },
+    ],
+    [
+      { x: 3, y: 1 },
+      { type: TileType.Not, connections: [] },
+    ],
   ];
 
   return (
