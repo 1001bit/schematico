@@ -90,7 +90,8 @@ export function Game(props: GameProps) {
         currTool={tool}
         onSelect={setTool}
         className="
-          bottom-0 py-2
+          sm:bottom-2
+          bottom-15
           absolute left-1/2 z-6 -translate-x-1/2
         "
       />
@@ -98,7 +99,8 @@ export function Game(props: GameProps) {
         x={mouseWorldTile.x}
         y={mouseWorldTile.y}
         className="
-          top-0 py-2
+          sm:top-2
+          top-15
           absolute left-1/2 z-6 -translate-x-1/2
         "
       />
