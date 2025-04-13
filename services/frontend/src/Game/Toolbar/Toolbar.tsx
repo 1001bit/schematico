@@ -21,6 +21,12 @@ export default function Toolbar(props: ToolbarProps) {
         choseTool={props.currTool}
       ></Tool>
       <Tool
+        text="erase"
+        type={ToolType.Erase}
+        onSelect={props.onSelect}
+        choseTool={props.currTool}
+      ></Tool>
+      <Tool
         text="Wire"
         type={ToolType.Wire}
         onSelect={props.onSelect}

@@ -7,6 +7,7 @@ import Locator from "./Locator";
 import TileMap from "./TileMap/TileMap";
 import { ToolType } from "./Toolbar/Tool";
 import { TileMapType } from "../project/interfaces";
+import { editMap } from "./mapEdit";
 
 interface GameProps {
   map: TileMapType;
@@ -30,14 +31,17 @@ export function Game(props: GameProps) {
     y: (-camPos.y + mousePos.y) / scale,
   };
   const mouseWorldTile = {
-    x: mouseWorldPos.x / tileSize,
-    y: mouseWorldPos.y / tileSize,
+    x: Math.floor(mouseWorldPos.x / tileSize),
+    y: Math.floor(mouseWorldPos.y / tileSize),
   };
+  const [mouseDown, setMouseDown] = useState(false);
 
-  const [tool, setTool] = useState<ToolType>(ToolType.Drag);
-  const canDrag = tool === ToolType.Drag;
+  const [currTool, setCurrTool] = useState<ToolType>(ToolType.Drag);
+  const canDrag = currTool === ToolType.Drag;
 
   const [dragging, setDragging] = useState(false);
+
+  const [map, setMap] = useState(props.map);
 
   useEffect(() => {
     window.addEventListener("resize", () => {
@@ -84,11 +88,18 @@ export function Game(props: GameProps) {
     setMousePos({ x: pointer?.x, y: pointer?.y });
   }
 
+  useEffect(() => {
+    if (!mouseDown) {
+      return;
+    }
+    editMap(setMap, mouseWorldTile, currTool);
+  }, [mousePos]);
+
   return (
     <>
       <Toolbar
-        currTool={tool}
-        onSelect={setTool}
+        currTool={currTool}
+        onSelect={setCurrTool}
         className="
           sm:bottom-2
           bottom-15
@@ -120,6 +131,8 @@ export function Game(props: GameProps) {
             handleDragMove(e);
             handleMouseMove(e);
           }}
+          onMouseDown={(_) => setMouseDown(true)}
+          onMouseUp={(_) => setMouseDown(false)}
           onDragEnd={(_e) => setDragging(false)}
           onWheel={(e) => handleWheel(e)}
           scaleX={scale}
@@ -134,7 +147,7 @@ export function Game(props: GameProps) {
               tileSize={tileSize}
               camX={-camPos.x / scale}
               camY={-camPos.y / scale}
-              map={props.map}
+              map={map}
             ></TileMap>
             {scale > noGridScale && (
               <GridLines

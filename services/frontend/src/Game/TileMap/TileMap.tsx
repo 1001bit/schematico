@@ -20,7 +20,12 @@ export default function TileMap(props: TileMapProps) {
 
   const tiles = [];
 
-  for (const [pos, tile] of map) {
+  for (const [posStr, tile] of Object.entries(map)) {
+    const pos = {
+      x: Number(posStr.split(",")[0]),
+      y: Number(posStr.split(",")[1]),
+    };
+
     if (pos.x < xStart || pos.x > xEnd || pos.y < yStart || pos.y > yEnd) {
       continue;
     }

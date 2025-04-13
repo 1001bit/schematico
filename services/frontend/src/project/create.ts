@@ -15,7 +15,7 @@ export function createLocalProject() {
   const id = `local-${idNum}`;
   const project = {
     title: "new project",
-    map: [],
+    map: {},
   } as ProjectInterface;
   projects[id] = project;
 

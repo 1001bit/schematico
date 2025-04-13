@@ -15,6 +15,7 @@ export enum ToolType {
   Not = TileType.Not,
   Drag = 4,
   Wire = 5,
+  Erase = 6,
 }
 
 export const ToolColors: Record<ToolType, string> = {
@@ -23,6 +24,7 @@ export const ToolColors: Record<ToolType, string> = {
   [ToolType.Not]: TileColors[ToolType.Not],
   [ToolType.Drag]: "#ffffff",
   [ToolType.Wire]: "#00ff00",
+  [ToolType.Erase]: "#ffffff",
 };
 
 export default function Tool(props: ToolProps) {

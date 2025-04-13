@@ -9,7 +9,7 @@ export interface TileInterface {
   connections: { x: number; y: number }[];
 }
 
-export type TileMapType = [{ x: number; y: number }, TileInterface][];
+export type TileMapType = Record<string, TileInterface>;
 
 export interface ProjectInterface {
   title: string;
