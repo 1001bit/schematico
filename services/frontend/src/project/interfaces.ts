@@ -11,7 +11,7 @@ export interface TileInterface {
 
 export type TileMapType = [{ x: number; y: number }, TileInterface][];
 
-interface Project {
+export interface ProjectInterface {
   title: string;
   map: TileMapType;
 }

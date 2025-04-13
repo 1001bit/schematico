@@ -26,8 +26,6 @@ export const ToolColors: Record<ToolType, string> = {
 };
 
 export default function Tool(props: ToolProps) {
-  console.log(ToolColors[props.type]);
-
   return (
     <div
       onClick={() => props.onSelect(props.type)}

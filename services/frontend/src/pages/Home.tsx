@@ -1,25 +1,37 @@
 import { useEffect } from "react";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import { useTitle } from "../hooks/title/TitleContext";
 import Button from "../components/Button/Button";
 import AnimatedBackground from "../components/Background/Background";
 import ProjectList from "../components/ProjectList/ProjectList";
+import { createLocalProject } from "../project/create";
+import { ProjectInterface } from "../project/interfaces";
 
-export async function loader({ params }: any): Promise<void> {
-  params;
-  // TODO
+export async function loader(): Promise<Record<string, ProjectInterface>> {
+  const projectsStr = localStorage.getItem("projects");
+  if (!projectsStr) {
+    return {};
+  }
+  return JSON.parse(projectsStr);
 }
 
 export default function Home() {
-  const data = useLoaderData();
+  const projects = useLoaderData() as Record<string, ProjectInterface>;
   const title = useTitle();
   useEffect(() => {
     title.setTitle("home");
   }, []);
 
-  const newProject = async () => {
-    // TODO
-  };
+  const navigate = useNavigate();
+
+  function newProject() {
+    const [id, _] = createLocalProject();
+    if (id === "") {
+      throw new Error("couldn't create a project");
+    }
+
+    navigate(`/project/${id}`);
+  }
 
   return (
     <div
@@ -36,8 +48,7 @@ export default function Home() {
       <AnimatedBackground></AnimatedBackground>
       <h3>Projects:</h3>
       <ProjectList
-        // TODO
-        projects={[]}
+        projects={projects}
         className="justify-center md:justify-start"
       />
       <Button onClick={newProject} className="w-40">
