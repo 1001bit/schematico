@@ -40,3 +40,35 @@ export function mapDraw(
     return m;
   });
 }
+
+export function mapWireDraw(
+  mouseWorldTile: vector2,
+  mouseDown: boolean,
+  map: TileMapType,
+  setMap: (value: React.SetStateAction<TileMapType>) => void,
+  setWireStart: (value: React.SetStateAction<vector2 | undefined>) => void,
+  wireStart: vector2 | undefined
+) {
+  const posStr = vector2ToStr(mouseWorldTile);
+
+  if (mouseDown) {
+    if (map[posStr]) {
+      setWireStart(mouseWorldTile);
+    }
+    return;
+  }
+  if (!wireStart) {
+    return;
+  }
+
+  const wireStartStr = vector2ToStr(wireStart);
+
+  const updatedMap = { ...map };
+  if (!updatedMap[wireStartStr].connections.has(posStr)) {
+    updatedMap[wireStartStr].connections.add(posStr);
+  } else {
+    updatedMap[wireStartStr].connections.delete(posStr);
+  }
+  setMap(updatedMap);
+  setWireStart(undefined);
+}

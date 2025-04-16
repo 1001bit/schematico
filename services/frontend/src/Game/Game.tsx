@@ -7,9 +7,9 @@ import Locator from "./Locator";
 import TileMap from "./TileMap/TileMap";
 import { ToolType } from "./Toolbar/Tool";
 import { TileMapType } from "../project/interfaces";
-import { mapDraw } from "./mapEdit";
+import { mapDraw, mapWireDraw } from "./mapEdit";
 import { Wire } from "./TileMap/Wire";
-import { vector2, vector2ToStr } from "./vector2";
+import { vector2 } from "./vector2";
 
 interface GameProps {
   map: TileMapType;
@@ -96,28 +96,14 @@ export function Game(props: GameProps) {
       return;
     }
 
-    const posStr = vector2ToStr(mouseWorldTile);
-
-    if (mouseDown) {
-      if (map[posStr]) {
-        setWireStart(mouseWorldTile);
-      }
-      return;
-    }
-    if (!wireStart) {
-      return;
-    }
-
-    const wireStartStr = vector2ToStr(wireStart);
-
-    const updatedMap = { ...map };
-    if (!updatedMap[wireStartStr].connections.has(posStr)) {
-      updatedMap[wireStartStr].connections.add(posStr);
-    } else {
-      updatedMap[wireStartStr].connections.delete(posStr);
-    }
-    setMap(updatedMap);
-    setWireStart(undefined);
+    mapWireDraw(
+      mouseWorldTile,
+      mouseDown,
+      map,
+      setMap,
+      setWireStart,
+      wireStart
+    );
   }, [mouseDown]);
 
   useEffect(() => {

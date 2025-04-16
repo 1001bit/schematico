@@ -67,7 +67,6 @@ export default function TileMap(props: TileMapProps) {
       const wireEnd = strToVector2(wireEndStr);
 
       if (!containsLine(start, end, pos, wireEnd)) {
-        console.log(1);
         continue;
       }
       wires.push(
