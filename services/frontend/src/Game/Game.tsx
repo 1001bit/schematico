@@ -171,13 +171,6 @@ export function Game(props: GameProps) {
           y={camPos.y}
         >
           <Layer>
-            <TileMap
-              width={width / scale}
-              height={height / scale}
-              tileSize={tileSize}
-              camPos={{ x: -camPos.x / scale, y: -camPos.y / scale }}
-              map={map}
-            />
             {scale > noGridScale && (
               <GridLines
                 width={width / scale}
@@ -187,6 +180,13 @@ export function Game(props: GameProps) {
                 camY={-camPos.y / scale}
               />
             )}
+            <TileMap
+              width={width / scale}
+              height={height / scale}
+              tileSize={tileSize}
+              camPos={{ x: -camPos.x / scale, y: -camPos.y / scale }}
+              map={map}
+            />
             {wireStart && (
               <Wire
                 start={wireStart}

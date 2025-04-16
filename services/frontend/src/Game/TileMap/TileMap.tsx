@@ -11,12 +11,26 @@ interface TileMapProps {
   map: TileMapType;
 }
 
-function contains(start: vector2, end: vector2, point: vector2) {
+function containsPoint(start: vector2, end: vector2, point: vector2) {
   return (
     point.x >= start.x &&
     point.y >= start.y &&
     point.x <= end.x &&
     point.y <= end.y
+  );
+}
+
+function containsLine(
+  start: vector2,
+  end: vector2,
+  lineStart: vector2,
+  lineEnd: vector2
+) {
+  return (
+    Math.max(lineStart.x, lineEnd.x) >= start.x &&
+    Math.max(lineStart.y, lineEnd.y) >= start.y &&
+    Math.min(lineStart.x, lineEnd.x) <= end.x &&
+    Math.min(lineStart.y, lineEnd.y) <= end.y
   );
 }
 
@@ -38,7 +52,7 @@ export default function TileMap(props: TileMapProps) {
   for (const [posStr, tile] of Object.entries(map)) {
     const pos = strToVector2(posStr);
 
-    if (contains(start, end, pos)) {
+    if (containsPoint(start, end, pos)) {
       tiles.push(
         <Tile
           pos={{ x: pos.x, y: pos.y }}
@@ -52,7 +66,8 @@ export default function TileMap(props: TileMapProps) {
     for (const wireEndStr of tile.connections) {
       const wireEnd = strToVector2(wireEndStr);
 
-      if (!contains(start, end, wireEnd) && !contains(start, end, pos)) {
+      if (!containsLine(start, end, pos, wireEnd)) {
+        console.log(1);
         continue;
       }
       wires.push(
