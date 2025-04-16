@@ -13,3 +13,7 @@ export function strToVector2(str: string) {
     y: Number(str.split(",")[1]),
   } as vector2;
 }
+
+export function vector2Compare(v1: vector2, v2: vector2) {
+  return v1.x === v2.x && v1.y === v2.y;
+}

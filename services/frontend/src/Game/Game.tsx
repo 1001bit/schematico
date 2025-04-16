@@ -1,114 +1,133 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Layer, Stage } from "react-konva";
-import GridLines from "./Grid";
+import GridLines from "./GridLines";
 import { KonvaEventObject, Node, NodeConfig } from "konva/lib/Node";
 import Toolbar from "./Toolbar/Toolbar";
 import Locator from "./Locator";
 import TileMap from "./TileMap/TileMap";
 import { ToolType } from "./Toolbar/Tool";
-import { TileMapType } from "../project/interfaces";
 import { mapDraw, mapWireDraw } from "./mapEdit";
-import { Wire } from "./TileMap/Wire";
+import Wire from "./TileMap/Wire";
 import { vector2 } from "./vector2";
+import { saveLocalMap } from "../project/save";
+import { ProjectInterface } from "../project/interfaces";
 
 interface GameProps {
-  map: TileMapType;
+  project: ProjectInterface;
 }
 
-export function Game(props: GameProps) {
+export function Game({ project }: GameProps) {
   const tileSize = 30;
 
-  const [width, setWidth] = useState(window.innerWidth);
-  const [height, setHeight] = useState(window.innerHeight);
-
-  const [scale, setScale] = useState(1);
+  const [cam, setCam] = useState({
+    scale: 1,
+    x: 0,
+    y: 0,
+    w: innerWidth,
+    h: innerHeight,
+  });
   const maxScale = 5;
   const noGridScale = 0.4;
   const minScale = 0.1;
 
-  const [camPos, setCamPos] = useState({ x: 0, y: 0 });
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const mouseWorldPos = {
-    x: (-camPos.x + mousePos.x) / scale,
-    y: (-camPos.y + mousePos.y) / scale,
-  };
-  const mouseWorldTile = {
-    x: Math.floor(mouseWorldPos.x / tileSize),
-    y: Math.floor(mouseWorldPos.y / tileSize),
-  };
-  const [mouseDown, setMouseDown] = useState(false);
-
-  const [currTool, setCurrTool] = useState<ToolType>(ToolType.Drag);
-  const canDrag = currTool === ToolType.Drag;
-
+  const [mouseWorldTile, setMouseWorldTile] = useState({ x: 0, y: 0 });
+  const mouseDown = useRef(false);
   const [dragging, setDragging] = useState(false);
 
-  const [map, setMap] = useState(props.map);
+  const [currTool, setCurrTool] = useState<ToolType>(ToolType.Drag);
+
+  const [map, setMap] = useState(project.map);
+
+  const drawPendingRef = useRef(false);
 
   useEffect(() => {
-    window.addEventListener("resize", () => {
-      setWidth(window.innerWidth);
-      setHeight(window.innerHeight);
-    });
+    const handleResize = () =>
+      setCam((c) => ({ ...c, w: innerWidth, h: innerHeight }));
 
-    return () => {
-      window.removeEventListener("resize", () => {
-        setWidth(window.innerWidth);
-        setHeight(window.innerHeight);
-      });
-    };
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   function handleDragMove(e: KonvaEventObject<DragEvent, Node<NodeConfig>>) {
     const node = e.target;
-    const x = node.x();
-    const y = node.y();
 
-    setCamPos({ x, y });
+    setCam((c) => ({
+      ...c,
+      x: node.x(),
+      y: node.y(),
+    }));
   }
 
   function handleWheel(e: KonvaEventObject<WheelEvent, Node<NodeConfig>>) {
     e.evt.preventDefault();
-    const ampl = Math.abs(e.evt.deltaY / 100);
-    const scaleBy = 1.1 * ampl;
+    const pointer = e.target.getStage()!.getPointerPosition();
+    if (!pointer) return;
 
-    const newScale = e.evt.deltaY < 0 ? scale * scaleBy : scale / scaleBy;
+    const scaleBy = 1.1 * Math.abs(e.evt.deltaY / 100);
+
+    const newScale =
+      e.evt.deltaY < 0 ? cam.scale * scaleBy : cam.scale / scaleBy;
     if (newScale > maxScale || newScale < minScale) return;
 
-    const newPos = {
-      x: -(mouseWorldPos.x - mousePos.x / newScale) * newScale,
-      y: -(mouseWorldPos.y - mousePos.y / newScale) * newScale,
+    const mouseWorldPos = {
+      x: (pointer.x - cam.x) / cam.scale,
+      y: (pointer.y - cam.y) / cam.scale,
     };
 
-    setScale(newScale);
-    setCamPos(newPos);
+    setCam({
+      scale: newScale,
+      x: pointer.x - mouseWorldPos.x * newScale,
+      y: pointer.y - mouseWorldPos.y * newScale,
+      w: cam.w,
+      h: cam.h,
+    });
   }
 
   function handleMouseMove(e: KonvaEventObject<MouseEvent, Node<NodeConfig>>) {
-    const pointer = e.target.getStage()?.getPointerPosition();
+    const pointer = e.target.getStage()!.getPointerPosition();
     if (!pointer) return;
-    setMousePos({ x: pointer?.x, y: pointer?.y });
+
+    const newMouseWorldTile = {
+      x: Math.floor((-cam.x + pointer.x) / cam.scale / tileSize),
+      y: Math.floor((-cam.y + pointer.y) / cam.scale / tileSize),
+    };
+
+    if (
+      newMouseWorldTile.x !== mouseWorldTile.x ||
+      newMouseWorldTile.y !== mouseWorldTile.y
+    ) {
+      setMouseWorldTile(newMouseWorldTile);
+    }
+
+    if (drawPendingRef.current) return;
+    drawPendingRef.current = true;
+    requestAnimationFrame(() => {
+      drawPendingRef.current = false;
+      if (currTool === ToolType.Wire) {
+        mapWireDraw(
+          mouseWorldTile,
+          mouseDown.current,
+          map,
+          setMap,
+          setWireStart,
+          wireStart
+        );
+      } else {
+        mapDraw(map, setMap, mouseWorldTile, currTool, mouseDown.current);
+      }
+    });
   }
 
   const [wireStart, setWireStart] = useState<vector2 | undefined>(undefined);
-  useEffect(() => {
-    if (currTool != ToolType.Wire) {
-      return;
-    }
-
-    mapWireDraw(
-      mouseWorldTile,
-      mouseDown,
-      map,
-      setMap,
-      setWireStart,
-      wireStart
-    );
-  }, [mouseDown]);
 
   useEffect(() => {
-    mapDraw(setMap, mouseWorldTile, currTool, mouseDown);
-  }, [mouseWorldTile, mouseDown]);
+    const timeout = setTimeout(() => {
+      saveLocalMap(project.id, map);
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [map]);
 
   return (
     <>
@@ -134,43 +153,43 @@ export function Game(props: GameProps) {
       <div
         className={`
           fixed left-0 top-0 z-0
-          ${canDrag ? (dragging ? "cursor-grabbing" : "cursor-grab") : "cursor-default"}
+          ${currTool === ToolType.Drag ? (dragging ? "cursor-grabbing" : "cursor-grab") : "cursor-default"}
         `}
       >
         <Stage
-          width={width}
-          height={height}
-          draggable={canDrag}
+          width={cam.w}
+          height={cam.h}
+          draggable={currTool === ToolType.Drag}
           onMouseMove={(e) => handleMouseMove(e)}
           onDragStart={(_e) => setDragging(true)}
           onDragMove={(e) => {
             handleDragMove(e);
             handleMouseMove(e);
           }}
-          onMouseDown={(_) => setMouseDown(true)}
-          onMouseUp={(_) => setMouseDown(false)}
+          onMouseDown={(_) => (mouseDown.current = true)}
+          onMouseUp={(_) => (mouseDown.current = false)}
           onDragEnd={(_e) => setDragging(false)}
           onWheel={(e) => handleWheel(e)}
-          scaleX={scale}
-          scaleY={scale}
-          x={camPos.x}
-          y={camPos.y}
+          scaleX={cam.scale}
+          scaleY={cam.scale}
+          x={cam.x}
+          y={cam.y}
         >
           <Layer>
-            {scale > noGridScale && (
+            {cam.scale > noGridScale && (
               <GridLines
-                width={width / scale}
-                height={height / scale}
+                width={cam.w / cam.scale}
+                height={cam.h / cam.scale}
                 tile={tileSize}
-                camX={-camPos.x / scale}
-                camY={-camPos.y / scale}
+                camX={-cam.x / cam.scale}
+                camY={-cam.y / cam.scale}
               />
             )}
             <TileMap
-              width={width / scale}
-              height={height / scale}
+              width={cam.w / cam.scale}
+              height={cam.h / cam.scale}
               tileSize={tileSize}
-              camPos={{ x: -camPos.x / scale, y: -camPos.y / scale }}
+              camPos={{ x: -cam.x / cam.scale, y: -cam.y / cam.scale }}
               map={map}
             />
             {wireStart && (

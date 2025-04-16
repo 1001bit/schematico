@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Line } from "react-konva";
 
 interface GridLinesProps {
@@ -9,7 +10,7 @@ interface GridLinesProps {
   camY: number;
 }
 
-export default function GridLines(props: GridLinesProps) {
+const GridLines = (props: GridLinesProps) => {
   const { tile, width, height, camX, camY } = props;
 
   const x = camX - (camX % tile);
@@ -46,4 +47,6 @@ export default function GridLines(props: GridLinesProps) {
       {horizontalLines}
     </>
   );
-}
+};
+
+export default memo(GridLines);

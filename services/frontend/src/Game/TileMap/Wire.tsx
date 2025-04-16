@@ -1,5 +1,6 @@
 import { Arrow } from "react-konva";
 import { vector2 } from "../vector2";
+import { memo } from "react";
 interface WireProps {
   start: vector2;
   end: vector2;
@@ -8,7 +9,7 @@ interface WireProps {
 
 export const WireColor = "#00ff00";
 
-export function Wire(props: WireProps) {
+function Wire(props: WireProps) {
   const { start, end, tileSize } = props;
   return (
     <Arrow
@@ -24,3 +25,5 @@ export function Wire(props: WireProps) {
     />
   );
 }
+
+export default memo(Wire);

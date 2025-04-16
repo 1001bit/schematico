@@ -6,9 +6,5 @@ export function getLocalProject(id: string) {
     return;
   }
   const projects = JSON.parse(projectsStr) as Record<string, ProjectInterface>;
-  const project = projects[id];
-  if (!project) {
-    return;
-  }
-  return project;
+  return projects[id];
 }

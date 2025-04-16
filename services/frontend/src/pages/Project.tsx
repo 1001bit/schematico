@@ -35,7 +35,7 @@ export default function Project() {
 
   return (
     <>
-      <Game map={project.map}></Game>
+      <Game project={project}></Game>
       <div className="flex justify-between w-full fixed left-0 bottom-0 px-5 py-2 items-end">
         <Button onClick={() => {}}>settings</Button>
         <Button onClick={() => {}}>play</Button>

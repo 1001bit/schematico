@@ -6,12 +6,11 @@ export enum TileType {
 
 export interface TileInterface {
   type: TileType;
-  connections: Set<string>;
+  connections: Record<string, boolean>;
 }
 
-export type TileMapType = Record<string, TileInterface>;
-
 export interface ProjectInterface {
+  id: string;
   title: string;
-  map: TileMapType;
+  map: Record<string, TileInterface>;
 }

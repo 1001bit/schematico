@@ -1,14 +1,15 @@
-import { TileMapType } from "../../project/interfaces";
+import { memo } from "react";
+import { TileInterface } from "../../project/interfaces";
 import { strToVector2, vector2 } from "../vector2";
-import { Tile } from "./Tile";
-import { Wire } from "./Wire";
+import Tile from "./Tile";
+import Wire from "./Wire";
 
 interface TileMapProps {
   width: number;
   height: number;
   camPos: vector2;
   tileSize: number;
-  map: TileMapType;
+  map: Record<string, TileInterface>;
 }
 
 function containsPoint(start: vector2, end: vector2, point: vector2) {
@@ -34,9 +35,7 @@ function containsLine(
   );
 }
 
-export default function TileMap(props: TileMapProps) {
-  const { width, height, camPos, tileSize, map } = props;
-
+function TileMap({ width, height, camPos, tileSize, map }: TileMapProps) {
   const start = {
     x: camPos.x / tileSize - 1,
     y: camPos.y / tileSize - 1,
@@ -63,7 +62,7 @@ export default function TileMap(props: TileMapProps) {
       );
     }
 
-    for (const wireEndStr of tile.connections) {
+    for (const [wireEndStr, _] of Object.entries(tile.connections)) {
       const wireEnd = strToVector2(wireEndStr);
 
       if (!containsLine(start, end, pos, wireEnd)) {
@@ -87,3 +86,5 @@ export default function TileMap(props: TileMapProps) {
     </>
   );
 }
+
+export default memo(TileMap);

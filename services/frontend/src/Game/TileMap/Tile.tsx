@@ -1,6 +1,7 @@
 import { Rect } from "react-konva";
 import { TileInterface, TileType } from "../../project/interfaces";
 import { vector2 } from "../vector2";
+import { memo } from "react";
 
 interface TileProps {
   pos: vector2;
@@ -14,7 +15,7 @@ export const TileColors: Record<TileType, string> = {
   [TileType.Not]: "#ffff00",
 };
 
-export function Tile(props: TileProps) {
+function Tile(props: TileProps) {
   return (
     <Rect
       x={props.pos.x * props.tileSize}
@@ -25,3 +26,5 @@ export function Tile(props: TileProps) {
     />
   );
 }
+
+export default memo(Tile);

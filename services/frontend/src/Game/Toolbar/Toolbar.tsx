@@ -1,3 +1,4 @@
+import { memo } from "react";
 import Tool, { ToolType } from "./Tool";
 
 interface ToolbarProps {
@@ -6,7 +7,7 @@ interface ToolbarProps {
   className?: string;
 }
 
-export default function Toolbar(props: ToolbarProps) {
+function Toolbar(props: ToolbarProps) {
   return (
     <div
       className={`
@@ -53,3 +54,5 @@ export default function Toolbar(props: ToolbarProps) {
     </div>
   );
 }
+
+export default memo(Toolbar);
