@@ -1,5 +1,6 @@
 import { TileType } from "../../project/interfaces";
 import { TileColors } from "../TileMap/Tile";
+import { WireColor } from "../TileMap/Wire";
 
 interface ToolProps {
   onSelect: (type: ToolType) => void;
@@ -23,7 +24,7 @@ export const ToolColors: Record<ToolType, string> = {
   [ToolType.And]: TileColors[ToolType.And],
   [ToolType.Not]: TileColors[ToolType.Not],
   [ToolType.Drag]: "#ffffff",
-  [ToolType.Wire]: "#00ff00",
+  [ToolType.Wire]: WireColor,
   [ToolType.Erase]: "#ffffff",
 };
 

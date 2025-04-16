@@ -56,7 +56,9 @@
     [X] Authorization
     [X] Project title render
     [X] Design + HTML + CSS for the page
-    [ ] Design circuit drawing
-    [ ] Drawing on frontend
+    [X] Drawing on frontend
+    [X] Drawing wires
+    [ ] Saving
+    [ ] Starting
 
 [ ] Enable tls for redis and postgres

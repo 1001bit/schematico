@@ -10,6 +10,5 @@ export function getLocalProject(id: string) {
   if (!project) {
     return;
   }
-
   return project;
 }

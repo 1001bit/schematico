@@ -7,7 +7,9 @@ import Locator from "./Locator";
 import TileMap from "./TileMap/TileMap";
 import { ToolType } from "./Toolbar/Tool";
 import { TileMapType } from "../project/interfaces";
-import { editMap } from "./mapEdit";
+import { mapDraw } from "./mapEdit";
+import { Wire } from "./TileMap/Wire";
+import { vector2, vector2ToStr } from "./vector2";
 
 interface GameProps {
   map: TileMapType;
@@ -88,12 +90,39 @@ export function Game(props: GameProps) {
     setMousePos({ x: pointer?.x, y: pointer?.y });
   }
 
+  const [wireStart, setWireStart] = useState<vector2 | undefined>(undefined);
   useEffect(() => {
-    if (!mouseDown) {
+    if (currTool != ToolType.Wire) {
       return;
     }
-    editMap(setMap, mouseWorldTile, currTool);
-  }, [mousePos]);
+
+    const posStr = vector2ToStr(mouseWorldTile);
+
+    if (mouseDown) {
+      if (map[posStr]) {
+        setWireStart(mouseWorldTile);
+      }
+      return;
+    }
+    if (!wireStart) {
+      return;
+    }
+
+    const wireStartStr = vector2ToStr(wireStart);
+
+    const updatedMap = { ...map };
+    if (!updatedMap[wireStartStr].connections.has(posStr)) {
+      updatedMap[wireStartStr].connections.add(posStr);
+    } else {
+      updatedMap[wireStartStr].connections.delete(posStr);
+    }
+    setMap(updatedMap);
+    setWireStart(undefined);
+  }, [mouseDown]);
+
+  useEffect(() => {
+    mapDraw(setMap, mouseWorldTile, currTool, mouseDown);
+  }, [mouseWorldTile, mouseDown]);
 
   return (
     <>
@@ -115,6 +144,7 @@ export function Game(props: GameProps) {
           absolute left-1/2 z-6 -translate-x-1/2
         "
       />
+
       <div
         className={`
           fixed left-0 top-0 z-0
@@ -145,10 +175,9 @@ export function Game(props: GameProps) {
               width={width / scale}
               height={height / scale}
               tileSize={tileSize}
-              camX={-camPos.x / scale}
-              camY={-camPos.y / scale}
+              camPos={{ x: -camPos.x / scale, y: -camPos.y / scale }}
               map={map}
-            ></TileMap>
+            />
             {scale > noGridScale && (
               <GridLines
                 width={width / scale}
@@ -156,7 +185,14 @@ export function Game(props: GameProps) {
                 tile={tileSize}
                 camX={-camPos.x / scale}
                 camY={-camPos.y / scale}
-              ></GridLines>
+              />
+            )}
+            {wireStart && (
+              <Wire
+                start={wireStart}
+                end={mouseWorldTile}
+                tileSize={tileSize}
+              />
             )}
           </Layer>
         </Stage>

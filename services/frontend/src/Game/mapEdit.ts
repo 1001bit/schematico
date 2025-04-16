@@ -1,12 +1,18 @@
 import { TileInterface, TileMapType, TileType } from "../project/interfaces";
 import { ToolType } from "./Toolbar/Tool";
+import { vector2, vector2ToStr } from "./vector2";
 
-export function editMap(
+export function mapDraw(
   setMap: React.Dispatch<React.SetStateAction<TileMapType>>,
-  pos: { x: number; y: number },
-  toolType: ToolType
+  tilePos: vector2,
+  toolType: ToolType,
+  mouseDown: boolean
 ) {
   if (toolType == ToolType.Drag || toolType == ToolType.Wire) {
+    return;
+  }
+
+  if (!mouseDown) {
     return;
   }
 
@@ -21,13 +27,13 @@ export function editMap(
   }
 
   setMap((m) => {
-    const posStr = `${pos.x},${pos.y}`;
+    const posStr = vector2ToStr(tilePos);
     if (toolType == ToolType.Erase) {
       delete m[posStr];
     } else {
       m[posStr] = {
         type: tileType,
-        connections: [],
+        connections: new Set(),
       } as TileInterface;
     }
 
