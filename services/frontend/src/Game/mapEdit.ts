@@ -1,10 +1,10 @@
-import { TileInterface, TileType } from "../project/interfaces";
+import { TileInterface, TileMapType, TileType } from "../project/interfaces";
 import { ToolType } from "./Toolbar/Tool";
 import { vector2, vector2ToStr } from "./vector2";
 
 export function mapDraw(
-  map: Record<string, TileInterface>,
-  setMap: React.Dispatch<React.SetStateAction<Record<string, TileInterface>>>,
+  map: TileMapType,
+  setMap: React.Dispatch<React.SetStateAction<TileMapType>>,
   tilePos: vector2,
   toolType: ToolType,
   mouseDown: boolean
@@ -32,6 +32,7 @@ export function mapDraw(
     [ToolType.And]: TileType.And,
     [ToolType.Not]: TileType.Not,
   }[toolType];
+  if (!tileType) return;
 
   if (tile && tile.type === tileType) {
     return;
@@ -49,8 +50,8 @@ export function mapDraw(
 export function mapWireDraw(
   mouseWorldTile: vector2,
   mouseDown: boolean,
-  map: Record<string, TileInterface>,
-  setMap: (value: React.SetStateAction<Record<string, TileInterface>>) => void,
+  map: TileMapType,
+  setMap: (value: React.SetStateAction<TileMapType>) => void,
   setWireStart: (value: React.SetStateAction<vector2 | undefined>) => void,
   wireStart: vector2 | undefined
 ) {

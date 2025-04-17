@@ -1,6 +1,6 @@
-import { ProjectInterface, TileInterface } from "./interfaces";
+import { ProjectInterface, TileMapType } from "./interfaces";
 
-export function saveLocalMap(id: string, map: Record<string, TileInterface>) {
+export function saveLocalMap(id: string, map: TileMapType) {
   const projectsStr = localStorage.getItem("projects");
   if (!projectsStr) {
     return;

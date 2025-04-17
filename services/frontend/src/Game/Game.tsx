@@ -129,6 +129,23 @@ export function Game({ project }: GameProps) {
     return () => clearTimeout(timeout);
   }, [map]);
 
+  function onMouseDown() {
+    mouseDown.current = true;
+  }
+  function onMouseUp() {
+    mouseDown.current = false;
+  }
+  function onDragMove(e: KonvaEventObject<DragEvent>) {
+    handleDragMove(e);
+    handleMouseMove(e);
+  }
+  function onDragStart() {
+    setDragging(true);
+  }
+  function onDragEnd() {
+    setDragging(false);
+  }
+
   return (
     <>
       <Toolbar
@@ -160,16 +177,13 @@ export function Game({ project }: GameProps) {
           width={cam.w}
           height={cam.h}
           draggable={currTool === ToolType.Drag}
-          onMouseMove={(e) => handleMouseMove(e)}
-          onDragStart={(_e) => setDragging(true)}
-          onDragMove={(e) => {
-            handleDragMove(e);
-            handleMouseMove(e);
-          }}
-          onMouseDown={(_) => (mouseDown.current = true)}
-          onMouseUp={(_) => (mouseDown.current = false)}
-          onDragEnd={(_e) => setDragging(false)}
-          onWheel={(e) => handleWheel(e)}
+          onMouseMove={handleMouseMove}
+          onDragStart={onDragStart}
+          onDragMove={onDragMove}
+          onMouseDown={onMouseDown}
+          onMouseUp={onMouseUp}
+          onDragEnd={onDragEnd}
+          onWheel={handleWheel}
           scaleX={cam.scale}
           scaleY={cam.scale}
           x={cam.x}

@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { TileInterface } from "../../project/interfaces";
+import { TileMapType } from "../../project/interfaces";
 import { strToVector2, vector2 } from "../vector2";
 import Tile from "./Tile";
 import Wire from "./Wire";
@@ -9,7 +9,7 @@ interface TileMapProps {
   height: number;
   camPos: vector2;
   tileSize: number;
-  map: Record<string, TileInterface>;
+  map: TileMapType;
 }
 
 function containsPoint(start: vector2, end: vector2, point: vector2) {

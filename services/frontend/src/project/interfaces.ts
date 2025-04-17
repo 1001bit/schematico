@@ -9,8 +9,10 @@ export interface TileInterface {
   connections: Record<string, boolean>;
 }
 
+export type TileMapType = Record<string, TileInterface>;
+
 export interface ProjectInterface {
   id: string;
   title: string;
-  map: Record<string, TileInterface>;
+  map: TileMapType;
 }
