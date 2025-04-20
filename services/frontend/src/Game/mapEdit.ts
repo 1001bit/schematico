@@ -4,7 +4,7 @@ import { vector2, vector2ToStr } from "./vector2";
 
 export function mapDraw(
   map: TileMapType,
-  setMap: React.Dispatch<React.SetStateAction<TileMapType>>,
+  setMap: (map: TileMapType) => void,
   tilePos: vector2,
   toolType: ToolType,
   mouseDown: boolean
@@ -24,46 +24,49 @@ export function mapDraw(
     const newMap = { ...map };
     delete newMap[tilePosStr];
     setMap(newMap);
-    return;
+  } else {
+    const tileType = {
+      [ToolType.Or]: TileType.Or,
+      [ToolType.And]: TileType.And,
+      [ToolType.Not]: TileType.Not,
+    }[toolType];
+    if (!tileType) return;
+
+    if (tile && tile.type === tileType) {
+      return;
+    }
+
+    setMap({
+      ...map,
+      [tilePosStr]: {
+        type: tileType,
+        connections: {},
+      },
+    });
   }
-
-  const tileType = {
-    [ToolType.Or]: TileType.Or,
-    [ToolType.And]: TileType.And,
-    [ToolType.Not]: TileType.Not,
-  }[toolType];
-  if (!tileType) return;
-
-  if (tile && tile.type === tileType) {
-    return;
-  }
-
-  setMap({
-    ...map,
-    [tilePosStr]: {
-      type: tileType,
-      connections: {},
-    },
-  });
 }
 
 export function mapWireDraw(
+  map: TileMapType,
+  setMap: (map: TileMapType) => void,
   mouseWorldTile: vector2,
   mouseDown: boolean,
-  map: TileMapType,
-  setMap: (value: React.SetStateAction<TileMapType>) => void,
-  setWireStart: (value: React.SetStateAction<vector2 | undefined>) => void,
+  setWireStart: (map: vector2 | undefined) => void,
   wireStart: vector2 | undefined
 ) {
   const mouseWorldTileStr = vector2ToStr(mouseWorldTile);
   if (mouseDown) {
-    if (map[mouseWorldTileStr]) {
+    if (!wireStart && map[mouseWorldTileStr]) {
       setWireStart(mouseWorldTile);
     }
     return;
   }
 
   if (!wireStart) return;
+  if (wireStart == mouseWorldTile) {
+    setWireStart(undefined);
+    return;
+  }
 
   const wireStartStr = vector2ToStr(wireStart);
   const tile = map[wireStartStr];

@@ -106,10 +106,10 @@ export function Game({ project }: GameProps) {
       drawPendingRef.current = false;
       if (currTool === ToolType.Wire) {
         mapWireDraw(
-          mouseWorldTile,
-          mouseDown.current,
           map,
           setMap,
+          mouseWorldTile,
+          mouseDown.current,
           setWireStart,
           wireStart
         );
@@ -129,11 +129,13 @@ export function Game({ project }: GameProps) {
     return () => clearTimeout(timeout);
   }, [map]);
 
-  function onMouseDown() {
+  function onMouseDown(e: KonvaEventObject<MouseEvent, Node<NodeConfig>>) {
     mouseDown.current = true;
+    handleMouseMove(e);
   }
-  function onMouseUp() {
+  function onMouseUp(e: KonvaEventObject<MouseEvent, Node<NodeConfig>>) {
     mouseDown.current = false;
+    handleMouseMove(e);
   }
   function onDragMove(e: KonvaEventObject<DragEvent>) {
     handleDragMove(e);
@@ -200,10 +202,11 @@ export function Game({ project }: GameProps) {
               />
             )}
             <TileMap
-              width={cam.w / cam.scale}
-              height={cam.h / cam.scale}
+              w={cam.w / cam.scale}
+              h={cam.h / cam.scale}
+              x={-cam.x / cam.scale}
+              y={-cam.y / cam.scale}
               tileSize={tileSize}
-              camPos={{ x: -cam.x / cam.scale, y: -cam.y / cam.scale }}
               map={map}
             />
             {wireStart && (

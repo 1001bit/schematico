@@ -1,13 +1,14 @@
-import { memo } from "react";
 import { TileMapType } from "../../project/interfaces";
 import { strToVector2, vector2 } from "../vector2";
 import Tile from "./Tile";
 import Wire from "./Wire";
+import { useMemo } from "react";
 
 interface TileMapProps {
-  width: number;
-  height: number;
-  camPos: vector2;
+  w: number;
+  h: number;
+  x: number;
+  y: number;
   tileSize: number;
   map: TileMapType;
 }
@@ -35,49 +36,53 @@ function containsLine(
   );
 }
 
-function TileMap({ width, height, camPos, tileSize, map }: TileMapProps) {
-  const start = {
-    x: camPos.x / tileSize - 1,
-    y: camPos.y / tileSize - 1,
-  };
-  const end = {
-    x: start.x + width / tileSize + 1,
-    y: start.y + height / tileSize + 1,
-  };
+function TileMap({ w, h, x, y, tileSize, map }: TileMapProps) {
+  const { tiles, wires } = useMemo(() => {
+    const start = {
+      x: x / tileSize - 1,
+      y: y / tileSize - 1,
+    };
+    const end = {
+      x: start.x + w / tileSize + 1,
+      y: start.y + h / tileSize + 1,
+    };
 
-  const tiles = [];
-  const wires = [];
+    const tiles = [];
+    const wires = [];
 
-  for (const [posStr, tile] of Object.entries(map)) {
-    const pos = strToVector2(posStr);
+    for (const [posStr, tile] of Object.entries(map)) {
+      const pos = strToVector2(posStr);
 
-    if (containsPoint(start, end, pos)) {
-      tiles.push(
-        <Tile
-          pos={{ x: pos.x, y: pos.y }}
-          tileSize={tileSize}
-          tile={tile}
-          key={`${pos.x}-${pos.y}`}
-        />
-      );
-    }
-
-    for (const [wireEndStr, _] of Object.entries(tile.connections)) {
-      const wireEnd = strToVector2(wireEndStr);
-
-      if (!containsLine(start, end, pos, wireEnd)) {
-        continue;
+      if (containsPoint(start, end, pos)) {
+        tiles.push(
+          <Tile
+            pos={{ x: pos.x, y: pos.y }}
+            tileSize={tileSize}
+            tile={tile}
+            key={`${pos.x}-${pos.y}`}
+          />
+        );
       }
-      wires.push(
-        <Wire
-          start={pos}
-          end={wireEnd}
-          tileSize={tileSize}
-          key={`${pos.x}-${pos.y}-${wireEnd.x}-${wireEnd.y}`}
-        />
-      );
+
+      for (const [wireEndStr, _] of Object.entries(tile.connections)) {
+        const wireEnd = strToVector2(wireEndStr);
+
+        if (!containsLine(start, end, pos, wireEnd)) {
+          continue;
+        }
+        wires.push(
+          <Wire
+            start={pos}
+            end={wireEnd}
+            tileSize={tileSize}
+            key={`${pos.x}-${pos.y}-${wireEnd.x}-${wireEnd.y}`}
+          />
+        );
+      }
     }
-  }
+
+    return { tiles, wires };
+  }, [x, y, w, h, map]);
 
   return (
     <>
@@ -87,4 +92,4 @@ function TileMap({ width, height, camPos, tileSize, map }: TileMapProps) {
   );
 }
 
-export default memo(TileMap);
+export default TileMap;
