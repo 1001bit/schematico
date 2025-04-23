@@ -36,6 +36,13 @@
   a {
     @apply text-acc hover:underline hover:cursor-pointer select-none;
   }
+
+  .drag-none {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+  }
 }
 
 /* custom colors */

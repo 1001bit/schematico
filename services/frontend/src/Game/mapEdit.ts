@@ -4,7 +4,6 @@ import { vector2, vector2ToStr } from "./vector2";
 
 export function mapDraw(
   map: TileMapType,
-  setMap: (map: TileMapType) => void,
   tilePos: vector2,
   toolType: ToolType,
   mouseDown: boolean
@@ -23,7 +22,7 @@ export function mapDraw(
     if (!tile) return;
     const newMap = { ...map };
     delete newMap[tilePosStr];
-    setMap(newMap);
+    return newMap;
   } else {
     const tileType = {
       [ToolType.Or]: TileType.Or,
@@ -36,19 +35,18 @@ export function mapDraw(
       return;
     }
 
-    setMap({
+    return {
       ...map,
       [tilePosStr]: {
         type: tileType,
         connections: {},
       },
-    });
+    };
   }
 }
 
 export function mapWireDraw(
   map: TileMapType,
-  setMap: (map: TileMapType) => void,
   mouseWorldTile: vector2,
   mouseDown: boolean,
   setWireStart: (map: vector2 | undefined) => void,
@@ -59,18 +57,20 @@ export function mapWireDraw(
     if (!wireStart && map[mouseWorldTileStr]) {
       setWireStart(mouseWorldTile);
     }
-    return;
+    return map;
   }
 
-  if (!wireStart) return;
-  if (wireStart == mouseWorldTile) {
+  if (!wireStart || wireStart == mouseWorldTile) {
     setWireStart(undefined);
-    return;
+    return map;
   }
 
   const wireStartStr = vector2ToStr(wireStart);
   const tile = map[wireStartStr];
-  if (!tile) return;
+  if (!tile) {
+    setWireStart(undefined);
+    return map;
+  }
 
   const newStartTile = {
     ...tile,
@@ -83,9 +83,10 @@ export function mapWireDraw(
     newStartTile.connections[mouseWorldTileStr] = true;
   }
 
-  setMap({
+  setWireStart(undefined);
+
+  return {
     ...map,
     [wireStartStr]: newStartTile,
-  });
-  setWireStart(undefined);
+  };
 }
