@@ -3,7 +3,8 @@ import Locator from "./Locator";
 import { ToolType } from "./Toolbar/Tool";
 import { ProjectInterface } from "../project/interfaces";
 import { Canvas } from "./Canvas";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { drawTileMap } from "./mapDraw";
 
 interface GameProps {
   project: ProjectInterface;
@@ -22,13 +23,13 @@ export function Game({ project }: GameProps) {
   const [currTool, setCurrTool] = useState<ToolType>(ToolType.Drag);
 
   useEffect(() => {
-    const resize = () =>
+    const resize = () => {
       setCam((c) => ({ ...c, w: innerWidth, h: innerHeight }));
-    window.addEventListener("resize", resize);
-    return window.removeEventListener("resize", resize);
-  }, []);
+    };
 
-  useEffect(() => {}, []);
+    window.addEventListener("resize", () => resize());
+    return window.removeEventListener("resize", () => resize());
+  }, []);
 
   function handleMouseMove(e: React.MouseEvent) {
     const pointer = { x: e.clientX, y: e.clientY };
@@ -46,6 +47,14 @@ export function Game({ project }: GameProps) {
       setMouseWorldTile(newMouseWorldTile);
     }
   }
+
+  const map = useRef(project.map);
+  const draw = useCallback(
+    (_dt: number, ctx: CanvasRenderingContext2D) => {
+      drawTileMap(ctx, map.current, cam.x, cam.y, cam.w, cam.h, tileSize);
+    },
+    [map, cam]
+  );
 
   return (
     <>
@@ -68,14 +77,14 @@ export function Game({ project }: GameProps) {
         "
       />
       <Canvas
-        map={project.map}
-        id={project.id}
         w={cam.w}
         h={cam.h}
+        bgColor="#000000"
         className={`
           fixed left-0 top-0 z-0
         `}
         onMouseMove={handleMouseMove}
+        draw={draw}
       ></Canvas>
     </>
   );

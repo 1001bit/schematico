@@ -1,6 +1,5 @@
 import { TileType } from "../../project/interfaces";
-import { TileColors } from "../TileMap/Tile";
-import { WireColor } from "../TileMap/Wire";
+import { TileColors, WireColor } from "../mapDraw";
 
 interface ToolProps {
   onSelect: (type: ToolType) => void;

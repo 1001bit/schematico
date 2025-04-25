@@ -1,4 +1,4 @@
-import { TileInterface, TileMapType, TileType } from "../project/interfaces";
+import { TileMapType, TileType } from "../project/interfaces";
 import { ToolType } from "./Toolbar/Tool";
 import { vector2, vector2ToStr } from "./vector2";
 
@@ -7,7 +7,7 @@ export function mapDraw(
   tilePos: vector2,
   toolType: ToolType,
   mouseDown: boolean
-) {
+): void {
   if (toolType == ToolType.Drag || toolType == ToolType.Wire) {
     return;
   }
@@ -20,9 +20,7 @@ export function mapDraw(
   const tile = map[tilePosStr];
   if (toolType === ToolType.Erase) {
     if (!tile) return;
-    const newMap = { ...map };
-    delete newMap[tilePosStr];
-    return newMap;
+    delete map[tilePosStr];
   } else {
     const tileType = {
       [ToolType.Or]: TileType.Or,
@@ -35,12 +33,9 @@ export function mapDraw(
       return;
     }
 
-    return {
-      ...map,
-      [tilePosStr]: {
-        type: tileType,
-        connections: {},
-      },
+    map[tilePosStr] = {
+      type: tileType,
+      connections: {},
     };
   }
 }
@@ -49,44 +44,29 @@ export function mapWireDraw(
   map: TileMapType,
   mouseWorldTile: vector2,
   mouseDown: boolean,
-  setWireStart: (map: vector2 | undefined) => void,
   wireStart: vector2 | undefined
-) {
+): void {
   const mouseWorldTileStr = vector2ToStr(mouseWorldTile);
   if (mouseDown) {
     if (!wireStart && map[mouseWorldTileStr]) {
-      setWireStart(mouseWorldTile);
+      wireStart = mouseWorldTile;
     }
-    return map;
+    return;
   }
 
   if (!wireStart || wireStart == mouseWorldTile) {
-    setWireStart(undefined);
-    return map;
+    wireStart = undefined;
+    return;
   }
 
   const wireStartStr = vector2ToStr(wireStart);
-  const tile = map[wireStartStr];
-  if (!tile) {
-    setWireStart(undefined);
-    return map;
+  const startTile = map[wireStartStr];
+  if (startTile) {
+    if (startTile.connections[mouseWorldTileStr]) {
+      delete startTile.connections[mouseWorldTileStr];
+    } else {
+      startTile.connections[mouseWorldTileStr] = true;
+    }
   }
-
-  const newStartTile = {
-    ...tile,
-    connections: { ...tile.connections },
-  } as TileInterface;
-
-  if (tile.connections[mouseWorldTileStr]) {
-    delete newStartTile.connections[mouseWorldTileStr];
-  } else {
-    newStartTile.connections[mouseWorldTileStr] = true;
-  }
-
-  setWireStart(undefined);
-
-  return {
-    ...map,
-    [wireStartStr]: newStartTile,
-  };
+  wireStart = undefined;
 }

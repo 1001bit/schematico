@@ -1,33 +1,55 @@
 import { useEffect, useRef } from "react";
-import { TileMapType } from "../project/interfaces";
 
 interface CanvasProps {
-  map: TileMapType;
-  id: string;
   className?: string;
   w: number;
   h: number;
+  bgColor: string;
   onMouseMove?: (e: React.MouseEvent) => void;
+  draw: (dt: number, ctx: CanvasRenderingContext2D) => void;
 }
 
-export function Canvas({ map, id, className, w, h, onMouseMove }: CanvasProps) {
+export function Canvas({
+  className,
+  w,
+  h,
+  bgColor,
+  onMouseMove,
+  draw,
+}: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const lastTime = useRef(performance.now());
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     canvas.addEventListener("dragstart", (e) => e.preventDefault());
 
+    return () =>
+      canvas.removeEventListener("dragstart", (e) => e.preventDefault());
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    ctx.fillStyle = "blue";
-    ctx.fillRect(100, 100, 100, 100);
-  }, []);
+    function update(currTime: number) {
+      if (!ctx) return;
+      ctx.fillStyle = bgColor;
+      ctx.fillRect(0, 0, w, h);
+      draw(currTime - lastTime.current, ctx);
+      lastTime.current = currTime;
+    }
+    const req = requestAnimationFrame(update);
+
+    return () => cancelAnimationFrame(req);
+  }, [draw]);
 
   return (
     <canvas
-      className={`drag-none ${className}`}
+      className={`${className}`}
       ref={canvasRef}
       width={w}
       height={h}
