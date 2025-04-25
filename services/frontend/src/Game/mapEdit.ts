@@ -2,71 +2,88 @@ import { TileMapType, TileType } from "../project/interfaces";
 import { ToolType } from "./Toolbar/Tool";
 import { vector2, vector2ToStr } from "./vector2";
 
-export function mapDraw(
+export function mapEdit(
   map: TileMapType,
-  tilePos: vector2,
-  toolType: ToolType,
-  mouseDown: boolean
-): void {
+  mouseWorldTile: vector2,
+  toolType: ToolType
+): TileMapType {
   if (toolType == ToolType.Drag || toolType == ToolType.Wire) {
-    return;
+    return map;
   }
 
-  if (!mouseDown) {
-    return;
-  }
-
-  const tilePosStr = vector2ToStr(tilePos);
+  const tilePosStr = vector2ToStr(mouseWorldTile);
   const tile = map[tilePosStr];
   if (toolType === ToolType.Erase) {
-    if (!tile) return;
-    delete map[tilePosStr];
+    if (!tile) {
+      return map;
+    }
+    const newMap = { ...map };
+    delete newMap[tilePosStr];
+    return newMap;
   } else {
     const tileType = {
       [ToolType.Or]: TileType.Or,
       [ToolType.And]: TileType.And,
       [ToolType.Not]: TileType.Not,
     }[toolType];
-    if (!tileType) return;
+    if (!tileType) return map;
 
     if (tile && tile.type === tileType) {
-      return;
+      return map;
     }
 
-    map[tilePosStr] = {
-      type: tileType,
-      connections: {},
+    const newMap = {
+      ...map,
+      [tilePosStr]: {
+        type: tileType,
+        connections: {},
+      },
     };
+
+    return newMap;
   }
 }
 
-export function mapWireDraw(
+export function mapStartWire(
   map: TileMapType,
   mouseWorldTile: vector2,
-  mouseDown: boolean,
   wireStart: vector2 | undefined
-): void {
+) {
   const mouseWorldTileStr = vector2ToStr(mouseWorldTile);
-  if (mouseDown) {
-    if (!wireStart && map[mouseWorldTileStr]) {
-      wireStart = mouseWorldTile;
-    }
-    return;
+  if (!wireStart && map[mouseWorldTileStr]) {
+    wireStart = mouseWorldTile;
+  }
+}
+
+export function mapEndWire(
+  map: TileMapType,
+  mouseWorldTile: vector2,
+  wireStart: vector2 | undefined
+): TileMapType {
+  if (!wireStart) {
+    return map;
   }
 
-  if (!wireStart || wireStart == mouseWorldTile) {
+  const mouseWorldTileStr = vector2ToStr(mouseWorldTile);
+  if (wireStart === mouseWorldTile) {
     wireStart = undefined;
-    return;
+    return map;
   }
 
   const wireStartStr = vector2ToStr(wireStart);
-  const startTile = map[wireStartStr];
-  if (startTile) {
-    if (startTile.connections[mouseWorldTileStr]) {
-      delete startTile.connections[mouseWorldTileStr];
-    } else {
-      startTile.connections[mouseWorldTileStr] = true;
-    }
+  if (!map[wireStartStr]) {
+    wireStart = undefined;
+    return map;
   }
+
+  const newMap = { ...map };
+  const startTile = newMap[wireStartStr];
+  if (startTile.connections[mouseWorldTileStr]) {
+    delete startTile.connections[mouseWorldTileStr];
+  } else {
+    startTile.connections[mouseWorldTileStr] = true;
+  }
+
   wireStart = undefined;
+  return newMap;
 }

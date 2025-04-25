@@ -5,6 +5,8 @@ import { ProjectInterface } from "../project/interfaces";
 import { Canvas } from "./Canvas";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { drawTileMap } from "./mapDraw";
+import { mapEdit, mapEndWire, mapStartWire } from "./mapEdit";
+import { vector2 } from "./vector2";
 
 interface GameProps {
   project: ProjectInterface;
@@ -12,19 +14,26 @@ interface GameProps {
 
 export function Game({ project }: GameProps) {
   const tileSize = 30;
-  const [cam, setCam] = useState({
-    scale: 1,
-    x: 0,
-    y: 0,
+  const [windowSize, setWindowSize] = useState({
     w: innerWidth,
     h: innerHeight,
   });
+  const cam = useRef({
+    scale: 1,
+    x: 0,
+    y: 0,
+  });
   const [mouseWorldTile, setMouseWorldTile] = useState({ x: 0, y: 0 });
   const [currTool, setCurrTool] = useState<ToolType>(ToolType.Drag);
+  const mouseDown = useRef(false);
+  const wireStart = useRef<vector2 | undefined>(undefined);
 
   useEffect(() => {
     const resize = () => {
-      setCam((c) => ({ ...c, w: innerWidth, h: innerHeight }));
+      setWindowSize({
+        w: innerWidth,
+        h: innerHeight,
+      });
     };
 
     window.addEventListener("resize", () => resize());
@@ -36,8 +45,12 @@ export function Game({ project }: GameProps) {
     if (!pointer) return;
 
     const newMouseWorldTile = {
-      x: Math.floor((-cam.x + pointer.x) / cam.scale / tileSize),
-      y: Math.floor((-cam.y + pointer.y) / cam.scale / tileSize),
+      x: Math.floor(
+        (-cam.current.x + pointer.x) / cam.current.scale / tileSize
+      ),
+      y: Math.floor(
+        (-cam.current.y + pointer.y) / cam.current.scale / tileSize
+      ),
     };
 
     if (
@@ -46,14 +59,44 @@ export function Game({ project }: GameProps) {
     ) {
       setMouseWorldTile(newMouseWorldTile);
     }
+
+    if (mouseDown.current) {
+      map.current = mapEdit(map.current, mouseWorldTile, currTool);
+    }
+  }
+
+  function handleMouseUp(_e: React.MouseEvent) {
+    if (currTool === ToolType.Wire) {
+      map.current = mapEndWire(map.current, mouseWorldTile, wireStart.current);
+    }
+
+    mouseDown.current = false;
+  }
+
+  function handleMouseDown(_e: React.MouseEvent) {
+    if (currTool === ToolType.Wire) {
+      mapStartWire(map.current, mouseWorldTile, wireStart.current);
+    } else {
+      map.current = mapEdit(map.current, mouseWorldTile, currTool);
+    }
+
+    mouseDown.current = true;
   }
 
   const map = useRef(project.map);
   const draw = useCallback(
     (_dt: number, ctx: CanvasRenderingContext2D) => {
-      drawTileMap(ctx, map.current, cam.x, cam.y, cam.w, cam.h, tileSize);
+      drawTileMap(
+        ctx,
+        map.current,
+        cam.current.x,
+        cam.current.y,
+        windowSize.w,
+        windowSize.h,
+        tileSize
+      );
     },
-    [map, cam]
+    [map.current, cam.current, windowSize]
   );
 
   return (
@@ -77,13 +120,15 @@ export function Game({ project }: GameProps) {
         "
       />
       <Canvas
-        w={cam.w}
-        h={cam.h}
+        w={windowSize.w}
+        h={windowSize.h}
         bgColor="#000000"
         className={`
           fixed left-0 top-0 z-0
         `}
         onMouseMove={handleMouseMove}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
         draw={draw}
       ></Canvas>
     </>

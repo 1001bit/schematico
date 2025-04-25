@@ -5,6 +5,8 @@ interface CanvasProps {
   w: number;
   h: number;
   bgColor: string;
+  onMouseDown?: (e: React.MouseEvent) => void;
+  onMouseUp?: (e: React.MouseEvent) => void;
   onMouseMove?: (e: React.MouseEvent) => void;
   draw: (dt: number, ctx: CanvasRenderingContext2D) => void;
 }
@@ -15,6 +17,8 @@ export function Canvas({
   h,
   bgColor,
   onMouseMove,
+  onMouseDown,
+  onMouseUp,
   draw,
 }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -55,6 +59,8 @@ export function Canvas({
       height={h}
       draggable={true}
       onMouseMove={onMouseMove}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
     ></canvas>
   );
 }
