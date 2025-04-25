@@ -1,4 +1,4 @@
-export interface vector2 {
+export default interface vector2 {
   x: number;
   y: number;
 }

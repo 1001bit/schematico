@@ -1,7 +1,7 @@
 import { useLoaderData } from "react-router";
 import { useTitle } from "../hooks/title/TitleContext";
 import { useEffect } from "react";
-import { Game } from "../Game/Game";
+import Game from "../Game/Game";
 import Button from "../components/Button/Button";
 import { ProjectInterface } from "../project/interfaces";
 import { getLocalProject } from "../project/get";

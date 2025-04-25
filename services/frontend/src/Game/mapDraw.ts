@@ -1,5 +1,5 @@
 import { TileMapType, TileType } from "../project/interfaces";
-import { strToVector2, vector2, vector2Product } from "./vector2";
+import vector2, { strToVector2, vector2Product } from "./vector2";
 
 export const TileColors: Record<TileType, string> = {
   [TileType.Or]: "#ff0000",
@@ -49,6 +49,8 @@ export function drawTileMap(
     y: start.y + h,
   };
 
+  ctx.translate(-x, -y);
+
   for (const [posStr, tile] of Object.entries(map)) {
     const pos = vector2Product(strToVector2(posStr), tileSize);
 
@@ -58,15 +60,19 @@ export function drawTileMap(
     }
 
     for (const [wireEndStr, _] of Object.entries(tile.connections)) {
-      const wireEnd = strToVector2(wireEndStr);
+      const wireEnd = vector2Product(strToVector2(wireEndStr), tileSize);
+      console.log(pos, wireEnd);
 
       if (!containsLine(start, end, pos, wireEnd)) {
         continue;
       }
+      ctx.beginPath();
       ctx.strokeStyle = WireColor;
       ctx.moveTo(pos.x, pos.y);
       ctx.lineTo(wireEnd.x, wireEnd.y);
       ctx.stroke();
     }
   }
+
+  ctx.translate(x, y);
 }

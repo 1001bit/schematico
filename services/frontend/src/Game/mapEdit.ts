@@ -1,6 +1,6 @@
 import { TileMapType, TileType } from "../project/interfaces";
 import { ToolType } from "./Toolbar/Tool";
-import { vector2, vector2ToStr } from "./vector2";
+import vector2, { vector2ToStr } from "./vector2";
 
 export function mapEdit(
   map: TileMapType,
@@ -42,48 +42,4 @@ export function mapEdit(
 
     return newMap;
   }
-}
-
-export function mapStartWire(
-  map: TileMapType,
-  mouseWorldTile: vector2,
-  wireStart: vector2 | undefined
-) {
-  const mouseWorldTileStr = vector2ToStr(mouseWorldTile);
-  if (!wireStart && map[mouseWorldTileStr]) {
-    wireStart = mouseWorldTile;
-  }
-}
-
-export function mapEndWire(
-  map: TileMapType,
-  mouseWorldTile: vector2,
-  wireStart: vector2 | undefined
-): TileMapType {
-  if (!wireStart) {
-    return map;
-  }
-
-  const mouseWorldTileStr = vector2ToStr(mouseWorldTile);
-  if (wireStart === mouseWorldTile) {
-    wireStart = undefined;
-    return map;
-  }
-
-  const wireStartStr = vector2ToStr(wireStart);
-  if (!map[wireStartStr]) {
-    wireStart = undefined;
-    return map;
-  }
-
-  const newMap = { ...map };
-  const startTile = newMap[wireStartStr];
-  if (startTile.connections[mouseWorldTileStr]) {
-    delete startTile.connections[mouseWorldTileStr];
-  } else {
-    startTile.connections[mouseWorldTileStr] = true;
-  }
-
-  wireStart = undefined;
-  return newMap;
 }

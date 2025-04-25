@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 
 interface CanvasProps {
   className?: string;
@@ -11,7 +11,7 @@ interface CanvasProps {
   draw: (dt: number, ctx: CanvasRenderingContext2D) => void;
 }
 
-export function Canvas({
+function Canvas({
   className,
   w,
   h,
@@ -64,3 +64,5 @@ export function Canvas({
     ></canvas>
   );
 }
+
+export default memo(Canvas);
