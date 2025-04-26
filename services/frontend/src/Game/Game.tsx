@@ -15,17 +15,24 @@ interface GameProps {
 
 function Game({ project }: GameProps) {
   const tileSize = 30;
+
   const [windowSize, setWindowSize] = useState({
     w: innerWidth,
     h: innerHeight,
   });
+
+  const [currTool, setCurrTool] = useState<ToolType>(ToolType.Drag);
+
   const [cam, setCam] = useState({
     scale: 1,
     x: 0,
     y: 0,
   });
+  const maxScale = 5;
+  const minGridScale = 0.3;
+  const minScale = 0.1;
+
   const [mouseWorldTile, setMouseWorldTile] = useState({ x: 0, y: 0 });
-  const [currTool, setCurrTool] = useState<ToolType>(ToolType.Drag);
   const mouseDown = useRef(false);
 
   const [map, setMap] = useState(project.map);
@@ -50,7 +57,7 @@ function Game({ project }: GameProps) {
     return window.removeEventListener("resize", () => resize());
   }, []);
 
-  function handleMouseMove(e: React.MouseEvent) {
+  function onMouseMove(e: React.MouseEvent) {
     const pointer = { x: e.clientX, y: e.clientY };
 
     let camPos = {
@@ -58,8 +65,8 @@ function Game({ project }: GameProps) {
       y: cam.y,
     };
     if (draggingPos) {
-      camPos.x = cam.x + draggingPos.x - pointer.x;
-      camPos.y = cam.y + draggingPos.y - pointer.y;
+      camPos.x = cam.x + (draggingPos.x - pointer.x) / cam.scale;
+      camPos.y = cam.y + (draggingPos.y - pointer.y) / cam.scale;
       setCam({
         scale: cam.scale,
         x: camPos.x,
@@ -69,8 +76,8 @@ function Game({ project }: GameProps) {
     }
 
     const newMouseWorldTile = {
-      x: Math.floor((camPos.x + pointer.x) / cam.scale / tileSize),
-      y: Math.floor((camPos.y + pointer.y) / cam.scale / tileSize),
+      x: Math.floor((camPos.x + pointer.x / cam.scale) / tileSize),
+      y: Math.floor((camPos.y + pointer.y / cam.scale) / tileSize),
     };
 
     if (
@@ -85,7 +92,7 @@ function Game({ project }: GameProps) {
     }
   }
 
-  function handleMouseUp(_e: React.MouseEvent) {
+  function onMouseUp(_e: React.MouseEvent) {
     switch (currTool) {
       case ToolType.Wire:
         break;
@@ -99,7 +106,7 @@ function Game({ project }: GameProps) {
     mouseDown.current = false;
   }
 
-  function handleMouseDown(e: React.MouseEvent) {
+  function onMouseDown(e: React.MouseEvent) {
     switch (currTool) {
       case ToolType.Wire:
         break;
@@ -114,10 +121,50 @@ function Game({ project }: GameProps) {
     mouseDown.current = true;
   }
 
+  function onWheel(e: React.WheelEvent) {
+    e.preventDefault();
+    const pointer = { x: e.clientX, y: e.clientY };
+
+    const scaleBy = 1.1 * Math.abs(e.deltaY / 100);
+
+    const newScale = e.deltaY < 0 ? cam.scale * scaleBy : cam.scale / scaleBy;
+    if (newScale > maxScale || newScale < minScale) return;
+
+    const mouseWorldPos = {
+      x: cam.x + pointer.x / cam.scale,
+      y: cam.y + pointer.y / cam.scale,
+    };
+
+    setCam({
+      scale: newScale,
+      x: mouseWorldPos.x - pointer.x / newScale,
+      y: mouseWorldPos.y - pointer.y / newScale,
+    });
+  }
+
   const drawCallback = useCallback(
     (_dt: number, ctx: CanvasRenderingContext2D) => {
-      drawGrid(ctx, cam.x, cam.y, windowSize.w, windowSize.h, tileSize);
-      drawTileMap(ctx, map, cam.x, cam.y, windowSize.w, windowSize.h, tileSize);
+      ctx.scale(cam.scale, cam.scale);
+      if (cam.scale >= minGridScale)
+        drawGrid(
+          ctx,
+          cam.x,
+          cam.y,
+          windowSize.w / cam.scale,
+          windowSize.h / cam.scale,
+          tileSize
+        );
+
+      drawTileMap(
+        ctx,
+        map,
+        cam.x,
+        cam.y,
+        windowSize.w / cam.scale,
+        windowSize.h / cam.scale,
+        tileSize
+      );
+      ctx.scale(1 / cam.scale, 1 / cam.scale);
     },
     [map, cam, windowSize]
   );
@@ -150,9 +197,10 @@ function Game({ project }: GameProps) {
           fixed left-0 top-0 z-0
           ${canDrag ? (draggingPos ? "cursor-grabbing" : "cursor-grab") : ""}
         `}
-        onMouseMove={handleMouseMove}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
+        onMouseMove={onMouseMove}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
+        onWheel={onWheel}
         drawCallback={drawCallback}
       ></Canvas>
     </>
