@@ -3,10 +3,11 @@ import Locator from "./Locator";
 import { ToolType } from "./Toolbar/Tool";
 import { ProjectInterface } from "../project/interfaces";
 import Canvas from "./Canvas";
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { drawTileMap } from "./mapDraw";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import drawTileMap from "./Draw/tilemap";
 import { mapEdit } from "./mapEdit";
 import vector2 from "./vector2";
+import drawGrid from "./Draw/grid";
 
 interface GameProps {
   project: ProjectInterface;
@@ -113,14 +114,13 @@ function Game({ project }: GameProps) {
     mouseDown.current = true;
   }
 
-  const draw = useCallback(
+  const drawCallback = useCallback(
     (_dt: number, ctx: CanvasRenderingContext2D) => {
+      drawGrid(ctx, cam.x, cam.y, windowSize.w, windowSize.h, tileSize);
       drawTileMap(ctx, map, cam.x, cam.y, windowSize.w, windowSize.h, tileSize);
     },
     [map, cam, windowSize]
   );
-
-  useEffect(() => {}, [map.current]);
 
   return (
     <>
@@ -153,10 +153,10 @@ function Game({ project }: GameProps) {
         onMouseMove={handleMouseMove}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
-        draw={draw}
+        drawCallback={drawCallback}
       ></Canvas>
     </>
   );
 }
 
-export default memo(Game);
+export default Game;

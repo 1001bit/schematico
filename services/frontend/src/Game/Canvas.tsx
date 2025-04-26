@@ -8,7 +8,7 @@ interface CanvasProps {
   onMouseDown?: (e: React.MouseEvent) => void;
   onMouseUp?: (e: React.MouseEvent) => void;
   onMouseMove?: (e: React.MouseEvent) => void;
-  draw: (dt: number, ctx: CanvasRenderingContext2D) => void;
+  drawCallback: (dt: number, ctx: CanvasRenderingContext2D) => void;
 }
 
 function Canvas({
@@ -19,7 +19,7 @@ function Canvas({
   onMouseMove,
   onMouseDown,
   onMouseUp,
-  draw,
+  drawCallback,
 }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const lastTime = useRef(performance.now());
@@ -43,13 +43,12 @@ function Canvas({
       if (!ctx) return;
       ctx.fillStyle = bgColor;
       ctx.fillRect(0, 0, w, h);
-      draw(currTime - lastTime.current, ctx);
+      drawCallback(currTime - lastTime.current, ctx);
       lastTime.current = currTime;
     }
     const req = requestAnimationFrame(update);
-
     return () => cancelAnimationFrame(req);
-  }, [draw]);
+  }, [drawCallback]);
 
   return (
     <canvas

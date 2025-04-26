@@ -1,5 +1,5 @@
-import { TileMapType, TileType } from "../project/interfaces";
-import vector2, { strToVector2, vector2Product } from "./vector2";
+import { TileMapType, TileType } from "../../project/interfaces";
+import vector2, { strToVector2, vector2Product } from "../vector2";
 
 export const TileColors: Record<TileType, string> = {
   [TileType.Or]: "#ff0000",
@@ -31,7 +31,7 @@ function containsLine(
   );
 }
 
-export function drawTileMap(
+function drawTileMap(
   ctx: CanvasRenderingContext2D,
   map: TileMapType,
   x: number,
@@ -40,13 +40,13 @@ export function drawTileMap(
   h: number,
   tileSize: number
 ) {
-  const start = {
-    x: x,
-    y: y,
+  const canvasStart = {
+    x: x - tileSize,
+    y: y - tileSize,
   };
-  const end = {
-    x: start.x + w,
-    y: start.y + h,
+  const canvasEnd = {
+    x: canvasStart.x + w,
+    y: canvasStart.y + h,
   };
 
   ctx.translate(-x, -y);
@@ -54,16 +54,15 @@ export function drawTileMap(
   for (const [posStr, tile] of Object.entries(map)) {
     const pos = vector2Product(strToVector2(posStr), tileSize);
 
-    if (containsPoint(start, end, pos)) {
+    if (containsPoint(canvasStart, canvasEnd, pos)) {
       ctx.fillStyle = TileColors[tile.type];
       ctx.fillRect(pos.x, pos.y, tileSize, tileSize);
     }
 
     for (const [wireEndStr, _] of Object.entries(tile.connections)) {
       const wireEnd = vector2Product(strToVector2(wireEndStr), tileSize);
-      console.log(pos, wireEnd);
 
-      if (!containsLine(start, end, pos, wireEnd)) {
+      if (!containsLine(canvasStart, canvasEnd, pos, wireEnd)) {
         continue;
       }
       ctx.beginPath();
@@ -76,3 +75,5 @@ export function drawTileMap(
 
   ctx.translate(x, y);
 }
+
+export default drawTileMap;

@@ -2,7 +2,7 @@
     [X] Layout
     [X] Drawing
     [X] Dragging to move
-    [ ] Grid
+    [X] Grid
     [ ] Zooming
     [ ] Drawing Wires
     [ ] Saving
