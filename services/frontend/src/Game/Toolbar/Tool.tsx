@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { TileType } from "../../project/interfaces";
+import { TileType } from "../interfaces";
 import { TileColors, WireColor } from "../Draw/tilemap";
 
 interface ToolProps {

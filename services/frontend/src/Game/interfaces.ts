@@ -10,9 +10,3 @@ export interface TileInterface {
 }
 
 export type TileMapType = Record<string, TileInterface>;
-
-export interface ProjectInterface {
-  id: string;
-  title: string;
-  map: TileMapType;
-}

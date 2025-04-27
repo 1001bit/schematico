@@ -1,6 +1,6 @@
-import { ProjectInterface } from "./interfaces";
+import ProjectInterface from "./project";
 
-export function getLocalProject(id: string) {
+function getLocalProject(id: string) {
   const projectsStr = localStorage.getItem("projects");
   if (!projectsStr) {
     return;
@@ -8,3 +8,5 @@ export function getLocalProject(id: string) {
   const projects = JSON.parse(projectsStr) as Record<string, ProjectInterface>;
   return projects[id];
 }
+
+export default getLocalProject;

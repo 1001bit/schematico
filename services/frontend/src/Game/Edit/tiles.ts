@@ -1,8 +1,8 @@
-import { TileMapType, TileType } from "../project/interfaces";
-import { ToolType } from "./Toolbar/Tool";
-import vector2, { vector2ToStr } from "./vector2";
+import { TileMapType, TileType } from "../interfaces";
+import { ToolType } from "../Toolbar/Tool";
+import vector2, { vector2ToStr } from "../vector2";
 
-export function mapEdit(
+function mapTilesEdit(
   map: TileMapType,
   mouseWorldTile: vector2,
   toolType: ToolType
@@ -43,3 +43,5 @@ export function mapEdit(
     return newMap;
   }
 }
+
+export default mapTilesEdit;

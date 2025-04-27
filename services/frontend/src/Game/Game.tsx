@@ -1,19 +1,19 @@
 import Toolbar from "./Toolbar/Toolbar";
 import Locator from "./Locator";
 import { ToolType } from "./Toolbar/Tool";
-import { ProjectInterface } from "../project/interfaces";
 import Canvas from "./Canvas";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import drawTileMap from "./Draw/tilemap";
-import { mapEdit } from "./mapEdit";
+import mapTilesEdit from "./Edit/tiles";
 import vector2 from "./vector2";
 import drawGrid from "./Draw/grid";
+import { TileMapType } from "./interfaces";
 
 interface GameProps {
-  project: ProjectInterface;
+  projectMap: TileMapType;
 }
 
-function Game({ project }: GameProps) {
+function Game({ projectMap }: GameProps) {
   const tileSize = 30;
 
   const [windowSize, setWindowSize] = useState({
@@ -35,7 +35,7 @@ function Game({ project }: GameProps) {
   const [mouseWorldTile, setMouseWorldTile] = useState({ x: 0, y: 0 });
   const mouseDown = useRef(false);
 
-  const [map, setMap] = useState(project.map);
+  const [map, setMap] = useState(projectMap);
 
   const [draggingPos, setDraggingPos] = useState<vector2 | undefined>(
     undefined
@@ -88,7 +88,7 @@ function Game({ project }: GameProps) {
     }
     setMouseWorldTile(newMouseWorldTile);
     if (mouseDown.current) {
-      setMap(mapEdit(map, newMouseWorldTile, currTool));
+      setMap(mapTilesEdit(map, newMouseWorldTile, currTool));
     }
   }
 
@@ -114,7 +114,7 @@ function Game({ project }: GameProps) {
         setDraggingPos({ x: e.clientX, y: e.clientY });
         break;
       default:
-        setMap(mapEdit(map, mouseWorldTile, currTool));
+        setMap(mapTilesEdit(map, mouseWorldTile, currTool));
         break;
     }
 
@@ -145,15 +145,6 @@ function Game({ project }: GameProps) {
   const drawCallback = useCallback(
     (_dt: number, ctx: CanvasRenderingContext2D) => {
       ctx.scale(cam.scale, cam.scale);
-      if (cam.scale >= minGridScale)
-        drawGrid(
-          ctx,
-          cam.x,
-          cam.y,
-          windowSize.w / cam.scale,
-          windowSize.h / cam.scale,
-          tileSize
-        );
 
       drawTileMap(
         ctx,
@@ -164,6 +155,16 @@ function Game({ project }: GameProps) {
         windowSize.h / cam.scale,
         tileSize
       );
+      if (cam.scale >= minGridScale)
+        drawGrid(
+          ctx,
+          cam.x,
+          cam.y,
+          windowSize.w / cam.scale,
+          windowSize.h / cam.scale,
+          tileSize
+        );
+
       ctx.scale(1 / cam.scale, 1 / cam.scale);
     },
     [map, cam, windowSize]

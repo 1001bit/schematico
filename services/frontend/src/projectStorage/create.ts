@@ -1,6 +1,6 @@
-import { ProjectInterface } from "./interfaces";
+import ProjectInterface from "./project";
 
-export function createLocalProject() {
+function createLocalProject() {
   const projectsStr = localStorage.getItem("projects");
   let projects = {} as Record<string, ProjectInterface>;
   if (projectsStr) {
@@ -24,3 +24,5 @@ export function createLocalProject() {
 
   return [id, project];
 }
+
+export default createLocalProject;
