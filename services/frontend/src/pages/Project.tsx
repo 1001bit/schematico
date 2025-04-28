@@ -1,10 +1,10 @@
 import { useLoaderData } from "react-router";
 import { useTitle } from "../hooks/title/TitleContext";
 import { useEffect } from "react";
-import { Game } from "../Game/Game";
+import Game from "../Game/Game";
 import Button from "../components/Button/Button";
-import { ProjectInterface } from "../project/interfaces";
-import { getLocalProject } from "../project/get";
+import getLocalProject from "../projectStorage/get";
+import ProjectInterface from "../projectStorage/project";
 
 export async function loader({
   params,
@@ -14,12 +14,7 @@ export async function loader({
     return;
   }
 
-  const project = getLocalProject(id);
-  if (!project) {
-    return;
-  }
-
-  return project;
+  return getLocalProject(id);
 }
 
 export default function Project() {
@@ -35,11 +30,13 @@ export default function Project() {
 
   return (
     <>
-      <Game project={project}></Game>
-      <div className="flex justify-between w-full fixed left-0 bottom-0 px-5 py-2 items-end">
-        <Button onClick={() => {}}>settings</Button>
-        <Button onClick={() => {}}>play</Button>
-      </div>
+      <Game projectMap={project.map} projectId={project.id}></Game>
+      <Button onClick={() => {}} className="fixed left-5 bottom-2">
+        settings
+      </Button>
+      <Button onClick={() => {}} className="fixed right-5 bottom-2">
+        play
+      </Button>
     </>
   );
 }

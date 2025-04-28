@@ -4,14 +4,11 @@ import { useTitle } from "../hooks/title/TitleContext";
 import Button from "../components/Button/Button";
 import AnimatedBackground from "../components/Background/Background";
 import ProjectList from "../components/ProjectList/ProjectList";
-import { createLocalProject } from "../project/create";
-import { ProjectInterface } from "../project/interfaces";
+import createLocalProject from "../projectStorage/create";
+import ProjectInterface from "../projectStorage/project";
 
 export async function loader(): Promise<Record<string, ProjectInterface>> {
-  const projectsStr = localStorage.getItem("projects");
-  if (!projectsStr) {
-    return {};
-  }
+  const projectsStr = localStorage.getItem("projects") || "{}";
   return JSON.parse(projectsStr);
 }
 

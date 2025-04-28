@@ -1,0 +1,2 @@
+- can optimize drawing by having tilesInView state variable
+- can optimize game by having every state as ref and having global update state, that triggers redraw

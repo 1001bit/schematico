@@ -1,4 +1,4 @@
-export interface vector2 {
+export default interface vector2 {
   x: number;
   y: number;
 }
@@ -16,4 +16,11 @@ export function strToVector2(str: string) {
 
 export function vector2Compare(v1: vector2, v2: vector2) {
   return v1.x === v2.x && v1.y === v2.y;
+}
+
+export function vector2Product(v: vector2, p: number) {
+  return {
+    x: v.x * p,
+    y: v.y * p,
+  };
 }

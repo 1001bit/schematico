@@ -1,6 +1,6 @@
-import { TileType } from "../../project/interfaces";
-import { TileColors } from "../TileMap/Tile";
-import { WireColor } from "../TileMap/Wire";
+import { memo } from "react";
+import { TileType } from "../interfaces";
+import { TileColors, WireColor } from "../Draw/tilemap";
 
 interface ToolProps {
   onSelect: (type: ToolType) => void;
@@ -28,7 +28,7 @@ export const ToolColors: Record<ToolType, string> = {
   [ToolType.Erase]: "#ffffff",
 };
 
-export default function Tool(props: ToolProps) {
+function Tool(props: ToolProps) {
   return (
     <div
       onClick={() => props.onSelect(props.type)}
@@ -53,3 +53,5 @@ export default function Tool(props: ToolProps) {
     </div>
   );
 }
+
+export default memo(Tool);
