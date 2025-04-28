@@ -8,7 +8,7 @@ function saveLocalMap(id: string, map: TileMapType) {
   }
   const projects = JSON.parse(projectsStr) as Record<string, ProjectInterface>;
   const project = projects[id];
-  if (!projects[id]) {
+  if (!project) {
     return;
   }
 

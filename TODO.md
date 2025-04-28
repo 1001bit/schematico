@@ -5,5 +5,5 @@
     [X] Grid
     [X] Zooming
     [X] Drawing Wires
-    [ ] Saving
+    [X] Autosave
     [ ] Starting

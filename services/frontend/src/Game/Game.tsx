@@ -10,12 +10,14 @@ import drawGrid from "./Draw/grid";
 import { TileMapType } from "./interfaces";
 import placeWire from "./Edit/wire";
 import drawGhostWire from "./Draw/ghostWire";
+import saveLocalMap from "../projectStorage/save";
 
 interface GameProps {
+  projectId: string;
   projectMap: TileMapType;
 }
 
-function Game({ projectMap }: GameProps) {
+function Game({ projectId, projectMap }: GameProps) {
   // TileSize
   const tileSize = 30;
 
@@ -218,6 +220,16 @@ function Game({ projectMap }: GameProps) {
     },
     [map, cam, windowSize, wireEndTile]
   );
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      saveLocalMap(projectId, map);
+    }, 500);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [map]);
 
   return (
     <>

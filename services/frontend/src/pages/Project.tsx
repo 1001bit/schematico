@@ -30,7 +30,7 @@ export default function Project() {
 
   return (
     <>
-      <Game projectMap={project.map}></Game>
+      <Game projectMap={project.map} projectId={project.id}></Game>
       <Button onClick={() => {}} className="fixed left-5 bottom-2">
         settings
       </Button>
