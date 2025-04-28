@@ -8,6 +8,7 @@ function drawGrid(
 ) {
   ctx.translate(-x % tileSize, -y % tileSize);
   ctx.scale(1, 1);
+  ctx.lineWidth = 1;
 
   ctx.strokeStyle = "#444444";
   for (let row = -tileSize; row <= w + tileSize; row += tileSize) {

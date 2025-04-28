@@ -3,48 +3,30 @@ import Locator from "./Locator";
 import { ToolType } from "./Toolbar/Tool";
 import Canvas from "./Canvas";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import drawTileMap from "./Draw/tilemap";
+import { drawTileMap, drawWires } from "./Draw/tilemap";
 import mapTilesEdit from "./Edit/tiles";
 import vector2 from "./vector2";
 import drawGrid from "./Draw/grid";
 import { TileMapType } from "./interfaces";
+import placeWire from "./Edit/wire";
+import drawGhostWire from "./Draw/ghostWire";
 
 interface GameProps {
   projectMap: TileMapType;
 }
 
 function Game({ projectMap }: GameProps) {
+  // TileSize
   const tileSize = 30;
 
+  // CurrTool
+  const [currTool, setCurrTool] = useState<ToolType>(ToolType.Drag);
+
+  // Window
   const [windowSize, setWindowSize] = useState({
     w: innerWidth,
     h: innerHeight,
   });
-
-  const [currTool, setCurrTool] = useState<ToolType>(ToolType.Drag);
-
-  const [cam, setCam] = useState({
-    scale: 1,
-    x: 0,
-    y: 0,
-  });
-  const maxScale = 5;
-  const minGridScale = 0.3;
-  const minScale = 0.1;
-
-  const [mouseWorldTile, setMouseWorldTile] = useState({ x: 0, y: 0 });
-  const mouseDown = useRef(false);
-
-  const [map, setMap] = useState(projectMap);
-
-  const [draggingPos, setDraggingPos] = useState<vector2 | undefined>(
-    undefined
-  );
-  const canDrag = useMemo(() => currTool === ToolType.Drag, [currTool]);
-  useEffect(() => {
-    if (!canDrag && draggingPos) setDraggingPos(undefined);
-  }, [canDrag]);
-
   useEffect(() => {
     const resize = () => {
       setWindowSize({
@@ -57,6 +39,40 @@ function Game({ projectMap }: GameProps) {
     return window.removeEventListener("resize", () => resize());
   }, []);
 
+  // Camera
+  const [cam, setCam] = useState({
+    scale: 1,
+    x: 0,
+    y: 0,
+  });
+  const maxScale = 5;
+  const minGridScale = 0.3;
+  const minScale = 0.1;
+
+  // Mouse
+  const [mouseWorldTile, setMouseWorldTile] = useState({ x: 0, y: 0 });
+  const mouseDown = useRef(false);
+  // Drag
+  const [draggingPos, setDraggingPos] = useState<vector2 | undefined>(
+    undefined
+  );
+  const canDrag = useMemo(() => currTool === ToolType.Drag, [currTool]);
+  useEffect(() => {
+    if (!canDrag && draggingPos) setDraggingPos(undefined);
+  }, [canDrag]);
+
+  // Wire Edit
+  const [wireStartTile, setWireStartTile] = useState<vector2 | undefined>(
+    undefined
+  );
+  const [wireEndTile, setWireEndTile] = useState<vector2 | undefined>(
+    undefined
+  );
+
+  // Map
+  const [map, setMap] = useState(projectMap);
+
+  // Mouse Move
   function onMouseMove(e: React.MouseEvent) {
     const pointer = { x: e.clientX, y: e.clientY };
 
@@ -89,12 +105,20 @@ function Game({ projectMap }: GameProps) {
     setMouseWorldTile(newMouseWorldTile);
     if (mouseDown.current) {
       setMap(mapTilesEdit(map, newMouseWorldTile, currTool));
+      if (currTool == ToolType.Wire) {
+        setWireEndTile(newMouseWorldTile);
+      }
     }
   }
-
+  // Mouse Up
   function onMouseUp(_e: React.MouseEvent) {
     switch (currTool) {
       case ToolType.Wire:
+        if (wireStartTile && wireEndTile) {
+          setMap(placeWire(map, wireStartTile, wireEndTile));
+          setWireStartTile(undefined);
+          setWireEndTile(undefined);
+        }
         break;
       case ToolType.Drag:
         setDraggingPos(undefined);
@@ -105,13 +129,17 @@ function Game({ projectMap }: GameProps) {
 
     mouseDown.current = false;
   }
-
+  // Mouse Down
   function onMouseDown(e: React.MouseEvent) {
+    const pointer = { x: e.clientX, y: e.clientY };
+
     switch (currTool) {
       case ToolType.Wire:
+        setWireStartTile(mouseWorldTile);
+        setWireEndTile(mouseWorldTile);
         break;
       case ToolType.Drag:
-        setDraggingPos({ x: e.clientX, y: e.clientY });
+        setDraggingPos(pointer);
         break;
       default:
         setMap(mapTilesEdit(map, mouseWorldTile, currTool));
@@ -120,7 +148,7 @@ function Game({ projectMap }: GameProps) {
 
     mouseDown.current = true;
   }
-
+  // Wheel Scroll
   function onWheel(e: React.WheelEvent) {
     e.preventDefault();
     const pointer = { x: e.clientX, y: e.clientY };
@@ -142,6 +170,7 @@ function Game({ projectMap }: GameProps) {
     });
   }
 
+  // Draw
   const drawCallback = useCallback(
     (_dt: number, ctx: CanvasRenderingContext2D) => {
       ctx.scale(cam.scale, cam.scale);
@@ -164,10 +193,30 @@ function Game({ projectMap }: GameProps) {
           windowSize.h / cam.scale,
           tileSize
         );
+      drawWires(
+        ctx,
+        map,
+        cam.x,
+        cam.y,
+        windowSize.w / cam.scale,
+        windowSize.h / cam.scale,
+        tileSize
+      );
+
+      if (wireStartTile && wireEndTile)
+        drawGhostWire(
+          ctx,
+          map,
+          wireStartTile,
+          wireEndTile,
+          cam.x,
+          cam.y,
+          tileSize
+        );
 
       ctx.scale(1 / cam.scale, 1 / cam.scale);
     },
-    [map, cam, windowSize]
+    [map, cam, windowSize, wireEndTile]
   );
 
   return (

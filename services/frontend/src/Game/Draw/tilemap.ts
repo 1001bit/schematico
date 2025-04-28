@@ -1,5 +1,6 @@
 import { TileMapType, TileType } from "../interfaces";
 import vector2, { strToVector2, vector2Product } from "../vector2";
+import drawArrow from "./arrow";
 
 export const TileColors: Record<TileType, string> = {
   [TileType.Or]: "#ff0000",
@@ -31,7 +32,7 @@ function intersects(
   );
 }
 
-function drawTileMap(
+export function drawTileMap(
   ctx: CanvasRenderingContext2D,
   map: TileMapType,
   x: number,
@@ -65,15 +66,56 @@ function drawTileMap(
       if (!intersects(canvasStart, canvasEnd, pos, wireEnd)) {
         continue;
       }
+      ctx.lineWidth = 3;
       ctx.beginPath();
       ctx.strokeStyle = WireColor;
-      ctx.moveTo(pos.x, pos.y);
-      ctx.lineTo(wireEnd.x, wireEnd.y);
+      ctx.moveTo(pos.x + tileSize / 2, pos.y + tileSize / 2);
+      ctx.lineTo(wireEnd.x + tileSize / 2, wireEnd.y + tileSize / 2);
       ctx.stroke();
+      ctx.lineWidth = 1;
     }
   }
 
   ctx.translate(x, y);
 }
 
-export default drawTileMap;
+export function drawWires(
+  ctx: CanvasRenderingContext2D,
+  map: TileMapType,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  tileSize: number
+) {
+  const canvasStart = {
+    x: x - tileSize,
+    y: y - tileSize,
+  };
+  const canvasEnd = {
+    x: canvasStart.x + w + tileSize,
+    y: canvasStart.y + h + tileSize,
+  };
+
+  ctx.translate(-x, -y);
+
+  for (const [posStr, tile] of Object.entries(map)) {
+    const pos = vector2Product(strToVector2(posStr), tileSize);
+
+    for (const [wireEndStr, _] of Object.entries(tile.connections)) {
+      const wireEnd = vector2Product(strToVector2(wireEndStr), tileSize);
+
+      if (!intersects(canvasStart, canvasEnd, pos, wireEnd)) {
+        continue;
+      }
+      drawArrow(
+        ctx,
+        { x: pos.x + tileSize / 2, y: pos.y + tileSize / 2 },
+        { x: wireEnd.x + tileSize / 2, y: wireEnd.y + tileSize / 2 },
+        WireColor
+      );
+    }
+  }
+
+  ctx.translate(x, y);
+}

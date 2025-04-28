@@ -4,6 +4,6 @@
     [X] Dragging to move
     [X] Grid
     [X] Zooming
-    [ ] Drawing Wires
+    [X] Drawing Wires
     [ ] Saving
     [ ] Starting
