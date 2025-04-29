@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { TileType } from "../interfaces";
-import { TileColors, WireColor } from "../Draw/tilemap";
+import { TileColors } from "../Draw/tile";
+import { WireColor } from "../Draw/wire";
 
 interface ToolProps {
   onSelect: (type: ToolType) => void;

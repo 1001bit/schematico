@@ -1,13 +1,7 @@
-import { TileMapType, TileType } from "../interfaces";
+import { TileMapType } from "../interfaces";
 import vector2, { strToVector2, vector2Product } from "../vector2";
-import drawArrow from "./arrow";
-
-export const TileColors: Record<TileType, string> = {
-  [TileType.Or]: "#ff0000",
-  [TileType.And]: "#00ffff",
-  [TileType.Not]: "#ffff00",
-};
-export const WireColor = "#00ff00";
+import drawTile, { drawTileLabel } from "./tile";
+import drawWire from "./wire";
 
 function containsPoint(start: vector2, end: vector2, point: vector2) {
   return (
@@ -56,23 +50,38 @@ export function drawTileMap(
     const pos = vector2Product(strToVector2(posStr), tileSize);
 
     if (containsPoint(canvasStart, canvasEnd, pos)) {
-      ctx.fillStyle = TileColors[tile.type];
-      ctx.fillRect(pos.x, pos.y, tileSize, tileSize);
+      drawTile(ctx, tile.type, pos, tileSize);
     }
+  }
 
-    for (const [wireEndStr, _] of Object.entries(tile.connections)) {
-      const wireEnd = vector2Product(strToVector2(wireEndStr), tileSize);
+  ctx.translate(x, y);
+}
 
-      if (!intersects(canvasStart, canvasEnd, pos, wireEnd)) {
-        continue;
-      }
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.strokeStyle = WireColor;
-      ctx.moveTo(pos.x + tileSize / 2, pos.y + tileSize / 2);
-      ctx.lineTo(wireEnd.x + tileSize / 2, wireEnd.y + tileSize / 2);
-      ctx.stroke();
-      ctx.lineWidth = 1;
+export function drawTileLabels(
+  ctx: CanvasRenderingContext2D,
+  map: TileMapType,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  tileSize: number
+) {
+  const canvasStart = {
+    x: x - tileSize,
+    y: y - tileSize,
+  };
+  const canvasEnd = {
+    x: canvasStart.x + w + tileSize,
+    y: canvasStart.y + h + tileSize,
+  };
+
+  ctx.translate(-x, -y);
+
+  for (const [posStr, tile] of Object.entries(map)) {
+    const pos = vector2Product(strToVector2(posStr), tileSize);
+
+    if (containsPoint(canvasStart, canvasEnd, pos)) {
+      drawTileLabel(ctx, tile.type, pos, tileSize);
     }
   }
 
@@ -108,12 +117,8 @@ export function drawWires(
       if (!intersects(canvasStart, canvasEnd, pos, wireEnd)) {
         continue;
       }
-      drawArrow(
-        ctx,
-        { x: pos.x + tileSize / 2, y: pos.y + tileSize / 2 },
-        { x: wireEnd.x + tileSize / 2, y: wireEnd.y + tileSize / 2 },
-        WireColor
-      );
+
+      drawWire(ctx, pos, wireEnd, tileSize);
     }
   }
 

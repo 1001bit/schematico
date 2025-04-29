@@ -1,5 +1,8 @@
 import vector2 from "../vector2";
 
+export const WireColor = "#00ff00";
+export const ErrorColor = "#ff0000";
+
 function drawArrow(
   ctx: CanvasRenderingContext2D,
   start: vector2,
@@ -12,6 +15,11 @@ function drawArrow(
   ctx.lineWidth = 3;
   ctx.beginPath();
   ctx.strokeStyle = color;
+
+  // Draw the tail
+  ctx.fillStyle = color;
+  ctx.arc(start.x, start.y, 3, 0, 2 * Math.PI);
+  ctx.fill();
 
   // Draw the main line
   ctx.moveTo(start.x, start.y);
@@ -38,4 +46,29 @@ function drawArrow(
   ctx.fill();
 }
 
-export default drawArrow;
+function drawWire(
+  ctx: CanvasRenderingContext2D,
+  wireStart: vector2,
+  wireEnd: vector2,
+  tileSize: number,
+  errorColor?: boolean
+) {
+  const offset = tileSize / 2;
+  const radius = 1 / 2.7;
+  const dx = wireEnd.x - wireStart.x;
+  const dy = wireEnd.y - wireStart.y;
+  const angle = Math.atan2(dy, dx);
+
+  const start = {
+    x: wireStart.x + offset + Math.cos(angle) * tileSize * radius,
+    y: wireStart.y + offset + Math.sin(angle) * tileSize * radius,
+  };
+  const end = {
+    x: wireEnd.x + offset - Math.cos(angle) * tileSize * radius,
+    y: wireEnd.y + offset - Math.sin(angle) * tileSize * radius,
+  };
+
+  drawArrow(ctx, start, end, errorColor ? ErrorColor : WireColor);
+}
+
+export default drawWire;

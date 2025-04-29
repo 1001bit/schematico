@@ -3,7 +3,7 @@ import Locator from "./Locator";
 import { ToolType } from "./Toolbar/Tool";
 import Canvas from "./Canvas";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { drawTileMap, drawWires } from "./Draw/tilemap";
+import { drawTileMap, drawTileLabels, drawWires } from "./Draw/tilemap";
 import mapTilesEdit from "./Edit/tiles";
 import vector2 from "./vector2";
 import drawGrid from "./Draw/grid";
@@ -49,6 +49,7 @@ function Game({ projectId, projectMap }: GameProps) {
   });
   const maxScale = 5;
   const minGridScale = 0.3;
+  const minTileTextScale = 0.7;
   const minScale = 0.1;
 
   // Mouse
@@ -177,15 +178,6 @@ function Game({ projectId, projectMap }: GameProps) {
     (_dt: number, ctx: CanvasRenderingContext2D) => {
       ctx.scale(cam.scale, cam.scale);
 
-      drawTileMap(
-        ctx,
-        map,
-        cam.x,
-        cam.y,
-        windowSize.w / cam.scale,
-        windowSize.h / cam.scale,
-        tileSize
-      );
       if (cam.scale >= minGridScale)
         drawGrid(
           ctx,
@@ -195,6 +187,15 @@ function Game({ projectId, projectMap }: GameProps) {
           windowSize.h / cam.scale,
           tileSize
         );
+      drawTileMap(
+        ctx,
+        map,
+        cam.x,
+        cam.y,
+        windowSize.w / cam.scale,
+        windowSize.h / cam.scale,
+        tileSize
+      );
       drawWires(
         ctx,
         map,
@@ -204,6 +205,16 @@ function Game({ projectId, projectMap }: GameProps) {
         windowSize.h / cam.scale,
         tileSize
       );
+      if (cam.scale >= minTileTextScale)
+        drawTileLabels(
+          ctx,
+          map,
+          cam.x,
+          cam.y,
+          windowSize.w / cam.scale,
+          windowSize.h / cam.scale,
+          tileSize
+        );
 
       if (wireStartTile && wireEndTile)
         drawGhostWire(

@@ -6,4 +6,5 @@
     [X] Zooming
     [X] Drawing Wires
     [X] Autosave
+    [ ] Switch and bulb tools
     [ ] Starting
