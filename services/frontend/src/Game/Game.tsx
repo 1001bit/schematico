@@ -7,17 +7,18 @@ import { drawTileMap, drawTileLabels, drawWires } from "./Draw/tilemap";
 import mapTilesEdit from "./Edit/tiles";
 import vector2 from "./vector2";
 import drawGrid from "./Draw/grid";
-import { TileMapType } from "./interfaces";
+import { Camera, TileMapType } from "./interfaces";
 import placeWire from "./Edit/wire";
 import drawGhostWire from "./Draw/ghostWire";
-import saveLocalMap from "../projectStorage/save";
+import saveLocalProject from "../projectStorage/save";
 
 interface GameProps {
   projectId: string;
   projectMap: TileMapType;
+  camera: Camera;
 }
 
-function Game({ projectId, projectMap }: GameProps) {
+function Game({ projectId, projectMap, camera }: GameProps) {
   // TileSize
   const tileSize = 30;
 
@@ -42,11 +43,13 @@ function Game({ projectId, projectMap }: GameProps) {
   }, []);
 
   // Camera
-  const [cam, setCam] = useState({
-    scale: 1,
-    x: 0,
-    y: 0,
-  });
+  const [cam, setCam] = useState(
+    camera || {
+      scale: 1,
+      x: 0,
+      y: 0,
+    }
+  );
   const maxScale = 5;
   const minGridScale = 0.3;
   const minTileTextScale = 0.7;
@@ -234,13 +237,13 @@ function Game({ projectId, projectMap }: GameProps) {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      saveLocalMap(projectId, map);
+      saveLocalProject(projectId, map, cam);
     }, 500);
 
     return () => {
       clearTimeout(timeout);
     };
-  }, [map]);
+  }, [map, cam]);
 
   return (
     <>

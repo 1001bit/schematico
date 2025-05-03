@@ -1,7 +1,7 @@
-import { TileMapType } from "../Game/interfaces";
+import { Camera, TileMapType } from "../Game/interfaces";
 import ProjectInterface from "./project";
 
-function saveLocalMap(id: string, map: TileMapType) {
+function saveLocalProject(id: string, map: TileMapType, camera: Camera) {
   const projectsStr = localStorage.getItem("projects");
   if (!projectsStr) {
     return;
@@ -12,9 +12,10 @@ function saveLocalMap(id: string, map: TileMapType) {
     return;
   }
 
+  project.camera = camera;
   project.map = map;
   projects[id] = project;
   localStorage.setItem("projects", JSON.stringify(projects));
 }
 
-export default saveLocalMap;
+export default saveLocalProject;

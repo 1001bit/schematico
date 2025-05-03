@@ -17,6 +17,11 @@ function createLocalProject() {
     title: "new project",
     id: id,
     map: {},
+    camera: {
+      scale: 1,
+      x: 0,
+      y: 0,
+    },
   } as ProjectInterface;
   projects[id] = project;
 

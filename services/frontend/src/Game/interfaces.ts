@@ -10,3 +10,9 @@ export interface TileInterface {
 }
 
 export type TileMapType = Record<string, TileInterface>;
+
+export interface Camera {
+  scale: number;
+  x: number;
+  y: number;
+}
