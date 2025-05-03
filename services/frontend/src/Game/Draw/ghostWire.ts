@@ -1,6 +1,6 @@
 import { TileMapType } from "../interfaces";
 import vector2, { vector2Product, vector2ToStr } from "../vector2";
-import drawWire from "./wire";
+import drawWire, { WireColor } from "./wire";
 
 function drawGhostWire(
   ctx: CanvasRenderingContext2D,
@@ -23,19 +23,34 @@ function drawGhostWire(
   const wireEndTileScaled = vector2Product(wireEndTile, tileSize);
 
   ctx.translate(-x, -y);
-  drawWire(
-    ctx,
-    {
-      x: wireStartTileScaled.x,
-      y: wireStartTileScaled.y,
-    },
-    {
-      x: wireEndTileScaled.x,
-      y: wireEndTileScaled.y,
-    },
-    tileSize,
-    tile.connections[wireEndTileStr]
-  );
+
+  if (wireStartTileStr !== wireEndTileStr) {
+    drawWire(
+      ctx,
+      {
+        x: wireStartTileScaled.x,
+        y: wireStartTileScaled.y,
+      },
+      {
+        x: wireEndTileScaled.x,
+        y: wireEndTileScaled.y,
+      },
+      tileSize,
+      tile.connections[wireEndTileStr]
+    );
+  } else {
+    const radius = 3;
+    ctx.fillStyle = WireColor;
+    ctx.arc(
+      wireStartTileScaled.x + tileSize / 2,
+      wireEndTileScaled.y + tileSize / 2,
+      radius,
+      0,
+      2 * Math.PI
+    );
+    ctx.fill();
+  }
+
   ctx.translate(x, y);
 }
 

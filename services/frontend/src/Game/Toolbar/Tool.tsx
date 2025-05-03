@@ -1,5 +1,4 @@
 import { memo } from "react";
-import { TileType } from "../interfaces";
 import { TileColors } from "../Draw/tile";
 import { WireColor } from "../Draw/wire";
 
@@ -12,9 +11,9 @@ interface ToolProps {
 }
 
 export enum ToolType {
-  Or = TileType.Or,
-  And = TileType.And,
-  Not = TileType.Not,
+  Or = 1,
+  And = 2,
+  Not = 3,
   Drag = 4,
   Wire = 5,
   Erase = 6,

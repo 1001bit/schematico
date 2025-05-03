@@ -9,24 +9,24 @@ function drawArrow(
   end: vector2,
   color: string
 ) {
-  const headLength = 10; // Length of the arrowhead
-  const angle = Math.atan2(end.y - start.y, end.x - start.x);
-
-  ctx.lineWidth = 3;
   ctx.beginPath();
-  ctx.strokeStyle = color;
 
   // Draw the tail
+  const radius = 2;
   ctx.fillStyle = color;
-  ctx.arc(start.x, start.y, 3, 0, 2 * Math.PI);
+  ctx.arc(start.x, start.y, radius, 0, 2 * Math.PI);
   ctx.fill();
 
   // Draw the main line
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = color;
   ctx.moveTo(start.x, start.y);
   ctx.lineTo(end.x, end.y);
   ctx.stroke();
 
   // Draw the arrowhead
+  const headLength = 10; // Length of the arrowhead
+  const angle = Math.atan2(end.y - start.y, end.x - start.x);
   const forwardOffset = 5; // Move the arrowhead forward
   const arrowTipX = end.x + forwardOffset * Math.cos(angle);
   const arrowTipY = end.y + forwardOffset * Math.sin(angle);
