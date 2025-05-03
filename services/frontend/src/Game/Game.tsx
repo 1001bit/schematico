@@ -117,20 +117,15 @@ function Game({ projectId, projectMap, camera }: GameProps) {
     }
   }
   // Mouse Up
-  function onMouseUp(_e: React.MouseEvent) {
-    switch (currTool) {
-      case ToolType.Wire:
-        if (wireStartTile && wireEndTile) {
-          setMap(placeWire(map, wireStartTile, wireEndTile));
-          setWireStartTile(undefined);
-          setWireEndTile(undefined);
-        }
-        break;
-      case ToolType.Drag:
-        setDraggingPos(undefined);
-        break;
-      default:
-        break;
+  function onMouseUp(e: React.MouseEvent) {
+    if (e.button === 1 || currTool === ToolType.Drag) {
+      setDraggingPos(undefined);
+    } else if (currTool === ToolType.Wire) {
+      if (wireStartTile && wireEndTile) {
+        setMap(placeWire(map, wireStartTile, wireEndTile));
+        setWireStartTile(undefined);
+        setWireEndTile(undefined);
+      }
     }
 
     mouseDown.current = false;
@@ -139,17 +134,13 @@ function Game({ projectId, projectMap, camera }: GameProps) {
   function onMouseDown(e: React.MouseEvent) {
     const pointer = { x: e.clientX, y: e.clientY };
 
-    switch (currTool) {
-      case ToolType.Wire:
-        setWireStartTile(mouseWorldTile);
-        setWireEndTile(mouseWorldTile);
-        break;
-      case ToolType.Drag:
-        setDraggingPos(pointer);
-        break;
-      default:
-        setMap(mapTilesEdit(map, mouseWorldTile, currTool));
-        break;
+    if (e.button === 1 || currTool === ToolType.Drag) {
+      setDraggingPos(pointer);
+    } else if (currTool === ToolType.Wire) {
+      setWireStartTile(mouseWorldTile);
+      setWireEndTile(mouseWorldTile);
+    } else {
+      setMap(mapTilesEdit(map, mouseWorldTile, currTool));
     }
 
     mouseDown.current = true;
@@ -271,7 +262,8 @@ function Game({ projectId, projectMap, camera }: GameProps) {
         bgColor="#000000"
         className={`
           fixed left-0 top-0 z-0
-          ${canDrag ? (draggingPos ? "cursor-grabbing" : "cursor-grab") : ""}
+          ${draggingPos && "cursor-grabbing"}
+          ${canDrag && !draggingPos && "cursor-grab"}
         `}
         onMouseMove={onMouseMove}
         onMouseDown={onMouseDown}
