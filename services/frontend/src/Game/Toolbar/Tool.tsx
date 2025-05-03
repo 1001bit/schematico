@@ -1,13 +1,13 @@
-import { memo } from "react";
-import { TileColors } from "../Draw/tile";
-import { WireColor } from "../Draw/wire";
+import { CSSProperties, memo } from "react";
 
 interface ToolProps {
   onSelect: (type: ToolType) => void;
   text: string;
+  toolType: ToolType;
+  currToolType: ToolType;
 
-  type: ToolType;
-  choseTool: ToolType;
+  style?: CSSProperties;
+  className?: string;
 }
 
 export enum ToolType {
@@ -19,37 +19,31 @@ export enum ToolType {
   Erase = 6,
 }
 
-export const ToolColors: Record<ToolType, string> = {
-  [ToolType.Or]: TileColors[ToolType.Or],
-  [ToolType.And]: TileColors[ToolType.And],
-  [ToolType.Not]: TileColors[ToolType.Not],
-  [ToolType.Drag]: "#ffffff",
-  [ToolType.Wire]: WireColor,
-  [ToolType.Erase]: "#ffffff",
-};
-
-function Tool(props: ToolProps) {
+function Tool({
+  onSelect,
+  text,
+  toolType,
+  currToolType,
+  style,
+  className,
+}: ToolProps) {
   return (
     <div
-      onClick={() => props.onSelect(props.type)}
-      style={{
-        borderColor: ToolColors[props.type],
-      }}
+      onClick={() => onSelect(toolType)}
+      style={style}
       className={`
-      border-1
-      h-14 w-14
-      bg-acc-bg
-      backdrop-blur-[5px]
-      cursor-pointer
-      transition-all duration-75 ease-in-out
-      flex
-      justify-center
-      items-center
-      select-none
-      ${props.type == props.choseTool ? "scale-110" : "hover:scale-105"}
+        h-14 w-14
+        cursor-pointer
+        transition-all duration-75 ease-in-out
+        flex
+        justify-center
+        items-center
+        select-none
+        ${toolType == currToolType ? "scale-110" : "hover:scale-105"}
+        ${className}
       `}
     >
-      {props.text}
+      {text}
     </div>
   );
 }

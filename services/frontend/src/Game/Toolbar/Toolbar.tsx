@@ -1,11 +1,24 @@
 import { memo } from "react";
 import Tool, { ToolType } from "./Tool";
+import { TileColors } from "../Draw/tile";
+import { WireColor } from "../Draw/wire";
 
 interface ToolbarProps {
   onSelect: (t: ToolType) => void;
   currTool: ToolType;
   className?: string;
 }
+
+export const ToolColors: Record<ToolType, string> = {
+  [ToolType.Or]: TileColors[ToolType.Or],
+  [ToolType.And]: TileColors[ToolType.And],
+  [ToolType.Not]: TileColors[ToolType.Not],
+  [ToolType.Drag]: "#ffffff",
+  [ToolType.Wire]: WireColor,
+  [ToolType.Erase]: "#ffffff",
+};
+
+const bgTransparency = "20";
 
 function Toolbar(props: ToolbarProps) {
   return (
@@ -17,39 +30,66 @@ function Toolbar(props: ToolbarProps) {
     >
       <Tool
         text="drag"
-        type={ToolType.Drag}
+        toolType={ToolType.Drag}
         onSelect={props.onSelect}
-        choseTool={props.currTool}
+        currToolType={props.currTool}
+        className="border-1 border-dashed backdrop-blur-[2px]"
+        style={{
+          borderColor: ToolColors[ToolType.Drag],
+        }}
       ></Tool>
       <Tool
         text="erase"
-        type={ToolType.Erase}
+        toolType={ToolType.Erase}
         onSelect={props.onSelect}
-        choseTool={props.currTool}
+        currToolType={props.currTool}
+        className="border-1 border-dashed backdrop-blur-[2px]"
+        style={{
+          borderColor: ToolColors[ToolType.Erase],
+        }}
       ></Tool>
       <Tool
         text="Wire"
-        type={ToolType.Wire}
+        toolType={ToolType.Wire}
         onSelect={props.onSelect}
-        choseTool={props.currTool}
+        currToolType={props.currTool}
+        className="border-2 backdrop-blur-[2px]"
+        style={{
+          borderColor: ToolColors[ToolType.Wire],
+        }}
       ></Tool>
       <Tool
         text="<OR>"
-        type={ToolType.Or}
+        toolType={ToolType.Or}
         onSelect={props.onSelect}
-        choseTool={props.currTool}
+        currToolType={props.currTool}
+        className="border-2 backdrop-blur-[2px]"
+        style={{
+          borderColor: ToolColors[ToolType.Or],
+          backgroundColor: ToolColors[ToolType.Or] + bgTransparency,
+        }}
       ></Tool>
       <Tool
         text="<AND>"
-        type={ToolType.And}
+        toolType={ToolType.And}
         onSelect={props.onSelect}
-        choseTool={props.currTool}
+        currToolType={props.currTool}
+        className="border-2 backdrop-blur-[2px]"
+        style={{
+          borderColor: ToolColors[ToolType.And],
+          backgroundColor: ToolColors[ToolType.And] + bgTransparency,
+        }}
       ></Tool>
       <Tool
         text="<NOT>"
-        type={ToolType.Not}
+        toolType={ToolType.Not}
         onSelect={props.onSelect}
-        choseTool={props.currTool}
+        currToolType={props.currTool}
+        className="border-2 backdrop-blur-[2px]"
+        style={{
+          borderColor: ToolColors[ToolType.Not],
+          backgroundColor: ToolColors[ToolType.Not] + bgTransparency,
+        }}
       ></Tool>
     </div>
   );
