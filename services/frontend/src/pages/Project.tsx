@@ -35,9 +35,6 @@ export default function Project() {
         projectId={project.id}
         camera={project.camera}
       ></Game>
-      <Button onClick={() => {}} className="fixed left-5 bottom-2">
-        settings
-      </Button>
       <Button onClick={() => {}} className="fixed right-5 bottom-2">
         play
       </Button>

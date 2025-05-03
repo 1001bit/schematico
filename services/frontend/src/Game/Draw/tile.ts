@@ -5,12 +5,16 @@ export const TileColors: Record<TileType, string> = {
   [TileType.Or]: "#ff0000",
   [TileType.And]: "#00ffff",
   [TileType.Not]: "#ffff00",
+  [TileType.Input]: "#00ff00",
+  [TileType.Bulb]: "#ffffff",
 };
 
 export const TileLabels: Record<TileType, string> = {
   [TileType.Or]: "OR",
   [TileType.And]: "AND",
   [TileType.Not]: "NOT",
+  [TileType.Input]: "Off",
+  [TileType.Bulb]: "Off",
 };
 
 function drawTile(

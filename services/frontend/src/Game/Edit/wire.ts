@@ -14,6 +14,7 @@ function placeWire(
   }
 
   const startTile = map[wireStartTileStr];
+  if (!startTile) return map;
 
   if (startTile.connections[mouseWorldTileStr]) {
     delete startTile.connections[mouseWorldTileStr];

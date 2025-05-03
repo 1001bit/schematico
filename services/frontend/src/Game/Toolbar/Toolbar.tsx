@@ -1,7 +1,8 @@
 import { memo } from "react";
-import Tool, { ToolType } from "./Tool";
 import { TileColors } from "../Draw/tile";
 import { WireColor } from "../Draw/wire";
+import Tool from "./Tool";
+import { TileType, ToolType } from "../interfaces";
 
 interface ToolbarProps {
   onSelect: (t: ToolType) => void;
@@ -10,12 +11,27 @@ interface ToolbarProps {
 }
 
 export const ToolColors: Record<ToolType, string> = {
-  [ToolType.Or]: TileColors[ToolType.Or],
-  [ToolType.And]: TileColors[ToolType.And],
-  [ToolType.Not]: TileColors[ToolType.Not],
   [ToolType.Drag]: "#ffffff",
-  [ToolType.Wire]: WireColor,
   [ToolType.Erase]: "#ffffff",
+
+  [ToolType.Wire]: WireColor,
+  [ToolType.Or]: TileColors[TileType.Or],
+  [ToolType.And]: TileColors[TileType.And],
+  [ToolType.Not]: TileColors[TileType.Not],
+  [ToolType.Input]: TileColors[TileType.Input],
+  [ToolType.Bulb]: TileColors[TileType.Bulb],
+};
+
+export const ToolLabels: Record<ToolType, string> = {
+  [ToolType.Drag]: "Drag",
+  [ToolType.Erase]: "Erase",
+
+  [ToolType.Wire]: "Wire",
+  [ToolType.Or]: "OR",
+  [ToolType.And]: "AND",
+  [ToolType.Not]: "NOT",
+  [ToolType.Input]: "Input",
+  [ToolType.Bulb]: "Bulb",
 };
 
 const bgTransparency = "20";
@@ -28,26 +44,22 @@ function Toolbar(props: ToolbarProps) {
       ${props.className}
     `}
     >
-      <Tool
-        text="drag"
-        toolType={ToolType.Drag}
-        onSelect={props.onSelect}
-        currToolType={props.currTool}
-        className="border-1 border-dashed backdrop-blur-[2px]"
-        style={{
-          borderColor: ToolColors[ToolType.Drag],
-        }}
-      ></Tool>
-      <Tool
-        text="erase"
-        toolType={ToolType.Erase}
-        onSelect={props.onSelect}
-        currToolType={props.currTool}
-        className="border-1 border-dashed backdrop-blur-[2px]"
-        style={{
-          borderColor: ToolColors[ToolType.Erase],
-        }}
-      ></Tool>
+      {[ToolType.Drag, ToolType.Erase].map((type, idx) => {
+        return (
+          <Tool
+            text={ToolLabels[type]}
+            toolType={type}
+            onSelect={props.onSelect}
+            currToolType={props.currTool}
+            className="border-1 border-dashed backdrop-blur-[2px]"
+            style={{
+              borderColor: ToolColors[type],
+            }}
+            key={idx}
+          ></Tool>
+        );
+      })}
+
       <Tool
         text="Wire"
         toolType={ToolType.Wire}
@@ -58,39 +70,29 @@ function Toolbar(props: ToolbarProps) {
           borderColor: ToolColors[ToolType.Wire],
         }}
       ></Tool>
-      <Tool
-        text="<OR>"
-        toolType={ToolType.Or}
-        onSelect={props.onSelect}
-        currToolType={props.currTool}
-        className="border-2 backdrop-blur-[2px]"
-        style={{
-          borderColor: ToolColors[ToolType.Or],
-          backgroundColor: ToolColors[ToolType.Or] + bgTransparency,
-        }}
-      ></Tool>
-      <Tool
-        text="<AND>"
-        toolType={ToolType.And}
-        onSelect={props.onSelect}
-        currToolType={props.currTool}
-        className="border-2 backdrop-blur-[2px]"
-        style={{
-          borderColor: ToolColors[ToolType.And],
-          backgroundColor: ToolColors[ToolType.And] + bgTransparency,
-        }}
-      ></Tool>
-      <Tool
-        text="<NOT>"
-        toolType={ToolType.Not}
-        onSelect={props.onSelect}
-        currToolType={props.currTool}
-        className="border-2 backdrop-blur-[2px]"
-        style={{
-          borderColor: ToolColors[ToolType.Not],
-          backgroundColor: ToolColors[ToolType.Not] + bgTransparency,
-        }}
-      ></Tool>
+
+      {[
+        ToolType.Or,
+        ToolType.And,
+        ToolType.Not,
+        ToolType.Input,
+        ToolType.Bulb,
+      ].map((type, idx) => {
+        return (
+          <Tool
+            text={ToolLabels[type]}
+            toolType={type}
+            onSelect={props.onSelect}
+            currToolType={props.currTool}
+            className="border-2 backdrop-blur-[2px]"
+            style={{
+              borderColor: ToolColors[type],
+              backgroundColor: ToolColors[type] + bgTransparency,
+            }}
+            key={idx}
+          ></Tool>
+        );
+      })}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { TileMapType, TileType } from "../interfaces";
-import { ToolType } from "../Toolbar/Tool";
+import { ToolType } from "../interfaces";
 import vector2, { vector2ToStr } from "../vector2";
 
 function mapTilesEdit(
@@ -25,6 +25,8 @@ function mapTilesEdit(
       [ToolType.Or]: TileType.Or,
       [ToolType.And]: TileType.And,
       [ToolType.Not]: TileType.Not,
+      [ToolType.Bulb]: TileType.Bulb,
+      [ToolType.Input]: TileType.Input,
     }[toolType];
     if (!tileType) return map;
 

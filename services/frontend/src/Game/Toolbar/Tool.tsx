@@ -1,4 +1,5 @@
 import { CSSProperties, memo } from "react";
+import { ToolType } from "./Toolbar";
 
 interface ToolProps {
   onSelect: (type: ToolType) => void;
@@ -8,15 +9,6 @@ interface ToolProps {
 
   style?: CSSProperties;
   className?: string;
-}
-
-export enum ToolType {
-  Or = 1,
-  And = 2,
-  Not = 3,
-  Drag = 4,
-  Wire = 5,
-  Erase = 6,
 }
 
 function Tool({

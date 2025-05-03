@@ -1,6 +1,6 @@
 import Toolbar from "./Toolbar/Toolbar";
 import Locator from "./Locator";
-import { ToolType } from "./Toolbar/Tool";
+import { ToolType } from "./interfaces";
 import Canvas from "./Canvas";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { drawTileMap, drawTileLabels, drawWires } from "./Draw/tilemap";

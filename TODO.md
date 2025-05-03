@@ -10,5 +10,5 @@
     [X] Autosave
         [X] Save the map
         [X] Save camera state
-    [ ] Switch and bulb tools
+    [X] Input and bulb tools
     [ ] Starting

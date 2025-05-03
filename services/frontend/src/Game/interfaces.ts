@@ -1,7 +1,21 @@
 export enum TileType {
-  Or = 1,
-  And = 2,
-  Not = 3,
+  Or = "or",
+  And = "and",
+  Not = "not",
+  Input = "input",
+  Bulb = "bulb",
+}
+
+export enum ToolType {
+  Drag = "drag",
+  Erase = "erase",
+
+  Wire = "wire",
+  Or = "or",
+  And = "and",
+  Not = "not",
+  Input = "input",
+  Bulb = "bulb",
 }
 
 export interface TileInterface {
