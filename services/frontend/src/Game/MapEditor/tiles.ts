@@ -4,22 +4,20 @@ import vector2, { vector2ToStr } from "../vector2";
 
 function mapTilesEdit(
   map: TileMapType,
-  mouseWorldTile: vector2,
+  mouseTile: vector2,
   toolType: ToolType
-): TileMapType {
+): void {
   if (toolType == ToolType.Drag || toolType == ToolType.Wire) {
-    return map;
+    return;
   }
 
-  const tilePosStr = vector2ToStr(mouseWorldTile);
+  const tilePosStr = vector2ToStr(mouseTile);
   const tile = map[tilePosStr];
   if (toolType === ToolType.Erase) {
     if (!tile) {
-      return map;
+      return;
     }
-    const newMap = { ...map };
-    delete newMap[tilePosStr];
-    return newMap;
+    delete map[tilePosStr];
   } else {
     const tileType = {
       [ToolType.Or]: TileType.Or,
@@ -28,21 +26,16 @@ function mapTilesEdit(
       [ToolType.Bulb]: TileType.Bulb,
       [ToolType.Input]: TileType.Input,
     }[toolType];
-    if (!tileType) return map;
+    if (!tileType) return;
 
     if (tile && tile.type === tileType) {
-      return map;
+      return;
     }
 
-    const newMap = {
-      ...map,
-      [tilePosStr]: {
-        type: tileType,
-        connections: {},
-      },
+    map[tilePosStr] = {
+      type: tileType,
+      connections: {},
     };
-
-    return newMap;
   }
 }
 

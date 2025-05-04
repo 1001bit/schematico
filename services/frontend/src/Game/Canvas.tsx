@@ -5,26 +5,24 @@ interface CanvasProps {
   w: number;
   h: number;
   bgColor: string;
+  ctxCallback: (ctx: CanvasRenderingContext2D) => void;
   onMouseDown?: (e: React.MouseEvent) => void;
   onMouseUp?: (e: React.MouseEvent) => void;
   onMouseMove?: (e: React.MouseEvent) => void;
   onWheel?: (e: React.WheelEvent) => void;
-  drawCallback: (dt: number, ctx: CanvasRenderingContext2D) => void;
 }
 
 function Canvas({
   className,
   w,
   h,
-  bgColor,
+  ctxCallback,
   onMouseMove,
   onMouseDown,
   onMouseUp,
   onWheel,
-  drawCallback,
 }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const lastTime = useRef(performance.now());
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -41,16 +39,8 @@ function Canvas({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    function update(currTime: number) {
-      if (!ctx) return;
-      ctx.fillStyle = bgColor;
-      ctx.fillRect(0, 0, w, h);
-      drawCallback(currTime - lastTime.current, ctx);
-      lastTime.current = currTime;
-    }
-    const req = requestAnimationFrame(update);
-    return () => cancelAnimationFrame(req);
-  }, [drawCallback]);
+    ctxCallback(ctx);
+  }, []);
 
   return (
     <canvas

@@ -1,6 +1,6 @@
 import { memo } from "react";
-import { TileColors } from "../Draw/tile";
-import { WireColor } from "../Draw/wire";
+import { TileColors } from "../Drawer/tile";
+import { WireColor } from "../Drawer/wire";
 import Tool from "./Tool";
 import { TileType, ToolType } from "../interfaces";
 

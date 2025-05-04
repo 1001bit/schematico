@@ -35,7 +35,7 @@ export default function Project() {
       <Game
         projectMap={project.map}
         projectId={project.id}
-        camera={project.camera}
+        projectCam={project.camera}
         started={started}
       ></Game>
       <Button

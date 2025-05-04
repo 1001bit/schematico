@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useRef, useState } from "react";
 import vector2 from "../vector2";
 
 export interface Camera {
@@ -8,65 +8,80 @@ export interface Camera {
 }
 
 function useCamera(
-  init: Camera,
+  initCamera: Camera,
   scaleBounds: [number, number],
-  scaleFactor: number
+  scaleFactor: number,
+  updateCallback: (cam: Camera) => void
 ) {
-  const [cam, setCam] = useState(init);
-  const [draggingPos, setDraggingPos] = useState<vector2 | undefined>(
-    undefined
-  );
+  const cam = useRef(initCamera);
+  const draggingPos = useRef<vector2 | undefined>(undefined);
 
-  const isDragging = useCallback(() => {
-    return draggingPos ? true : false;
-  }, [draggingPos]);
+  const [dragging, setDragging] = useState(false);
 
-  const drag = useCallback(
-    (pointer: vector2) => {
-      if (draggingPos) {
-        setCam((c) => ({
-          scale: c.scale,
-          x: c.x + (draggingPos.x - pointer.x) / c.scale,
-          y: c.y + (draggingPos.y - pointer.y) / c.scale,
-        }));
-      }
-      setDraggingPos(pointer);
-    },
-    [draggingPos]
-  );
+  const drag = (pointer: vector2) => {
+    if (!draggingPos.current) {
+      return;
+    }
 
-  const stopDrag = useCallback(() => {
-    setDraggingPos(undefined);
-  }, []);
+    cam.current.x += (draggingPos.current.x - pointer.x) / cam.current.scale;
+    cam.current.y += (draggingPos.current.y - pointer.y) / cam.current.scale;
 
-  const zoom = useCallback((pointer: vector2, deltaY: number) => {
+    draggingPos.current = pointer;
+
+    updateCallback(cam.current);
+  };
+
+  const startDrag = (pointer: vector2) => {
+    draggingPos.current = pointer;
+    setDragging(true);
+  };
+
+  const stopDrag = () => {
+    setDragging(false);
+    draggingPos.current = undefined;
+  };
+
+  const zoom = (pointer: vector2, deltaY: number) => {
     const scaleBy = scaleFactor * Math.abs(deltaY / 100);
 
-    setCam((c) => {
-      const newScale = deltaY < 0 ? c.scale * scaleBy : c.scale / scaleBy;
+    const newScale =
+      deltaY < 0 ? cam.current.scale * scaleBy : cam.current.scale / scaleBy;
 
-      const [lowBound, highBound] = scaleBounds;
-      if (lowBound > newScale || newScale > highBound) return c;
+    const [lowBound, highBound] = scaleBounds;
+    if (lowBound > newScale || newScale > highBound) return cam.current;
 
-      const mouseWorldPos = {
-        x: c.x + pointer.x / c.scale,
-        y: c.y + pointer.y / c.scale,
-      };
+    const mouseWorldPos = {
+      x: cam.current.x + pointer.x / cam.current.scale,
+      y: cam.current.y + pointer.y / cam.current.scale,
+    };
 
-      return {
-        scale: newScale,
-        x: mouseWorldPos.x - pointer.x / newScale,
-        y: mouseWorldPos.y - pointer.y / newScale,
-      };
-    });
-  }, []);
+    cam.current = {
+      scale: newScale,
+      x: mouseWorldPos.x - pointer.x / newScale,
+      y: mouseWorldPos.y - pointer.y / newScale,
+    };
+    updateCallback(cam.current);
+  };
+
+  const getScale = () => {
+    return cam.current.scale;
+  };
+
+  const getPos = () => {
+    return {
+      x: cam.current.x,
+      y: cam.current.y,
+    };
+  };
 
   return {
-    cam,
     drag,
-    isDragging,
+    dragging,
+    startDrag,
     stopDrag,
     zoom,
+    getScale,
+    getPos,
   };
 }
 
