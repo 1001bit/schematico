@@ -23,7 +23,7 @@ function drawTile(
   pos: vector2,
   tileSize: number
 ) {
-  ctx.fillStyle = TileColors[tileType] + "20";
+  ctx.fillStyle = TileColors[tileType] + "13";
   ctx.fillRect(pos.x + 1, pos.y + 1, tileSize - 2, tileSize - 2);
   ctx.strokeStyle = TileColors[tileType];
   ctx.lineWidth = 1;

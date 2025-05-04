@@ -34,7 +34,6 @@ const router = createBrowserRouter([
 function App() {
   return (
     <TitleProvider>
-      {" "}
       <RouterProvider router={router} />
     </TitleProvider>
   );

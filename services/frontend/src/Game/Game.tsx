@@ -1,11 +1,11 @@
 import Toolbar from "./Toolbar/Toolbar";
 import Locator from "./Locator";
-import { ToolType } from "./interfaces";
+import { TileType, ToolType } from "./interfaces";
 import Canvas from "./Canvas";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { drawTileMap, drawTileLabels, drawWires } from "./Draw/tilemap";
 import mapTilesEdit from "./Edit/tiles";
-import vector2 from "./vector2";
+import vector2, { vector2ToStr } from "./vector2";
 import drawGrid from "./Draw/grid";
 import { Camera, TileMapType } from "./interfaces";
 import placeWire from "./Edit/wire";
@@ -16,9 +16,10 @@ interface GameProps {
   projectId: string;
   projectMap: TileMapType;
   camera: Camera;
+  started: boolean;
 }
 
-function Game({ projectId, projectMap, camera }: GameProps) {
+function Game({ projectId, projectMap, camera, started }: GameProps) {
   // TileSize
   const tileSize = 30;
 
@@ -62,10 +63,9 @@ function Game({ projectId, projectMap, camera }: GameProps) {
   const [draggingPos, setDraggingPos] = useState<vector2 | undefined>(
     undefined
   );
-  const canDrag = useMemo(() => currTool === ToolType.Drag, [currTool]);
   useEffect(() => {
-    if (!canDrag && draggingPos) setDraggingPos(undefined);
-  }, [canDrag]);
+    if (currTool !== ToolType.Drag) setDraggingPos(undefined);
+  }, [currTool]);
 
   // Wire Edit
   const [wireStartTile, setWireStartTile] = useState<vector2 | undefined>(
@@ -109,7 +109,8 @@ function Game({ projectId, projectMap, camera }: GameProps) {
       return;
     }
     setMouseWorldTile(newMouseWorldTile);
-    if (mouseDown.current) {
+
+    if (!started && mouseDown.current) {
       setMap(mapTilesEdit(map, newMouseWorldTile, currTool));
       if (currTool == ToolType.Wire) {
         setWireEndTile(newMouseWorldTile);
@@ -117,10 +118,12 @@ function Game({ projectId, projectMap, camera }: GameProps) {
     }
   }
   // Mouse Up
-  function onMouseUp(e: React.MouseEvent) {
-    if (e.button === 1 || currTool === ToolType.Drag) {
+  function onMouseUp(_e: React.MouseEvent) {
+    if (draggingPos) {
       setDraggingPos(undefined);
-    } else if (currTool === ToolType.Wire) {
+    }
+
+    if (currTool === ToolType.Wire) {
       if (wireStartTile && wireEndTile) {
         setMap(placeWire(map, wireStartTile, wireEndTile));
         setWireStartTile(undefined);
@@ -134,7 +137,7 @@ function Game({ projectId, projectMap, camera }: GameProps) {
   function onMouseDown(e: React.MouseEvent) {
     const pointer = { x: e.clientX, y: e.clientY };
 
-    if (e.button === 1 || currTool === ToolType.Drag) {
+    if (e.button === 1 || currTool === ToolType.Drag || started) {
       setDraggingPos(pointer);
     } else if (currTool === ToolType.Wire) {
       setWireStartTile(mouseWorldTile);
@@ -166,6 +169,28 @@ function Game({ projectId, projectMap, camera }: GameProps) {
       y: mouseWorldPos.y - pointer.y / newScale,
     });
   }
+
+  // Cursor style
+  const cursorStyle = useMemo(() => {
+    if (draggingPos) {
+      return "cursor-grabbing";
+    }
+
+    if (!started) {
+      if (currTool === ToolType.Drag) {
+        return "cursor-grab";
+      }
+    } else {
+      const tile = map[vector2ToStr(mouseWorldTile)];
+      if (tile && tile.type == TileType.Input) {
+        return "cursor-pointer";
+      } else {
+        return "cursor-grab";
+      }
+    }
+
+    return "cursor-default";
+  }, [draggingPos, currTool, started, mouseWorldTile]);
 
   // Draw
   const drawCallback = useCallback(
@@ -199,7 +224,7 @@ function Game({ projectId, projectMap, camera }: GameProps) {
         windowSize.h / cam.scale,
         tileSize
       );
-      if (cam.scale >= minTileTextScale)
+      if (cam.scale >= minTileTextScale && !started)
         drawTileLabels(
           ctx,
           map,
@@ -223,7 +248,7 @@ function Game({ projectId, projectMap, camera }: GameProps) {
 
       ctx.scale(1 / cam.scale, 1 / cam.scale);
     },
-    [map, cam, windowSize, wireEndTile]
+    [map, cam, windowSize, wireEndTile, started]
   );
 
   useEffect(() => {
@@ -238,15 +263,17 @@ function Game({ projectId, projectMap, camera }: GameProps) {
 
   return (
     <>
-      <Toolbar
-        currTool={currTool}
-        onSelect={setCurrTool}
-        className="
+      {!started && (
+        <Toolbar
+          currTool={currTool}
+          onSelect={setCurrTool}
+          className="
           sm:bottom-2
           bottom-15
           absolute left-1/2 z-6 -translate-x-1/2
         "
-      />
+        />
+      )}
       <Locator
         x={mouseWorldTile.x}
         y={mouseWorldTile.y}
@@ -262,8 +289,7 @@ function Game({ projectId, projectMap, camera }: GameProps) {
         bgColor="#000000"
         className={`
           fixed left-0 top-0 z-0
-          ${draggingPos && "cursor-grabbing"}
-          ${canDrag && !draggingPos && "cursor-grab"}
+          ${cursorStyle}
         `}
         onMouseMove={onMouseMove}
         onMouseDown={onMouseDown}

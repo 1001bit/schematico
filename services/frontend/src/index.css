@@ -1,18 +1,6 @@
 @import "tailwindcss";
 
 @layer base {
-  html {
-    @apply h-full lg:text-lg text-sm font-[DM_Mono] dark:bg-black dark:text-white;
-  }
-
-  body {
-    @apply h-full overflow-x-hidden;
-  }
-
-  #root {
-    @apply h-full flex flex-col;
-  }
-
   * {
     @apply m-0 z-5 p-0 box-border max-w-full;
   }
