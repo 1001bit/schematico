@@ -7,10 +7,12 @@ import { drawTileMap, drawTileLabels, drawWires } from "./Draw/tilemap";
 import mapTilesEdit from "./Edit/tiles";
 import vector2, { vector2ToStr } from "./vector2";
 import drawGrid from "./Draw/grid";
-import { Camera, TileMapType } from "./interfaces";
+import { TileMapType } from "./interfaces";
+import useCamera, { Camera } from "./Camera/camera";
 import placeWire from "./Edit/wire";
 import drawGhostWire from "./Draw/ghostWire";
 import saveLocalProject from "../projectStorage/save";
+import useWindowSize from "../hooks/window";
 
 interface GameProps {
   projectId: string;
@@ -27,44 +29,27 @@ function Game({ projectId, projectMap, camera, started }: GameProps) {
   const [currTool, setCurrTool] = useState<ToolType>(ToolType.Drag);
 
   // Window
-  const [windowSize, setWindowSize] = useState({
-    w: innerWidth,
-    h: innerHeight,
-  });
-  useEffect(() => {
-    const resize = () => {
-      setWindowSize({
-        w: innerWidth,
-        h: innerHeight,
-      });
-    };
-
-    window.addEventListener("resize", () => resize());
-    return window.removeEventListener("resize", () => resize());
-  }, []);
+  const windowSize = useWindowSize();
 
   // Camera
-  const [cam, setCam] = useState(
+  const { cam, drag, isDragging, stopDrag, zoom } = useCamera(
     camera || {
       scale: 1,
       x: 0,
       y: 0,
-    }
+    },
+    [0.1, 5],
+    1.1
   );
-  const maxScale = 5;
   const minGridScale = 0.3;
   const minTileTextScale = 0.7;
-  const minScale = 0.1;
 
   // Mouse
   const [mouseWorldTile, setMouseWorldTile] = useState({ x: 0, y: 0 });
   const mouseDown = useRef(false);
   // Drag
-  const [draggingPos, setDraggingPos] = useState<vector2 | undefined>(
-    undefined
-  );
   useEffect(() => {
-    if (currTool !== ToolType.Drag) setDraggingPos(undefined);
+    if (currTool !== ToolType.Drag) stopDrag();
   }, [currTool]);
 
   // Wire Edit
@@ -86,16 +71,7 @@ function Game({ projectId, projectMap, camera, started }: GameProps) {
       x: cam.x,
       y: cam.y,
     };
-    if (draggingPos) {
-      camPos.x = cam.x + (draggingPos.x - pointer.x) / cam.scale;
-      camPos.y = cam.y + (draggingPos.y - pointer.y) / cam.scale;
-      setCam({
-        scale: cam.scale,
-        x: camPos.x,
-        y: camPos.y,
-      });
-      setDraggingPos(pointer);
-    }
+    if (isDragging()) drag(pointer);
 
     const newMouseWorldTile = {
       x: Math.floor((camPos.x + pointer.x / cam.scale) / tileSize),
@@ -119,9 +95,7 @@ function Game({ projectId, projectMap, camera, started }: GameProps) {
   }
   // Mouse Up
   function onMouseUp(_e: React.MouseEvent) {
-    if (draggingPos) {
-      setDraggingPos(undefined);
-    }
+    stopDrag();
 
     if (currTool === ToolType.Wire) {
       if (wireStartTile && wireEndTile) {
@@ -138,7 +112,7 @@ function Game({ projectId, projectMap, camera, started }: GameProps) {
     const pointer = { x: e.clientX, y: e.clientY };
 
     if (e.button === 1 || currTool === ToolType.Drag || started) {
-      setDraggingPos(pointer);
+      drag(pointer);
     } else if (currTool === ToolType.Wire) {
       setWireStartTile(mouseWorldTile);
       setWireEndTile(mouseWorldTile);
@@ -153,26 +127,12 @@ function Game({ projectId, projectMap, camera, started }: GameProps) {
     e.preventDefault();
     const pointer = { x: e.clientX, y: e.clientY };
 
-    const scaleBy = 1.1 * Math.abs(e.deltaY / 100);
-
-    const newScale = e.deltaY < 0 ? cam.scale * scaleBy : cam.scale / scaleBy;
-    if (newScale > maxScale || newScale < minScale) return;
-
-    const mouseWorldPos = {
-      x: cam.x + pointer.x / cam.scale,
-      y: cam.y + pointer.y / cam.scale,
-    };
-
-    setCam({
-      scale: newScale,
-      x: mouseWorldPos.x - pointer.x / newScale,
-      y: mouseWorldPos.y - pointer.y / newScale,
-    });
+    zoom(pointer, e.deltaY);
   }
 
   // Cursor style
   const cursorStyle = useMemo(() => {
-    if (draggingPos) {
+    if (isDragging()) {
       return "cursor-grabbing";
     }
 
@@ -190,7 +150,7 @@ function Game({ projectId, projectMap, camera, started }: GameProps) {
     }
 
     return "cursor-default";
-  }, [draggingPos, currTool, started, mouseWorldTile]);
+  }, [isDragging, currTool, started, mouseWorldTile]);
 
   // Draw
   const drawCallback = useCallback(

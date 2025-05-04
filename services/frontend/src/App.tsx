@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import Layout from "./pages/Layout";
 import Project, { loader as projectLoader } from "./pages/Project";
-import { TitleProvider } from "./hooks/title/TitleContext";
+import { TitleProvider } from "./hooks/title";
 import Home, { loader as homeLoader } from "./pages/Home";
 
 const router = createBrowserRouter([

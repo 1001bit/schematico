@@ -1,4 +1,5 @@
-import { Camera, TileMapType } from "../Game/interfaces";
+import { TileMapType } from "../Game/interfaces";
+import { Camera } from "../Game/Camera/camera";
 import ProjectInterface from "./project";
 
 function saveLocalProject(id: string, map: TileMapType, camera: Camera) {

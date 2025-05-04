@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router";
-import { useTitle } from "../hooks/title/TitleContext";
+import { useTitle } from "../hooks/title";
 import { useEffect } from "react";
 
 function Layout() {

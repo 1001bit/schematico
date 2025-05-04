@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useLoaderData, useNavigate } from "react-router";
-import { useTitle } from "../hooks/title/TitleContext";
+import { useTitle } from "../hooks/title";
 import Button from "../components/Button/Button";
 import AnimatedBackground from "../components/Background/Background";
 import ProjectList from "../components/ProjectList/ProjectList";

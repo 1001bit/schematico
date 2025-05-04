@@ -1,5 +1,5 @@
 import { useLoaderData } from "react-router";
-import { useTitle } from "../hooks/title/TitleContext";
+import { useTitle } from "../hooks/title";
 import { useEffect, useState } from "react";
 import Game from "../Game/Game";
 import Button from "../components/Button/Button";
