@@ -20,6 +20,7 @@ function drawArrow(
   // Draw the main line
   ctx.lineWidth = 3;
   ctx.strokeStyle = color;
+
   ctx.moveTo(start.x, start.y);
   ctx.lineTo(end.x, end.y);
   ctx.stroke();
@@ -31,7 +32,6 @@ function drawArrow(
   const arrowTipX = end.x + forwardOffset * Math.cos(angle);
   const arrowTipY = end.y + forwardOffset * Math.sin(angle);
 
-  ctx.beginPath();
   ctx.moveTo(arrowTipX, arrowTipY);
   ctx.lineTo(
     arrowTipX - headLength * Math.cos(angle - Math.PI / 6),
@@ -43,7 +43,9 @@ function drawArrow(
   );
   ctx.lineTo(arrowTipX, arrowTipY);
   ctx.fillStyle = color;
+
   ctx.fill();
+  ctx.closePath();
 }
 
 function drawWire(

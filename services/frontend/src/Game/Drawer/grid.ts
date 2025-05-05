@@ -8,21 +8,23 @@ function drawGrid(
 ) {
   ctx.translate(-x % tileSize, -y % tileSize);
   ctx.scale(1, 1);
-  ctx.lineWidth = 1;
 
+  ctx.lineWidth = 1;
   ctx.strokeStyle = "#444444";
+
+  ctx.beginPath();
+
   for (let row = -tileSize; row <= w + tileSize; row += tileSize) {
-    ctx.beginPath();
     ctx.moveTo(row, -tileSize);
     ctx.lineTo(row, h + tileSize);
-    ctx.stroke();
   }
   for (let col = -tileSize; col <= h + tileSize; col += tileSize) {
-    ctx.beginPath();
     ctx.moveTo(-tileSize, col);
     ctx.lineTo(w + tileSize, col);
-    ctx.stroke();
   }
+
+  ctx.stroke();
+  ctx.closePath();
 
   ctx.translate(x % tileSize, y % tileSize);
   ctx.scale(1, 1);

@@ -13,8 +13,8 @@ export const TileLabels: Record<TileType, string> = {
   [TileType.Or]: "OR",
   [TileType.And]: "AND",
   [TileType.Not]: "NOT",
-  [TileType.Input]: "Off",
-  [TileType.Bulb]: "Off",
+  [TileType.Input]: "Input",
+  [TileType.Bulb]: "Bulb",
 };
 
 function drawTile(
@@ -39,7 +39,7 @@ export function drawTileLabel(
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
   ctx.fillStyle = TileColors[tileType];
-  ctx.font = "10px DM Mono";
+  ctx.font = "8px DM Mono";
   ctx.fillText(
     TileLabels[tileType],
     pos.x + tileSize / 2,

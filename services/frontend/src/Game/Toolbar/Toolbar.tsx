@@ -80,6 +80,7 @@ function Toolbar(props: ToolbarProps) {
         className="border-2 backdrop-blur-[2px]"
         style={{
           borderColor: ToolColors[ToolType.Wire],
+          color: ToolColors[ToolType.Wire],
         }}
       ></Tool>
 
@@ -100,6 +101,7 @@ function Toolbar(props: ToolbarProps) {
             style={{
               borderColor: ToolColors[type],
               backgroundColor: ToolColors[type] + bgTransparency,
+              color: ToolColors[type],
             }}
             key={idx}
           ></Tool>
