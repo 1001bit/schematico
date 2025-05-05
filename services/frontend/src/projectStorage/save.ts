@@ -1,4 +1,4 @@
-import { TileMapType } from "../Game/interfaces";
+import { TileMapType } from "../Game/tilemap";
 import { Camera } from "../Game/Camera/camera";
 import ProjectInterface from "./project";
 

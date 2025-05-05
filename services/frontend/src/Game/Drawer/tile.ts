@@ -1,4 +1,4 @@
-import { TileType } from "../interfaces";
+import { TileType } from "../tilemap";
 import vector2 from "../vector2";
 
 export const TileColors: Record<TileType, string> = {

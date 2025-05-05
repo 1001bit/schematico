@@ -1,10 +1,9 @@
-import Toolbar from "./Toolbar/Toolbar";
+import Toolbar, { ToolType } from "./Toolbar/Toolbar";
 import Locator from "./Locator";
-import { ToolType } from "./interfaces";
 import Canvas from "./Canvas";
 import { useMemo, useState } from "react";
 import vector2 from "./vector2";
-import { TileMapType } from "./interfaces";
+import { TileMapType } from "./tilemap";
 import useCamera, { Camera } from "./Camera/camera";
 import useWindowSize from "../hooks/window";
 import useMapEditor from "./MapEditor/editor";

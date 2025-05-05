@@ -1,5 +1,5 @@
-import { TileMapType, TileType } from "../interfaces";
-import { ToolType } from "../interfaces";
+import { TileMapType, TileType } from "../tilemap";
+import { ToolType } from "../Toolbar/Toolbar";
 import vector2, { vector2ToStr } from "../vector2";
 
 function mapTilesEdit(

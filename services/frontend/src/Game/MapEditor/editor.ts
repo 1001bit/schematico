@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef } from "react";
-import { TileMapType, ToolType } from "../interfaces";
+import { TileMapType } from "../tilemap";
 import vector2 from "../vector2";
 import placeWire from "./wire";
 import mapTilesEdit from "./tiles";
+import { ToolType } from "../Toolbar/Toolbar";
 
 function useMapEditor(
   initMap: TileMapType,

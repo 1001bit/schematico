@@ -2,12 +2,24 @@ import { memo } from "react";
 import { TileColors } from "../Drawer/tile";
 import { WireColor } from "../Drawer/wire";
 import Tool from "./Tool";
-import { TileType, ToolType } from "../interfaces";
+import { TileType } from "../tilemap";
 
 interface ToolbarProps {
   onSelect: (t: ToolType) => void;
   currTool: ToolType;
   className?: string;
+}
+
+export enum ToolType {
+  Drag = "drag",
+  Erase = "erase",
+
+  Wire = "wire",
+  Or = "or",
+  And = "and",
+  Not = "not",
+  Input = "input",
+  Bulb = "bulb",
 }
 
 export const ToolColors: Record<ToolType, string> = {

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Camera } from "../Camera/camera";
-import { TileMapType } from "../interfaces";
+import { TileMapType } from "../tilemap";
 import drawGrid from "./grid";
 import { drawTileLabels, drawTileMap, drawWires } from "./tilemap";
 import drawGhostWire from "./ghostWire";

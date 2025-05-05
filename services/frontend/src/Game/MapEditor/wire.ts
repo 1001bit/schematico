@@ -1,4 +1,4 @@
-import { TileMapType } from "../interfaces";
+import { TileMapType } from "../tilemap";
 import vector2, { vector2ToStr } from "../vector2";
 
 function placeWire(

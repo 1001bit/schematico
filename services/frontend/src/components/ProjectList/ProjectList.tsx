@@ -1,4 +1,4 @@
-import { ProjectInterface } from "../../Game/interfaces";
+import { ProjectInterface } from "../../Game/tilemap";
 import ProjectCard from "./ProjectCard";
 
 export interface ProjectListData {

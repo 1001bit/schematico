@@ -1,4 +1,4 @@
-import { TileMapType } from "../interfaces";
+import { TileMapType } from "../tilemap";
 import vector2, { strToVector2, vector2Product } from "../vector2";
 import drawTile, { drawTileLabel } from "./tile";
 import drawWire from "./wire";
