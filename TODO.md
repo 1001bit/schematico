@@ -1,4 +1,4 @@
-[ ] Frontend
+Frontend
     [X] Layout
     [X] Drawing
     [X] Grid
@@ -11,4 +11,6 @@
         [X] Save the map
         [X] Save camera state
     [X] Input and bulb tools
-    [ ] Starting
+    [ ] Play
+        [X] Mouse behavior on input hover
+        [ ] React on input click

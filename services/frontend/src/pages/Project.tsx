@@ -1,8 +1,7 @@
 import { useLoaderData } from "react-router";
 import { useTitle } from "../hooks/title";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Game from "../Game/Game";
-import Button from "../components/Button/Button";
 import getLocalProject from "../projectStorage/get";
 import ProjectInterface from "../projectStorage/project";
 
@@ -23,9 +22,6 @@ export default function Project() {
   if (!project) {
     return <p className="px-5">Project not found!</p>;
   }
-
-  const [started, setStarted] = useState(false);
-
   useEffect(() => {
     title.setTitle(project.title);
   }, []);
@@ -36,16 +32,7 @@ export default function Project() {
         projectMap={project.map}
         projectId={project.id}
         projectCam={project.camera}
-        started={started}
       ></Game>
-      <Button
-        onClick={() => {
-          setStarted((s) => !s);
-        }}
-        className="fixed right-5 bottom-2"
-      >
-        {started ? "edit" : "play"}
-      </Button>
     </>
   );
 }

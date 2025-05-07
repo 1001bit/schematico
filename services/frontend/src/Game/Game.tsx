@@ -2,23 +2,26 @@ import Toolbar, { ToolType } from "./Toolbar/Toolbar";
 import Locator from "./Locator";
 import Canvas from "./Canvas";
 import { useMemo, useState } from "react";
-import vector2 from "./vector2";
-import { TileMapType } from "./tilemap";
+import vector2, { vector2Equal } from "./vector2";
+import { TileMapType, TileType } from "./tilemap";
 import useCamera, { Camera } from "./Camera/camera";
 import useWindowSize from "../hooks/window";
 import useMapEditor from "./MapEditor/editor";
 import useDrawer from "./Drawer/drawer";
 import useDebouncedCallback from "../hooks/debouncedCallback";
 import saveLocalProject from "../projectStorage/save";
+import Button from "../components/Button/Button";
+import useMapPlayer from "./MapPlayer/player";
 
 interface GameProps {
   projectId: string;
   projectMap: TileMapType;
   projectCam: Camera;
-  started: boolean;
 }
 
-function Game({ projectId, projectMap, projectCam, started }: GameProps) {
+function Game({ projectId, projectMap, projectCam }: GameProps) {
+  const [started, setStarted] = useState(false);
+
   // TileSize
   const tileSize = 30;
 
@@ -46,7 +49,10 @@ function Game({ projectId, projectMap, projectCam, started }: GameProps) {
     started
   );
 
-  // Save
+  // Play
+  const mapPlayer = useMapPlayer(projectMap, mouseTile);
+
+  // Local Save
   const debounceSave = useDebouncedCallback(
     (map?: TileMapType, cam?: Camera) => {
       saveLocalProject(projectId, map, cam);
@@ -74,10 +80,11 @@ function Game({ projectId, projectMap, projectCam, started }: GameProps) {
   // Map Edit
   function mapUpdateCallback(
     newMap?: TileMapType,
-    newWire?: [vector2, vector2]
+    newNewWire?: [vector2, vector2]
   ) {
     debounceSave(newMap, undefined);
-    drawerHook.draw(undefined, newMap, newWire);
+    drawerHook.draw(undefined, newMap, newNewWire);
+    if (newMap) mapPlayer.setMap(newMap);
   }
 
   const mapEditorHook = useMapEditor(
@@ -103,10 +110,9 @@ function Game({ projectId, projectMap, projectCam, started }: GameProps) {
       ),
     };
 
-    if (newMouseTile.x === mouseTile.x && newMouseTile.y === mouseTile.y) {
-      return;
+    if (!vector2Equal(mouseTile, newMouseTile)) {
+      setMouseTile(newMouseTile);
     }
-    setMouseTile(newMouseTile);
   }
   // Mouse Up
   function onMouseUp(_e: React.MouseEvent) {
@@ -120,17 +126,23 @@ function Game({ projectId, projectMap, projectCam, started }: GameProps) {
   function onMouseDown(e: React.MouseEvent) {
     const pointer = { x: e.clientX, y: e.clientY };
 
-    if (e.button === 1 || currTool === ToolType.Drag || started) {
-      camHook.startDrag(pointer);
-    } else if (!started) {
-      mapEditorHook.onMouseDown();
+    if (!started) {
+      if (e.button === 1 || currTool === ToolType.Drag) {
+        camHook.startDrag(pointer);
+      } else {
+        mapEditorHook.onMouseDown();
+      }
+    } else {
+      if (
+        !mapPlayer.pointingTile ||
+        mapPlayer.pointingTile.type !== TileType.Input
+      )
+        camHook.startDrag(pointer);
     }
   }
   // Wheel Scroll
   function onWheel(e: React.WheelEvent) {
-    e.preventDefault();
     const pointer = { x: e.clientX, y: e.clientY };
-
     camHook.zoom(pointer, e.deltaY);
   }
 
@@ -144,11 +156,21 @@ function Game({ projectId, projectMap, projectCam, started }: GameProps) {
     if (camHook.dragging) {
       return "cursor-grabbing";
     }
-    if (currTool === ToolType.Drag) {
-      return "cursor-grab";
+    if (!started) {
+      if (currTool === ToolType.Drag) {
+        return "cursor-grab";
+      }
+    } else {
+      if (
+        mapPlayer.pointingTile &&
+        mapPlayer.pointingTile.type === TileType.Input
+      ) {
+        return "cursor-pointer";
+      }
     }
+
     return "cursor-default";
-  }, [camHook.dragging, currTool]);
+  }, [camHook.dragging, currTool, started, mouseTile]);
 
   return (
     <>
@@ -172,6 +194,12 @@ function Game({ projectId, projectMap, projectCam, started }: GameProps) {
           absolute left-1/2 z-6 -translate-x-1/2
         "
       />
+      <Button
+        onClick={() => setStarted((s) => !s)}
+        className="fixed right-5 bottom-2"
+      >
+        {started ? "edit" : "play"}
+      </Button>
       <Canvas
         w={windowSize.w}
         h={windowSize.h}
