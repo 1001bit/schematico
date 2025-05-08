@@ -1,5 +1,5 @@
-import { TileMapType, TileType } from "../tilemap";
-import { ToolType } from "../Toolbar/Toolbar";
+import { TileMapType } from "../tilemap";
+import { ToolToTileType, ToolType } from "../Toolbar/Toolbar";
 import vector2, { vector2ToStr } from "../vector2";
 
 function mapTilesEdit(
@@ -19,13 +19,7 @@ function mapTilesEdit(
     }
     delete map[tilePosStr];
   } else {
-    const tileType = {
-      [ToolType.Or]: TileType.Or,
-      [ToolType.And]: TileType.And,
-      [ToolType.Not]: TileType.Not,
-      [ToolType.Bulb]: TileType.Bulb,
-      [ToolType.Input]: TileType.Input,
-    }[toolType];
+    const tileType = ToolToTileType[toolType];
     if (!tileType) return;
 
     if (tile && tile.type === tileType) {

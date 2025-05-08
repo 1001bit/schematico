@@ -12,12 +12,16 @@ function drawArrow(
   ctx.beginPath();
 
   // Draw the tail
-  const radius = 2;
+  const radius = 3;
   ctx.fillStyle = color;
   ctx.arc(start.x, start.y, radius, 0, 2 * Math.PI);
   ctx.fill();
 
+  ctx.closePath();
+
   // Draw the main line
+  ctx.beginPath();
+
   ctx.lineWidth = 3;
   ctx.strokeStyle = color;
 
@@ -53,6 +57,7 @@ function drawWire(
   wireStart: vector2,
   wireEnd: vector2,
   tileSize: number,
+  active: boolean,
   errorColor?: boolean
 ) {
   const offset = tileSize / 2;
@@ -70,7 +75,9 @@ function drawWire(
     y: wireEnd.y + offset - Math.sin(angle) * tileSize * radius,
   };
 
-  drawArrow(ctx, start, end, errorColor ? ErrorColor : WireColor);
+  const opacity = active ? "ff" : "88";
+
+  drawArrow(ctx, start, end, errorColor ? ErrorColor : WireColor + opacity);
 }
 
 export default drawWire;

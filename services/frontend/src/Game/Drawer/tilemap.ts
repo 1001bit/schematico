@@ -118,7 +118,7 @@ export function drawWires(
         continue;
       }
 
-      drawWire(ctx, pos, wireEnd, tileSize);
+      drawWire(ctx, pos, wireEnd, tileSize, false);
     }
   }
 

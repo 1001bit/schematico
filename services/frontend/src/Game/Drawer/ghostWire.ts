@@ -24,6 +24,7 @@ function drawGhostWire(
 
   ctx.translate(-x, -y);
 
+  ctx.beginPath();
   if (wireStartTileStr !== wireEndTileStr) {
     drawWire(
       ctx,
@@ -36,9 +37,11 @@ function drawGhostWire(
         y: wireEndTileScaled.y,
       },
       tileSize,
+      true,
       tile.connections[wireEndTileStr]
     );
   } else {
+    ctx.beginPath();
     const radius = 3;
     ctx.fillStyle = WireColor;
     ctx.arc(
@@ -49,6 +52,7 @@ function drawGhostWire(
       2 * Math.PI
     );
     ctx.fill();
+    ctx.closePath();
   }
 
   ctx.translate(x, y);

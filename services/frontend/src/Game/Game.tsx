@@ -167,6 +167,7 @@ function Game({ projectId, projectMap, projectCam }: GameProps) {
       ) {
         return "cursor-pointer";
       }
+      return "cursor-grab";
     }
 
     return "cursor-default";

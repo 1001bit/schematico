@@ -1,7 +1,7 @@
 import { TileType } from "../tilemap";
 import vector2 from "../vector2";
 
-export const TileColors: Record<TileType, string> = {
+export const TileColors = {
   [TileType.Or]: "#ff0000",
   [TileType.And]: "#00ffff",
   [TileType.Not]: "#ffff00",
@@ -9,13 +9,15 @@ export const TileColors: Record<TileType, string> = {
   [TileType.Bulb]: "#ffffff",
 };
 
-export const TileLabels: Record<TileType, string> = {
+export const TileLabels = {
   [TileType.Or]: "OR",
   [TileType.And]: "AND",
   [TileType.Not]: "NOT",
   [TileType.Input]: "Input",
   [TileType.Bulb]: "Bulb",
 };
+
+export const RoundTiles = new Set([TileType.Or, TileType.And, TileType.Not]);
 
 function drawTile(
   ctx: CanvasRenderingContext2D,
@@ -24,10 +26,20 @@ function drawTile(
   tileSize: number
 ) {
   ctx.fillStyle = TileColors[tileType] + "13";
-  ctx.fillRect(pos.x + 1, pos.y + 1, tileSize - 2, tileSize - 2);
   ctx.strokeStyle = TileColors[tileType];
   ctx.lineWidth = 1;
-  ctx.strokeRect(pos.x + 1, pos.y + 1, tileSize - 2, tileSize - 2);
+
+  if (RoundTiles.has(tileType)) {
+    const radius = (tileSize - 2) / 2;
+    ctx.beginPath();
+    ctx.arc(pos.x + radius + 1, pos.y + radius + 1, radius, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.stroke();
+    ctx.closePath();
+  } else {
+    ctx.fillRect(pos.x + 1, pos.y + 1, tileSize - 2, tileSize - 2);
+    ctx.strokeRect(pos.x + 1, pos.y + 1, tileSize - 2, tileSize - 2);
+  }
 }
 
 export function drawTileLabel(

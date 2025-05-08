@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { TileColors } from "../Drawer/tile";
+import { TileColors, TileLabels } from "../Drawer/tile";
 import { WireColor } from "../Drawer/wire";
 import Tool from "./Tool";
 import { TileType } from "../tilemap";
@@ -22,11 +22,12 @@ export enum ToolType {
   Bulb = "bulb",
 }
 
-export const ToolColors: Record<ToolType, string> = {
+export const ToolColors = {
   [ToolType.Drag]: "#ffffff",
   [ToolType.Erase]: "#ffffff",
 
   [ToolType.Wire]: WireColor,
+
   [ToolType.Or]: TileColors[TileType.Or],
   [ToolType.And]: TileColors[TileType.And],
   [ToolType.Not]: TileColors[TileType.Not],
@@ -34,21 +35,30 @@ export const ToolColors: Record<ToolType, string> = {
   [ToolType.Bulb]: TileColors[TileType.Bulb],
 };
 
-export const ToolLabels: Record<ToolType, string> = {
+export const ToolLabels = {
   [ToolType.Drag]: "Drag",
   [ToolType.Erase]: "Erase",
 
   [ToolType.Wire]: "Wire",
-  [ToolType.Or]: "OR",
-  [ToolType.And]: "AND",
-  [ToolType.Not]: "NOT",
-  [ToolType.Input]: "Input",
-  [ToolType.Bulb]: "Bulb",
+
+  [ToolType.Or]: TileLabels[TileType.Or],
+  [ToolType.And]: TileLabels[TileType.And],
+  [ToolType.Not]: TileLabels[TileType.Not],
+  [ToolType.Input]: TileLabels[TileType.Input],
+  [ToolType.Bulb]: TileLabels[TileType.Bulb],
 };
 
-const bgTransparency = "20";
+export const ToolToTileType = {
+  [ToolType.Or]: TileType.Or,
+  [ToolType.And]: TileType.And,
+  [ToolType.Not]: TileType.Not,
+  [ToolType.Bulb]: TileType.Bulb,
+  [ToolType.Input]: TileType.Input,
+};
 
 function Toolbar(props: ToolbarProps) {
+  const bgTransparency = "20";
+
   return (
     <div
       className={`
@@ -97,7 +107,7 @@ function Toolbar(props: ToolbarProps) {
             toolType={type}
             onSelect={props.onSelect}
             currToolType={props.currTool}
-            className="border-2 backdrop-blur-[2px]"
+            className={`border-2 backdrop-blur-[2px] ${type != ToolType.Bulb && type != ToolType.Input && "rounded-4xl"}`}
             style={{
               borderColor: ToolColors[type],
               backgroundColor: ToolColors[type] + bgTransparency,
