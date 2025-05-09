@@ -11,7 +11,7 @@ function useCamera(
   initCamera: Camera,
   scaleBounds: [number, number],
   scaleFactor: number,
-  updateCallback: (cam: Camera) => void
+  updateCallback: () => void
 ) {
   const cam = useRef(initCamera);
   const draggingPos = useRef<vector2 | undefined>(undefined);
@@ -28,7 +28,7 @@ function useCamera(
 
     draggingPos.current = pointer;
 
-    updateCallback(cam.current);
+    updateCallback();
   };
 
   const startDrag = (pointer: vector2) => {
@@ -55,33 +55,20 @@ function useCamera(
       y: cam.current.y + pointer.y / cam.current.scale,
     };
 
-    cam.current = {
-      scale: newScale,
-      x: mouseWorldPos.x - pointer.x / newScale,
-      y: mouseWorldPos.y - pointer.y / newScale,
-    };
-    updateCallback(cam.current);
-  };
+    cam.current.scale = newScale;
+    cam.current.x = mouseWorldPos.x - pointer.x / newScale;
+    cam.current.y = mouseWorldPos.y - pointer.y / newScale;
 
-  const getScale = () => {
-    return cam.current.scale;
-  };
-
-  const getPos = () => {
-    return {
-      x: cam.current.x,
-      y: cam.current.y,
-    };
+    updateCallback();
   };
 
   return {
+    cam: cam.current,
     drag,
     dragging,
     startDrag,
     stopDrag,
     zoom,
-    getScale,
-    getPos,
   };
 }
 

@@ -6,34 +6,31 @@ import { ToolbarItem, ToolType } from "../Toolbar/Toolbar";
 import { mapTilesEdit, mapTilesErase } from "./tiles";
 
 function useMapEditor(
-  initMap: TileMapType,
+  map: TileMapType,
   mouseTile: vector2,
   currItem: ToolbarItem,
-  canEdit: boolean,
-  updateCallback: (map?: TileMapType, newWire?: [vector2, vector2]) => void
+  updateCallback: (newWire?: [vector2, vector2]) => void
 ) {
-  const map = useRef(initMap);
   const newWire = useRef<[vector2, vector2] | undefined>(undefined);
   const mouseDown = useRef(false);
 
   const onMouseDown = useCallback(() => {
-    if (!canEdit) return;
     mouseDown.current = true;
 
     if (currItem.item === "tool") {
       if (currItem.type === ToolType.Erase) {
-        mapTilesErase(map.current, mouseTile);
-        updateCallback(map.current);
+        mapTilesErase(map, mouseTile);
+        updateCallback();
       } else if (currItem.type === ToolType.Wire) {
         if (!newWire.current) {
           newWire.current = [mouseTile, mouseTile];
         }
         newWire.current[1] = mouseTile;
-        updateCallback(undefined, newWire.current);
+        updateCallback(newWire.current);
       }
     } else {
-      mapTilesEdit(map.current, mouseTile, currItem.type);
-      updateCallback(map.current);
+      mapTilesEdit(map, mouseTile, currItem.type);
+      updateCallback();
     }
   }, [currItem, mouseTile]);
 
@@ -44,16 +41,14 @@ function useMapEditor(
   }, [mouseTile]);
 
   const onMouseUp = useCallback(() => {
-    if (!canEdit) return;
-
     mouseDown.current = false;
 
     if (newWire.current) {
       const [start, end] = newWire.current;
-      placeWire(map.current, start, end);
+      placeWire(map, start, end);
       newWire.current = undefined;
 
-      updateCallback(map.current, undefined);
+      updateCallback();
     }
   }, [currItem, mouseTile]);
 

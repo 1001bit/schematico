@@ -33,7 +33,8 @@ export function drawTileMap(
   y: number,
   w: number,
   h: number,
-  tileSize: number
+  tileSize: number,
+  activeTiles: Set<string>
 ) {
   const canvasStart = {
     x: x - tileSize,
@@ -50,7 +51,7 @@ export function drawTileMap(
     const pos = vector2Product(strToVector2(posStr), tileSize);
 
     if (containsPoint(canvasStart, canvasEnd, pos)) {
-      drawTile(ctx, tile.type, pos, tileSize, false);
+      drawTile(ctx, tile.type, pos, tileSize, activeTiles.has(posStr));
     }
   }
 

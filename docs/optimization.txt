@@ -1,2 +1,6 @@
-- can optimize drawing by having tilesInView state variable
-- can optimize game by having every state as ref and having global update state, that triggers redraw
+- can optimize camera movement by:
+    translating ctx
+    drawing only tiles/grid that appeared in the window
+- can optimize editing:
+    drawing only new tile
+    drawing black square on tile erase

@@ -13,4 +13,5 @@ Frontend
     [X] Input and bulb tools
     [ ] Play
         [X] Mouse behavior on input hover
-        [ ] React on input click
+        [X] Switch state on input click
+        [ ] Activate connected tiles 

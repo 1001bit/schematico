@@ -2,7 +2,7 @@ import { TileMapType } from "../Game/tilemap";
 import { Camera } from "../Game/Camera/camera";
 import ProjectInterface from "./project";
 
-function saveLocalProject(id: string, map?: TileMapType, camera?: Camera) {
+function saveLocalProject(id: string, map: TileMapType, camera: Camera) {
   const projectsStr = localStorage.getItem("projects");
   if (!projectsStr) {
     return;
@@ -13,8 +13,8 @@ function saveLocalProject(id: string, map?: TileMapType, camera?: Camera) {
     return;
   }
 
-  if (camera) project.camera = camera;
-  if (map) project.map = map;
+  project.camera = camera;
+  project.map = map;
   projects[id] = project;
   localStorage.setItem("projects", JSON.stringify(projects));
 }

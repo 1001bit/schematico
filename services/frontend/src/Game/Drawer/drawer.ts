@@ -7,9 +7,7 @@ import drawGhostWire from "./ghostWire";
 import vector2 from "../vector2";
 
 function useDrawer(
-  initCtx: CanvasRenderingContext2D | undefined,
-  initCam: Camera,
-  initMap: TileMapType,
+  map: TileMapType,
 
   config: {
     minGridScale: number;
@@ -21,19 +19,22 @@ function useDrawer(
   windowSize: { w: number; h: number },
   started: boolean
 ) {
-  const ctx = useRef(initCtx);
-  const cam = useRef(initCam);
-  const map = useRef(initMap);
+  const ctx = useRef<CanvasRenderingContext2D>(undefined);
+  const cam = useRef<Camera>(undefined);
+  const activeTiles = useRef<Set<string>>(undefined);
 
-  const draw = (
-    newCam?: Camera,
-    newMap?: TileMapType,
-    newWire?: [vector2, vector2]
+  const setAttributes = (
+    newCtx: CanvasRenderingContext2D,
+    newCam: Camera,
+    newActiveTiles: Set<string>
   ) => {
-    if (newCam) cam.current = newCam;
-    if (newMap) map.current = newMap;
+    ctx.current = newCtx;
+    cam.current = newCam;
+    activeTiles.current = newActiveTiles;
+  };
 
-    if (!ctx.current) return;
+  const draw = (newWire?: [vector2, vector2]) => {
+    if (!ctx.current || !cam.current || !activeTiles.current) return;
 
     ctx.current.fillStyle = config.bgColor || "#000000";
     ctx.current.fillRect(0, 0, windowSize.w, windowSize.h);
@@ -51,16 +52,17 @@ function useDrawer(
       );
     drawTileMap(
       ctx.current,
-      map.current,
+      map,
       cam.current.x,
       cam.current.y,
       windowSize.w / cam.current.scale,
       windowSize.h / cam.current.scale,
-      config.tileSize
+      config.tileSize,
+      activeTiles.current
     );
     drawWires(
       ctx.current,
-      map.current,
+      map,
       cam.current.x,
       cam.current.y,
       windowSize.w / cam.current.scale,
@@ -70,7 +72,7 @@ function useDrawer(
     if (cam.current.scale >= config.minTileLabelScale && !started)
       drawTileLabels(
         ctx.current,
-        map.current,
+        map,
         cam.current.x,
         cam.current.y,
         windowSize.w / cam.current.scale,
@@ -82,7 +84,7 @@ function useDrawer(
       const [start, end] = newWire;
       drawGhostWire(
         ctx.current,
-        map.current,
+        map,
         start,
         end,
         cam.current.x,
@@ -95,16 +97,12 @@ function useDrawer(
   };
 
   useEffect(() => {
-    draw(undefined, undefined, undefined);
+    draw();
   }, [windowSize, started]);
 
-  const setCtx = (newCtx: CanvasRenderingContext2D) => {
-    ctx.current = newCtx;
-  };
-
   return {
+    setAttributes,
     draw,
-    setCtx,
   };
 }
 
