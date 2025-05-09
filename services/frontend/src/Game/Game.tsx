@@ -1,4 +1,4 @@
-import Toolbar, { ToolType } from "./Toolbar/Toolbar";
+import Toolbar, { ToolbarItem, ToolType } from "./Toolbar/Toolbar";
 import Locator from "./Locator";
 import Canvas from "./Canvas";
 import { useMemo, useState } from "react";
@@ -25,8 +25,11 @@ function Game({ projectId, projectMap, projectCam }: GameProps) {
   // TileSize
   const tileSize = 30;
 
-  // CurrTool
-  const [currTool, setCurrTool] = useState<ToolType>(ToolType.Drag);
+  // Current toolbar item
+  const [currItem, setCurrItem] = useState<ToolbarItem>({
+    item: "tool",
+    type: ToolType.Drag,
+  });
 
   // Window
   const windowSize = useWindowSize();
@@ -90,7 +93,7 @@ function Game({ projectId, projectMap, projectCam }: GameProps) {
   const mapEditorHook = useMapEditor(
     projectMap,
     mouseTile,
-    currTool,
+    currItem,
     !started,
     mapUpdateCallback
   );
@@ -127,7 +130,7 @@ function Game({ projectId, projectMap, projectCam }: GameProps) {
     const pointer = { x: e.clientX, y: e.clientY };
 
     if (!started) {
-      if (e.button === 1 || currTool === ToolType.Drag) {
+      if (e.button === 1 || currItem.type === ToolType.Drag) {
         camHook.startDrag(pointer);
       } else {
         mapEditorHook.onMouseDown();
@@ -156,8 +159,9 @@ function Game({ projectId, projectMap, projectCam }: GameProps) {
     if (camHook.dragging) {
       return "cursor-grabbing";
     }
+
     if (!started) {
-      if (currTool === ToolType.Drag) {
+      if (currItem.type === ToolType.Drag) {
         return "cursor-grab";
       }
     } else {
@@ -171,14 +175,14 @@ function Game({ projectId, projectMap, projectCam }: GameProps) {
     }
 
     return "cursor-default";
-  }, [camHook.dragging, currTool, started, mouseTile]);
+  }, [camHook.dragging, currItem, started, mouseTile]);
 
   return (
     <>
       {!started && (
         <Toolbar
-          currTool={currTool}
-          onSelect={setCurrTool}
+          currItem={currItem}
+          onSelect={setCurrItem}
           className="
           sm:bottom-2
           bottom-15

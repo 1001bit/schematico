@@ -2,13 +2,13 @@ import { useCallback, useEffect, useRef } from "react";
 import { TileMapType } from "../tilemap";
 import vector2 from "../vector2";
 import placeWire from "./wire";
-import mapTilesEdit from "./tiles";
-import { ToolType } from "../Toolbar/Toolbar";
+import { ToolbarItem, ToolType } from "../Toolbar/Toolbar";
+import { mapTilesEdit, mapTilesErase } from "./tiles";
 
 function useMapEditor(
   initMap: TileMapType,
   mouseTile: vector2,
-  currTool: ToolType,
+  currItem: ToolbarItem,
   canEdit: boolean,
   updateCallback: (map?: TileMapType, newWire?: [vector2, vector2]) => void
 ) {
@@ -16,31 +16,32 @@ function useMapEditor(
   const newWire = useRef<[vector2, vector2] | undefined>(undefined);
   const mouseDown = useRef(false);
 
-  useEffect(() => {
-    if (!canEdit) return;
-
-    if (mouseDown.current) {
-      mapTilesEdit(map.current, mouseTile, currTool);
-      if (newWire.current) {
-        newWire.current[1] = mouseTile;
-      }
-      updateCallback(map.current, newWire.current);
-    }
-  }, [mouseTile]);
-
   const onMouseDown = useCallback(() => {
     if (!canEdit) return;
-
     mouseDown.current = true;
 
-    if (currTool === ToolType.Wire) {
-      newWire.current = [mouseTile, mouseTile];
-      updateCallback(undefined, newWire.current);
+    if (currItem.item === "tool") {
+      if (currItem.type === ToolType.Erase) {
+        mapTilesErase(map.current, mouseTile);
+        updateCallback(map.current);
+      } else if (currItem.type === ToolType.Wire) {
+        if (!newWire.current) {
+          newWire.current = [mouseTile, mouseTile];
+        }
+        newWire.current[1] = mouseTile;
+        updateCallback(undefined, newWire.current);
+      }
     } else {
-      mapTilesEdit(map.current, mouseTile, currTool);
-      updateCallback(map.current, undefined);
+      mapTilesEdit(map.current, mouseTile, currItem.type);
+      updateCallback(map.current);
     }
-  }, [currTool, mouseTile]);
+  }, [currItem, mouseTile]);
+
+  useEffect(() => {
+    if (mouseDown.current) {
+      onMouseDown();
+    }
+  }, [mouseTile]);
 
   const onMouseUp = useCallback(() => {
     if (!canEdit) return;
@@ -54,7 +55,7 @@ function useMapEditor(
 
       updateCallback(map.current, undefined);
     }
-  }, [currTool, mouseTile]);
+  }, [currItem, mouseTile]);
 
   return {
     onMouseDown,

@@ -1,27 +1,20 @@
 import { CSSProperties, memo } from "react";
-import { ToolType } from "./Toolbar";
+import { ToolbarItem } from "./Toolbar";
 
-interface ToolProps {
-  onSelect: (type: ToolType) => void;
+interface ItemProps {
+  onSelect: (type: ToolbarItem) => void;
   text: string;
-  toolType: ToolType;
-  currToolType: ToolType;
+  item: ToolbarItem;
+  currItem: ToolbarItem;
 
   style?: CSSProperties;
   className?: string;
 }
 
-function Tool({
-  onSelect,
-  text,
-  toolType,
-  currToolType,
-  style,
-  className,
-}: ToolProps) {
+function Item({ onSelect, text, item, currItem, style, className }: ItemProps) {
   return (
     <div
-      onClick={() => onSelect(toolType)}
+      onClick={() => onSelect(item)}
       style={style}
       className={`
         h-14 w-14
@@ -31,7 +24,7 @@ function Tool({
         justify-center
         items-center
         select-none
-        ${toolType == currToolType ? "scale-110" : "hover:scale-105"}
+        ${item.type == currItem.type ? "scale-110" : "hover:scale-105"}
         ${className}
       `}
     >
@@ -40,4 +33,4 @@ function Tool({
   );
 }
 
-export default memo(Tool);
+export default memo(Item);

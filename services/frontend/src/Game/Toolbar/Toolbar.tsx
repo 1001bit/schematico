@@ -1,60 +1,36 @@
 import { memo } from "react";
-import { TileColors, TileLabels } from "../Drawer/tile";
+import { RoundTiles, TileColors, TileLabels } from "../Drawer/tile";
 import { WireColor } from "../Drawer/wire";
-import Tool from "./Tool";
+import Item from "./Item";
 import { TileType } from "../tilemap";
 
-interface ToolbarProps {
-  onSelect: (t: ToolType) => void;
-  currTool: ToolType;
-  className?: string;
-}
+export type ToolbarItem =
+  | { item: "tool"; type: ToolType }
+  | { item: "tile"; type: TileType };
 
 export enum ToolType {
   Drag = "drag",
   Erase = "erase",
-
   Wire = "wire",
-  Or = "or",
-  And = "and",
-  Not = "not",
-  Input = "input",
-  Bulb = "bulb",
 }
 
 export const ToolColors = {
   [ToolType.Drag]: "#ffffff",
   [ToolType.Erase]: "#ffffff",
-
   [ToolType.Wire]: WireColor,
-
-  [ToolType.Or]: TileColors[TileType.Or],
-  [ToolType.And]: TileColors[TileType.And],
-  [ToolType.Not]: TileColors[TileType.Not],
-  [ToolType.Input]: TileColors[TileType.Input],
-  [ToolType.Bulb]: TileColors[TileType.Bulb],
 };
 
 export const ToolLabels = {
   [ToolType.Drag]: "Drag",
   [ToolType.Erase]: "Erase",
-
   [ToolType.Wire]: "Wire",
-
-  [ToolType.Or]: TileLabels[TileType.Or],
-  [ToolType.And]: TileLabels[TileType.And],
-  [ToolType.Not]: TileLabels[TileType.Not],
-  [ToolType.Input]: TileLabels[TileType.Input],
-  [ToolType.Bulb]: TileLabels[TileType.Bulb],
 };
 
-export const ToolToTileType = {
-  [ToolType.Or]: TileType.Or,
-  [ToolType.And]: TileType.And,
-  [ToolType.Not]: TileType.Not,
-  [ToolType.Bulb]: TileType.Bulb,
-  [ToolType.Input]: TileType.Input,
-};
+interface ToolbarProps {
+  onSelect: (i: ToolbarItem) => void;
+  currItem: ToolbarItem;
+  className?: string;
+}
 
 function Toolbar(props: ToolbarProps) {
   const bgTransparency = "20";
@@ -66,55 +42,43 @@ function Toolbar(props: ToolbarProps) {
       ${props.className}
     `}
     >
-      {[ToolType.Drag, ToolType.Erase].map((type, idx) => {
+      {[ToolType.Drag, ToolType.Erase, ToolType.Wire].map((type, idx) => {
         return (
-          <Tool
+          <Item
             text={ToolLabels[type]}
-            toolType={type}
+            item={{ item: "tool", type: type }}
             onSelect={props.onSelect}
-            currToolType={props.currTool}
-            className="border-1 border-dashed backdrop-blur-[2px]"
+            currItem={props.currItem}
+            className="border-1 backdrop-blur-[2px]"
             style={{
               borderColor: ToolColors[type],
             }}
             key={idx}
-          ></Tool>
+          ></Item>
         );
       })}
 
-      <Tool
-        text="Wire"
-        toolType={ToolType.Wire}
-        onSelect={props.onSelect}
-        currToolType={props.currTool}
-        className="border-2 backdrop-blur-[2px]"
-        style={{
-          borderColor: ToolColors[ToolType.Wire],
-          color: ToolColors[ToolType.Wire],
-        }}
-      ></Tool>
-
       {[
-        ToolType.Or,
-        ToolType.And,
-        ToolType.Not,
-        ToolType.Input,
-        ToolType.Bulb,
+        TileType.Or,
+        TileType.And,
+        TileType.Not,
+        TileType.Input,
+        TileType.Bulb,
       ].map((type, idx) => {
         return (
-          <Tool
-            text={ToolLabels[type]}
-            toolType={type}
+          <Item
+            text={TileLabels[type]}
+            item={{ item: "tile", type: type }}
             onSelect={props.onSelect}
-            currToolType={props.currTool}
-            className={`border-2 backdrop-blur-[2px] ${type != ToolType.Bulb && type != ToolType.Input && "rounded-4xl"}`}
+            currItem={props.currItem}
+            className={`border-2 backdrop-blur-[2px] ${RoundTiles.has(type) && "rounded-4xl"}`}
             style={{
-              borderColor: ToolColors[type],
-              backgroundColor: ToolColors[type] + bgTransparency,
-              color: ToolColors[type],
+              borderColor: TileColors[type],
+              backgroundColor: TileColors[type] + bgTransparency,
+              color: TileColors[type],
             }}
             key={idx}
-          ></Tool>
+          ></Item>
         );
       })}
     </div>
