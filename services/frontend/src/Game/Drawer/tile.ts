@@ -23,9 +23,12 @@ function drawTile(
   ctx: CanvasRenderingContext2D,
   tileType: TileType,
   pos: vector2,
-  tileSize: number
+  tileSize: number,
+  active: boolean
 ) {
-  ctx.fillStyle = TileColors[tileType] + "13";
+  const opacity = active ? "ff" : "13";
+
+  ctx.fillStyle = TileColors[tileType] + opacity;
   ctx.strokeStyle = TileColors[tileType];
   ctx.lineWidth = 1;
 

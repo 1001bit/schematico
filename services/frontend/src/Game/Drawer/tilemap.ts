@@ -50,7 +50,7 @@ export function drawTileMap(
     const pos = vector2Product(strToVector2(posStr), tileSize);
 
     if (containsPoint(canvasStart, canvasEnd, pos)) {
-      drawTile(ctx, tile.type, pos, tileSize);
+      drawTile(ctx, tile.type, pos, tileSize, false);
     }
   }
 
