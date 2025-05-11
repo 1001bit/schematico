@@ -163,7 +163,7 @@ function Game({ projectId, projectMap, projectCam }: GameProps) {
 
   // init ctx
   function init(ctx: CanvasRenderingContext2D) {
-    drawerHook.setAttributes(ctx, camHook.cam, mapPlayerHook.activeTiles);
+    drawerHook.setAttributes(ctx, camHook.cam, mapPlayerHook.getState);
     drawerHook.draw();
   }
   return (

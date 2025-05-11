@@ -21,7 +21,7 @@ function useDrawer(
 ) {
   const ctx = useRef<CanvasRenderingContext2D>(undefined);
   const cam = useRef<Camera>(undefined);
-  const activeTiles = useRef<Map<string, boolean>>(undefined);
+  const getState = useRef<(posStr: string) => boolean | undefined>(undefined);
 
   const startedRef = useRef(started);
   useEffect(() => {
@@ -32,17 +32,17 @@ function useDrawer(
     (
       newCtx: CanvasRenderingContext2D,
       newCam: Camera,
-      newActiveTiles: Map<string, boolean>
+      newGetState: (posStr: string) => boolean | undefined
     ) => {
       ctx.current = newCtx;
       cam.current = newCam;
-      activeTiles.current = newActiveTiles;
+      getState.current = newGetState;
     },
     []
   );
 
   const draw = useCallback((newWire?: [vector2, vector2]) => {
-    if (!ctx.current || !cam.current || !activeTiles.current) return;
+    if (!ctx.current || !cam.current || !getState.current) return;
 
     ctx.current.fillStyle = config.bgColor || "#000000";
     ctx.current.fillRect(0, 0, windowSize.w, windowSize.h);
@@ -66,7 +66,7 @@ function useDrawer(
       windowSize.w / cam.current.scale,
       windowSize.h / cam.current.scale,
       config.tileSize,
-      activeTiles.current
+      getState.current
     );
     drawWires(
       ctx.current,
@@ -76,7 +76,7 @@ function useDrawer(
       windowSize.w / cam.current.scale,
       windowSize.h / cam.current.scale,
       config.tileSize,
-      activeTiles.current
+      getState.current
     );
     if (cam.current.scale >= config.minTileLabelScale && !startedRef.current) {
       drawTileLabels(

@@ -5,21 +5,27 @@ import useTicker from "./ticker";
 
 function getNewState(
   type: TileType,
-  conns: number,
-  activeConns: number
+  inputs: number,
+  activeInputs: number
 ): boolean {
   switch (type) {
     case TileType.Input:
       return false;
     case TileType.And:
-      return activeConns >= 1 && conns === activeConns;
+      return activeInputs >= 1 && inputs === activeInputs;
     case TileType.Bulb:
-      return activeConns >= 1;
+      return activeInputs >= 1;
     case TileType.Not:
-      return activeConns === 0;
+      return activeInputs === 0;
     case TileType.Or:
-      return activeConns >= 1;
+      return activeInputs >= 1;
   }
+}
+
+interface TileState {
+  state: boolean;
+  inputs: number;
+  activeInputs: number;
 }
 
 function useMapPlayer(
@@ -27,86 +33,91 @@ function useMapPlayer(
   mouseTile: vector2,
   stateUpdateCallback: () => void
 ) {
-  const tilesState = useRef<Map<string, boolean>>(new Map());
-  const tilesInputs = useRef<Map<string, [number, number]>>(new Map());
-  const toActivateQueue = useRef<Map<string, number>>(new Map());
+  const tilesStates = useRef<Map<string, TileState>>(new Map());
+  const deltaActiveInputs = useRef<Map<string, number>>(new Map());
 
-  function tick() {
-    const newActivateQueue = new Map();
-    for (const [posStr, newActiveConns] of toActivateQueue.current) {
+  const tick = useCallback(() => {
+    const newDeltaActiveInputs = new Map();
+    for (const [posStr, delta] of deltaActiveInputs.current) {
       const tile = map[posStr];
-      if (!tile || tile.type === TileType.Input) continue;
+      const tileState = tilesStates.current.get(posStr);
+      if (!tile || !tileState || tile.type === TileType.Input) continue;
 
-      let [conns, activeConns] = tilesInputs.current.get(posStr) || [0, 0];
-      activeConns += newActiveConns;
-      tilesInputs.current.set(posStr, [conns, activeConns]);
+      tileState.activeInputs += delta;
 
-      const newState = getNewState(tile.type, conns, activeConns);
-      if (newState === tilesState.current.get(posStr)) continue;
+      const newState = getNewState(
+        tile.type,
+        tileState.inputs,
+        tileState.activeInputs
+      );
+      if (newState === tileState.state) continue;
 
       for (const [wireEndStr, _] of Object.entries(tile.connections)) {
-        const newActivates = newActivateQueue.get(wireEndStr) || 0;
-        newActivateQueue.set(wireEndStr, newActivates + (newState ? 1 : -1));
+        const newDelta = newDeltaActiveInputs.get(wireEndStr) || 0;
+        newDeltaActiveInputs.set(wireEndStr, newDelta + (newState ? 1 : -1));
       }
 
-      tilesState.current.set(posStr, newState);
+      tileState.state = newState;
     }
-    toActivateQueue.current = newActivateQueue;
+    deltaActiveInputs.current = newDeltaActiveInputs;
 
     stateUpdateCallback();
-  }
+  }, []);
   const tps = 10;
   const ticker = useTicker(tick, 1000 / tps);
 
-  function inputSwitch(posStr: string) {
+  const inputSwitch = useCallback((posStr: string) => {
     const tile = map[posStr];
-    if (!tile || tile.type !== TileType.Input) return;
-    const newState = !tilesState.current.get(posStr) || false;
-    tilesState.current.set(posStr, newState);
+    const tileState = tilesStates.current.get(posStr);
+    if (!tile || !tileState || tile.type !== TileType.Input) return;
 
+    const newState = !tileState.state;
     for (const [wireEndStr, _] of Object.entries(tile.connections)) {
-      const currCount = toActivateQueue.current.get(wireEndStr) || 0;
-      toActivateQueue.current.set(wireEndStr, currCount + (newState ? 1 : -1));
+      const newDelta = deltaActiveInputs.current.get(wireEndStr) || 0;
+      deltaActiveInputs.current.set(wireEndStr, newDelta + (newState ? 1 : -1));
     }
 
-    stateUpdateCallback();
-  }
+    tileState.state = newState;
 
-  function init() {
+    stateUpdateCallback();
+  }, []);
+
+  const init = useCallback(() => {
     // init maps
     clear();
     for (const [posStr, _tile] of Object.entries(map)) {
-      tilesState.current.set(posStr, false);
-      toActivateQueue.current.set(posStr, 0);
-      tilesInputs.current.set(posStr, [0, 0]);
+      tilesStates.current.set(posStr, {
+        state: false,
+        inputs: 0,
+        activeInputs: 0,
+      } as TileState);
+      deltaActiveInputs.current.set(posStr, 0);
     }
 
     // init tilesInputs
     for (const [_posStr, tile] of Object.entries(map)) {
       for (const [endPosStr, _endTile] of Object.entries(tile.connections)) {
-        const [conns, activeConns] = tilesInputs.current.get(endPosStr) || [
-          0, 0,
-        ];
-        tilesInputs.current.set(endPosStr, [conns + 1, activeConns]);
+        const tileState = tilesStates.current.get(endPosStr);
+        if (!tileState) continue;
+        tileState.inputs += 1;
       }
     }
-  }
+  }, []);
 
-  function clear() {
-    tilesState.current.clear();
-    tilesInputs.current.clear();
-    toActivateQueue.current.clear();
-  }
+  const clear = useCallback(() => {
+    deltaActiveInputs.current.clear();
+    tilesStates.current.clear();
+  }, []);
 
-  const start = () => {
+  const start = useCallback(() => {
     init();
     ticker.start();
-  };
+  }, []);
 
-  const stop = () => {
+  const stop = useCallback(() => {
     clear();
     ticker.stop();
-  };
+  }, []);
 
   const onMouseDown = useCallback(() => {
     const mouseTileStr = vector2ToStr(mouseTile);
@@ -118,9 +129,14 @@ function useMapPlayer(
     }
   }, [mouseTile]);
 
+  const getState = useCallback((posStr: string) => {
+    const tileState = tilesStates.current.get(posStr);
+    return tileState && tileState.state;
+  }, []);
+
   return {
     onMouseDown,
-    activeTiles: tilesState.current,
+    getState,
     start,
     stop,
   };

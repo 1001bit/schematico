@@ -15,4 +15,9 @@ Frontend
         [X] Mouse behavior on input hover
         [X] Switch state on input click
         [X] Activate connected tiles
-        [ ] Refactor
+        [X] Refactor
+        [ ] TPS slider
+    [ ] Edit project
+        [ ] Title
+        [ ] Clear
+        [ ] Delete
