@@ -141,8 +141,8 @@ function Game({ projectId, projectMap, projectCam }: GameProps) {
 
   // Play button press
   function switchMode() {
-    setStarted((s) => !s);
-    mapPlayerHook.clear();
+    started ? mapPlayerHook.stop() : mapPlayerHook.start();
+    setStarted(!started);
   }
 
   // Cursor

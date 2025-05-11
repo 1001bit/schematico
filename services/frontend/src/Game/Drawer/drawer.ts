@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Camera } from "../Camera/camera";
 import { TileMapType } from "../tilemap";
 import drawGrid from "./grid";
@@ -21,19 +21,27 @@ function useDrawer(
 ) {
   const ctx = useRef<CanvasRenderingContext2D>(undefined);
   const cam = useRef<Camera>(undefined);
-  const activeTiles = useRef<Set<string>>(undefined);
+  const activeTiles = useRef<Map<string, boolean>>(undefined);
 
-  const setAttributes = (
-    newCtx: CanvasRenderingContext2D,
-    newCam: Camera,
-    newActiveTiles: Set<string>
-  ) => {
-    ctx.current = newCtx;
-    cam.current = newCam;
-    activeTiles.current = newActiveTiles;
-  };
+  const startedRef = useRef(started);
+  useEffect(() => {
+    startedRef.current = started;
+  }, [started]);
 
-  const draw = (newWire?: [vector2, vector2]) => {
+  const setAttributes = useCallback(
+    (
+      newCtx: CanvasRenderingContext2D,
+      newCam: Camera,
+      newActiveTiles: Map<string, boolean>
+    ) => {
+      ctx.current = newCtx;
+      cam.current = newCam;
+      activeTiles.current = newActiveTiles;
+    },
+    []
+  );
+
+  const draw = useCallback((newWire?: [vector2, vector2]) => {
     if (!ctx.current || !cam.current || !activeTiles.current) return;
 
     ctx.current.fillStyle = config.bgColor || "#000000";
@@ -67,9 +75,10 @@ function useDrawer(
       cam.current.y,
       windowSize.w / cam.current.scale,
       windowSize.h / cam.current.scale,
-      config.tileSize
+      config.tileSize,
+      activeTiles.current
     );
-    if (cam.current.scale >= config.minTileLabelScale && !started)
+    if (cam.current.scale >= config.minTileLabelScale && !startedRef.current) {
       drawTileLabels(
         ctx.current,
         map,
@@ -79,6 +88,7 @@ function useDrawer(
         windowSize.h / cam.current.scale,
         config.tileSize
       );
+    }
 
     if (newWire) {
       const [start, end] = newWire;
@@ -94,7 +104,7 @@ function useDrawer(
     }
 
     ctx.current.scale(1 / cam.current.scale, 1 / cam.current.scale);
-  };
+  }, []);
 
   useEffect(() => {
     draw();

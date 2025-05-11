@@ -34,7 +34,7 @@ export function drawTileMap(
   w: number,
   h: number,
   tileSize: number,
-  activeTiles: Set<string>
+  activeTiles: Map<string, boolean>
 ) {
   const canvasStart = {
     x: x - tileSize,
@@ -51,7 +51,7 @@ export function drawTileMap(
     const pos = vector2Product(strToVector2(posStr), tileSize);
 
     if (containsPoint(canvasStart, canvasEnd, pos)) {
-      drawTile(ctx, tile.type, pos, tileSize, activeTiles.has(posStr));
+      drawTile(ctx, tile.type, pos, tileSize, activeTiles.get(posStr) || false);
     }
   }
 
@@ -96,7 +96,8 @@ export function drawWires(
   y: number,
   w: number,
   h: number,
-  tileSize: number
+  tileSize: number,
+  activeTiles: Map<string, boolean>
 ) {
   const canvasStart = {
     x: x - tileSize,
@@ -119,7 +120,7 @@ export function drawWires(
         continue;
       }
 
-      drawWire(ctx, pos, wireEnd, tileSize, false);
+      drawWire(ctx, pos, wireEnd, tileSize, activeTiles.get(posStr) || false);
     }
   }
 

@@ -11,7 +11,8 @@ Frontend
         [X] Save the map
         [X] Save camera state
     [X] Input and bulb tools
-    [ ] Play
+    [X] Play
         [X] Mouse behavior on input hover
         [X] Switch state on input click
-        [ ] Activate connected tiles 
+        [X] Activate connected tiles
+        [ ] Refactor
