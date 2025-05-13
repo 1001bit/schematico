@@ -1,3 +1,3 @@
-- user places gates (drawn as vector images) and connects them by wiring using non-tile lines/curves
 - some kind of projects version control, like git
-- let users create their projects without login, save them locally and suggest them to log in to save them
+- Keybindings: E (erase), Ctrl+z (undo)
+- Copy/Paste and select

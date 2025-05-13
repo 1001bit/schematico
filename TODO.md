@@ -18,7 +18,9 @@ Frontend
         [X] Refactor
         [X] Draw wires under tiles
         [X] TPS slider
-    [ ] Edit project
+    [ ] Project Settings
+        [ ] Settings open button
+        [ ] Settings window
         [ ] Title
         [ ] Clear
         [ ] Delete

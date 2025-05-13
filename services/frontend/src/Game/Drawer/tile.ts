@@ -31,17 +31,26 @@ function drawTile(
   ctx.fillStyle = "#000000";
   ctx.strokeStyle = TileColors[tileType];
   ctx.lineWidth = 1;
-  ctx.fillRect(pos.x + 1, pos.y + 1, tileSize - 2, tileSize - 2);
-  ctx.fillStyle = TileColors[tileType] + opacity;
 
   if (RoundTiles.has(tileType)) {
     const radius = (tileSize - 2) / 2;
+
+    // black arc
     ctx.beginPath();
+    ctx.arc(pos.x + radius + 1, pos.y + radius + 1, radius, 0, 2 * Math.PI);
+    ctx.fill();
+
+    // tile
+    ctx.fillStyle = TileColors[tileType] + opacity;
     ctx.arc(pos.x + radius + 1, pos.y + radius + 1, radius, 0, 2 * Math.PI);
     ctx.fill();
     ctx.stroke();
     ctx.closePath();
   } else {
+    // back rect
+    ctx.fillRect(pos.x + 1, pos.y + 1, tileSize - 2, tileSize - 2);
+    ctx.fillStyle = TileColors[tileType] + opacity;
+    // tile
     ctx.fillRect(pos.x + 1, pos.y + 1, tileSize - 2, tileSize - 2);
     ctx.strokeRect(pos.x + 1, pos.y + 1, tileSize - 2, tileSize - 2);
   }

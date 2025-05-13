@@ -28,7 +28,7 @@ const Slider = ({
   };
 
   return (
-    <div className={`flex flex-col items-center w-full ${className}`}>
+    <div className={`flex flex-col items-center ${className}`}>
       <span className={`mt-2 text-sm`}>
         {label}
         {value}
