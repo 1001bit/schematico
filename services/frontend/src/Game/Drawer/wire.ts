@@ -75,7 +75,7 @@ function drawWire(
     y: wireEnd.y + offset - Math.sin(angle) * tileSize * radius,
   };
 
-  const opacity = active ? "ff" : "88";
+  const opacity = active ? "ff" : "66";
 
   drawArrow(ctx, start, end, errorColor ? ErrorColor : WireColor + opacity);
 }

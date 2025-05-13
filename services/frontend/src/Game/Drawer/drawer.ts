@@ -58,26 +58,34 @@ function useDrawer(
         windowSize.h / cam.current.scale,
         config.tileSize
       );
-    drawTileMap(
-      ctx.current,
-      map,
-      cam.current.x,
-      cam.current.y,
-      windowSize.w / cam.current.scale,
-      windowSize.h / cam.current.scale,
-      config.tileSize,
-      getState.current
-    );
-    drawWires(
-      ctx.current,
-      map,
-      cam.current.x,
-      cam.current.y,
-      windowSize.w / cam.current.scale,
-      windowSize.h / cam.current.scale,
-      config.tileSize,
-      getState.current
-    );
+
+    const order = startedRef.current ? ["wires", "tiles"] : ["tiles", "wires"];
+    for (const toDraw of order) {
+      if (toDraw === "wires") {
+        drawWires(
+          ctx.current,
+          map,
+          cam.current.x,
+          cam.current.y,
+          windowSize.w / cam.current.scale,
+          windowSize.h / cam.current.scale,
+          config.tileSize,
+          getState.current
+        );
+      } else {
+        drawTileMap(
+          ctx.current,
+          map,
+          cam.current.x,
+          cam.current.y,
+          windowSize.w / cam.current.scale,
+          windowSize.h / cam.current.scale,
+          config.tileSize,
+          getState.current
+        );
+      }
+    }
+
     if (cam.current.scale >= config.minTileLabelScale && !startedRef.current) {
       drawTileLabels(
         ctx.current,

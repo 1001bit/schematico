@@ -28,9 +28,11 @@ function drawTile(
 ) {
   const opacity = active ? "ff" : "13";
 
-  ctx.fillStyle = TileColors[tileType] + opacity;
+  ctx.fillStyle = "#000000";
   ctx.strokeStyle = TileColors[tileType];
   ctx.lineWidth = 1;
+  ctx.fillRect(pos.x + 1, pos.y + 1, tileSize - 2, tileSize - 2);
+  ctx.fillStyle = TileColors[tileType] + opacity;
 
   if (RoundTiles.has(tileType)) {
     const radius = (tileSize - 2) / 2;

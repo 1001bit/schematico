@@ -16,7 +16,8 @@ Frontend
         [X] Switch state on input click
         [X] Activate connected tiles
         [X] Refactor
-        [ ] TPS slider
+        [X] Draw wires under tiles
+        [X] TPS slider
     [ ] Edit project
         [ ] Title
         [ ] Clear

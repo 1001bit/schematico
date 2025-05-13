@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { TileMapType, TileType } from "../tilemap";
 import vector2, { vector2ToStr } from "../vector2";
 import useTicker from "./ticker";
@@ -31,6 +31,7 @@ interface TileState {
 function useMapPlayer(
   map: TileMapType,
   mouseTile: vector2,
+  tps: number,
   stateUpdateCallback: () => void
 ) {
   const tilesStates = useRef<Map<string, TileState>>(new Map());
@@ -63,8 +64,11 @@ function useMapPlayer(
 
     stateUpdateCallback();
   }, []);
-  const tps = 10;
-  const ticker = useTicker(tick, 1000 / tps);
+
+  const ticker = useTicker(
+    tick,
+    useMemo(() => 1000 / tps, [tps])
+  );
 
   const inputSwitch = useCallback((posStr: string) => {
     const tile = map[posStr];

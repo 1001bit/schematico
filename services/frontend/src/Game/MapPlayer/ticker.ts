@@ -1,19 +1,33 @@
 import { useEffect, useRef } from "react";
 
-function useTicker(callback: () => void, dtMs: number) {
+function useTicker(callback: () => void, initDelay: number) {
   const interval = useRef<NodeJS.Timeout>(null);
+  const delay = useRef(initDelay);
+
+  useEffect(() => {
+    delay.current = initDelay;
+  }, [initDelay]);
+
+  const start = () => {
+    stop();
+    interval.current = setInterval(() => callback(), delay.current);
+  };
+
+  const stop = () => {
+    if (!interval.current) return;
+    clearInterval(interval.current);
+    interval.current = null;
+  };
+
+  useEffect(() => {
+    delay.current = initDelay;
+    stop();
+    start();
+  }, [initDelay]);
 
   useEffect(() => {
     return stop;
   }, []);
-
-  const start = () => {
-    interval.current = setInterval(callback, dtMs);
-  };
-
-  const stop = () => {
-    if (interval.current) clearInterval(interval.current);
-  };
 
   return {
     start,

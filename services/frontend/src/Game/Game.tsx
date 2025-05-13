@@ -12,6 +12,7 @@ import useDebouncedCallback from "../hooks/debouncedCallback";
 import saveLocalProject from "../projectStorage/save";
 import Button from "../components/Button/Button";
 import useMapPlayer from "./MapPlayer/player";
+import Slider from "./Slider";
 
 interface GameProps {
   projectId: string;
@@ -31,6 +32,12 @@ function Game({ projectId, projectMap, projectCam }: GameProps) {
     item: "tool",
     type: ToolType.Drag,
   });
+
+  // TPS
+  const [tps, setTps] = useState(10);
+  const tpsMin = 1;
+  const tpsMax = 150;
+  const tpsStep = 1;
 
   // Window
   const windowSize = useWindowSize();
@@ -81,6 +88,7 @@ function Game({ projectId, projectMap, projectCam }: GameProps) {
   const mapPlayerHook = useMapPlayer(
     map.current,
     mouseTile,
+    tps,
     stateUpdateCallback
   );
 
@@ -145,6 +153,8 @@ function Game({ projectId, projectMap, projectCam }: GameProps) {
     setStarted(!started);
   }
 
+  // Slider Change
+
   // Cursor
   const cursorStyle = useMemo(() => {
     if (camHook.dragging) return "cursor-grabbing";
@@ -173,11 +183,26 @@ function Game({ projectId, projectMap, projectCam }: GameProps) {
           currItem={currItem}
           onSelect={setCurrItem}
           className="
-          sm:bottom-2
-          bottom-15
-          absolute left-1/2 z-6 -translate-x-1/2
-        "
+            sm:bottom-2
+            bottom-15
+            absolute left-1/2 z-6 -translate-x-1/2
+          "
         />
+      )}
+      {started && (
+        <Slider
+          min={tpsMin}
+          max={tpsMax}
+          step={tpsStep}
+          initial={tps}
+          onChange={setTps}
+          label="tps: "
+          className="
+            sm:bottom-2
+            bottom-15
+            absolute left-1/2 z-6 -translate-x-1/2
+          "
+        ></Slider>
       )}
       <Locator
         x={mouseTile.x}
