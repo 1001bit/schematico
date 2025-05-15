@@ -19,8 +19,10 @@ Frontend
         [X] Draw wires under tiles
         [X] TPS slider
     [ ] Project Settings
-        [ ] Settings open button
+        [X] Settings open button
         [ ] Settings window
+            [X] Element
+            [ ] Close on outside click
         [ ] Title
         [ ] Clear
         [ ] Delete
