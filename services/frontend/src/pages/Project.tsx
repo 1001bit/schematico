@@ -5,6 +5,7 @@ import Game from "../Game/Game";
 import getLocalProject from "../projectStorage/get";
 import ProjectInterface from "../projectStorage/project";
 import Button from "../components/Button/Button";
+import TextInput from "../components/TextInput/TextInput";
 
 export async function loader({
   params,
@@ -52,7 +53,15 @@ function Settings({ className, closeCallback }: SettingsProps) {
         ${className}
       `}
       ref={windowRef}
-    ></div>
+    >
+      <div className="flex flex-col gap-2">
+        <p className="font-bold">Project title</p>
+        <div className="flex gap-1">
+          <TextInput placeholder="title" length={32}></TextInput>
+          <Button onClick={() => {}}>Enter</Button>
+        </div>
+      </div>
+    </div>
   );
 }
 

@@ -4,7 +4,7 @@ interface ButtonProps {
   className?: string;
 }
 
-export default function Button(props: ButtonProps) {
+export default function Button({ onClick, children, className }: ButtonProps) {
   return (
     <button
       className={`
@@ -22,11 +22,11 @@ export default function Button(props: ButtonProps) {
         px-2 py-1
         transition-all duration-75 ease-in-out
         select-none
-        ${props.className}
+        ${className}
       `}
-      onClick={props.onClick}
+      onClick={onClick}
     >
-      {props.children}
+      {children}
     </button>
   );
 }
