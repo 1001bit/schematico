@@ -1,6 +1,6 @@
 import { useLoaderData } from "react-router";
 import { useTitle } from "../hooks/title";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Game from "../Game/Game";
 import getLocalProject from "../projectStorage/get";
 import ProjectInterface from "../projectStorage/project";
@@ -18,10 +18,27 @@ export async function loader({
 }
 
 interface SettingsProps {
+  closeCallback: () => void;
   className?: string;
 }
 
-function Settings({ className }: SettingsProps) {
+function Settings({ className, closeCallback }: SettingsProps) {
+  const windowRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(event: MouseEvent) {
+      if (
+        windowRef.current &&
+        !windowRef.current.contains(event.target as Node)
+      ) {
+        closeCallback();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
   return (
     <div
       className={`
@@ -34,6 +51,7 @@ function Settings({ className }: SettingsProps) {
         h-fit
         ${className}
       `}
+      ref={windowRef}
     ></div>
   );
 }
@@ -49,17 +67,20 @@ export default function Project() {
   }, []);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const openSettings = useCallback(() => {
+  const toggleSettings = useCallback(() => {
     setSettingsOpen((s) => !s);
   }, []);
 
   return (
     <>
-      <Button onClick={openSettings} className="fixed left-5 bottom-2">
+      <Button onClick={toggleSettings} className="fixed left-5 bottom-2">
         settings
       </Button>
       {settingsOpen && (
-        <Settings className="fixed left-1/2 top-1/2 -translate-1/2" />
+        <Settings
+          closeCallback={toggleSettings}
+          className="fixed left-1/2 top-1/2 -translate-1/2"
+        />
       )}
       <Game
         projectMap={project.map}

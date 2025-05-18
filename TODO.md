@@ -20,9 +20,9 @@ Frontend
         [X] TPS slider
     [ ] Project Settings
         [X] Settings open button
-        [ ] Settings window
+        [X] Settings window
             [X] Element
-            [ ] Close on outside click
+            [X] Close on outside click
         [ ] Title
         [ ] Clear
         [ ] Delete
