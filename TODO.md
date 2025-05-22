@@ -26,6 +26,7 @@ Frontend
         [ ] Title
             [X] Input and button
             [X] Submit
-            [ ] Save title
+            [X] Local title save
+            [ ] Reactive title save
         [ ] Clear
         [ ] Delete

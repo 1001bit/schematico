@@ -6,6 +6,7 @@ import getLocalProject from "../projectStorage/get";
 import ProjectInterface from "../projectStorage/project";
 import Button from "../components/Button/Button";
 import TextInput from "../components/TextInput/TextInput";
+import { saveLocalProjectTitle } from "../projectStorage/save";
 
 export async function loader({
   params,
@@ -19,6 +20,7 @@ export async function loader({
 }
 
 interface BaseParams {
+  id: string;
   title: string;
 }
 
@@ -47,7 +49,7 @@ function Settings({ base, className, closeCallback }: SettingsProps) {
 
   const [titleInput, setTitleInput] = useState(base.title);
   const submitTitle = useCallback(() => {
-    console.log("title:", titleInput);
+    saveLocalProjectTitle(base.id, titleInput);
   }, [titleInput]);
 
   return (
@@ -103,6 +105,7 @@ export default function Project() {
       {settingsOpen && (
         <Settings
           base={{
+            id: project.id,
             title: project.title,
           }}
           closeCallback={toggleSettings}
