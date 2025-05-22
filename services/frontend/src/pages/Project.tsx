@@ -18,12 +18,17 @@ export async function loader({
   return getLocalProject(id);
 }
 
+interface BaseParams {
+  title: string;
+}
+
 interface SettingsProps {
+  base: BaseParams;
   closeCallback: () => void;
   className?: string;
 }
 
-function Settings({ className, closeCallback }: SettingsProps) {
+function Settings({ base, className, closeCallback }: SettingsProps) {
   const windowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -39,6 +44,11 @@ function Settings({ className, closeCallback }: SettingsProps) {
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
+
+  const [titleInput, setTitleInput] = useState(base.title);
+  const submitTitle = useCallback(() => {
+    console.log("title:", titleInput);
+  }, [titleInput]);
 
   return (
     <div
@@ -57,8 +67,13 @@ function Settings({ className, closeCallback }: SettingsProps) {
       <div className="flex flex-col gap-2">
         <p className="font-bold">Project title</p>
         <div className="flex gap-1">
-          <TextInput placeholder="title" length={32}></TextInput>
-          <Button onClick={() => {}}>Enter</Button>
+          <TextInput
+            value={titleInput}
+            placeholder="title"
+            length={32}
+            onChange={setTitleInput}
+          ></TextInput>
+          <Button onClick={submitTitle}>Enter</Button>
         </div>
       </div>
     </div>
@@ -87,6 +102,9 @@ export default function Project() {
       </Button>
       {settingsOpen && (
         <Settings
+          base={{
+            title: project.title,
+          }}
           closeCallback={toggleSettings}
           className="fixed left-1/2 top-1/2 -translate-1/2"
         />

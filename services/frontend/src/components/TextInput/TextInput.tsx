@@ -1,5 +1,6 @@
 interface TextInputProps {
   placeholder: string;
+  value?: string;
   onChange?: (text: string) => void;
   password?: boolean;
   length: number;
@@ -16,6 +17,7 @@ export default function TextInput(props: TextInputProps) {
 
   return (
     <input
+      value={props.value}
       type={props.password ? "password" : "text"}
       onChange={onChange}
       autoComplete="off"

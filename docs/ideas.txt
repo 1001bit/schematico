@@ -1,4 +1,5 @@
 - Move tiles
+- Group tiles
 - some kind of projects version control, like git
 - Keybindings: E (erase), Ctrl+z (undo)
 - Copy/Paste and select

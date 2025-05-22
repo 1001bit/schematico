@@ -25,7 +25,7 @@ Frontend
             [X] Close on outside click
         [ ] Title
             [X] Input and button
-            [ ] Submit trigger
-            [ ] Submit
+            [X] Submit
+            [ ] Save title
         [ ] Clear
         [ ] Delete
