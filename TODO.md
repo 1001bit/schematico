@@ -23,10 +23,10 @@ Frontend
         [X] Settings window
             [X] Element
             [X] Close on outside click
-        [ ] Title
+        [X] Title
             [X] Input and button
             [X] Submit
             [X] Local title save
-            [ ] Reactive title save
-        [ ] Clear
-        [ ] Delete
+            [X] Reactive title change
+        [ ] Clear map
+        [ ] Delete project

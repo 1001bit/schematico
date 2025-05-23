@@ -22,6 +22,7 @@ export async function loader({
 interface BaseParams {
   id: string;
   title: string;
+  setTitle: (title: string) => void;
 }
 
 interface SettingsProps {
@@ -49,6 +50,7 @@ function Settings({ base, className, closeCallback }: SettingsProps) {
 
   const [titleInput, setTitleInput] = useState(base.title);
   const submitTitle = useCallback(() => {
+    base.setTitle(titleInput);
     saveLocalProjectTitle(base.id, titleInput);
   }, [titleInput]);
 
@@ -83,32 +85,40 @@ function Settings({ base, className, closeCallback }: SettingsProps) {
 }
 
 export default function Project() {
-  const title = useTitle();
   const project = useLoaderData() as ProjectInterface | undefined;
   if (!project) {
     return <p className="px-5">Project not found!</p>;
   }
+
+  const titleHook = useTitle();
+
+  const [title, setTitle] = useState(project.title);
+
   useEffect(() => {
-    title.setTitle(project.title);
-  }, []);
+    titleHook.setTitle(title);
+  }, [title]);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const toggleSettings = useCallback(() => {
-    setSettingsOpen((s) => !s);
+  const openSettings = useCallback(() => {
+    setSettingsOpen(true);
+  }, []);
+  const closeSettings = useCallback(() => {
+    setSettingsOpen(false);
   }, []);
 
   return (
     <>
-      <Button onClick={toggleSettings} className="fixed left-5 bottom-2">
+      <Button onClick={openSettings} className="fixed left-5 bottom-2">
         settings
       </Button>
       {settingsOpen && (
         <Settings
           base={{
             id: project.id,
-            title: project.title,
+            title: title,
+            setTitle: setTitle,
           }}
-          closeCallback={toggleSettings}
+          closeCallback={closeSettings}
           className="fixed left-1/2 top-1/2 -translate-1/2"
         />
       )}
