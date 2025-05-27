@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import { useTitle } from "../hooks/title";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Game from "../Game/Game";
@@ -6,7 +6,8 @@ import getLocalProject from "../projectStorage/get";
 import ProjectInterface from "../projectStorage/project";
 import Button from "../components/Button/Button";
 import TextInput from "../components/TextInput/TextInput";
-import { saveLocalProjectTitle } from "../projectStorage/save";
+import { saveLocalProjectTitle } from "../projectStorage/edit";
+import deleteProject from "../projectStorage/delete";
 
 export async function loader({
   params,
@@ -19,20 +20,25 @@ export async function loader({
   return getLocalProject(id);
 }
 
-interface BaseParams {
+interface ProjectSettings {
   id: string;
   title: string;
-  setTitle: (title: string) => void;
+  titleEditCallback: (title: string) => void;
 }
 
 interface SettingsProps {
-  base: BaseParams;
+  projectSettings: ProjectSettings;
   closeCallback: () => void;
   className?: string;
 }
 
-function Settings({ base, className, closeCallback }: SettingsProps) {
+function Settings({
+  projectSettings,
+  className,
+  closeCallback,
+}: SettingsProps) {
   const windowRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     function handleClick(event: MouseEvent) {
@@ -48,11 +54,16 @@ function Settings({ base, className, closeCallback }: SettingsProps) {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  const [titleInput, setTitleInput] = useState(base.title);
+  const [titleInput, setTitleInput] = useState(projectSettings.title);
   const submitTitle = useCallback(() => {
-    base.setTitle(titleInput);
-    saveLocalProjectTitle(base.id, titleInput);
+    projectSettings.titleEditCallback(titleInput);
+    saveLocalProjectTitle(projectSettings.id, titleInput);
   }, [titleInput]);
+
+  const clickDeleteProject = useCallback(() => {
+    deleteProject(projectSettings.id);
+    navigate("/");
+  }, []);
 
   return (
     <div
@@ -68,7 +79,7 @@ function Settings({ base, className, closeCallback }: SettingsProps) {
       `}
       ref={windowRef}
     >
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-8">
         <p className="font-bold">Project title</p>
         <div className="flex gap-1 w-full">
           <TextInput
@@ -80,11 +91,10 @@ function Settings({ base, className, closeCallback }: SettingsProps) {
           ></TextInput>
           <Button onClick={submitTitle}>Enter</Button>
         </div>
-        <div className="flex gap-1 w-100">
-          <Button className="flex-1" confirm>
-            Clear map
-          </Button>
-          <Button className="flex-1" confirm>
+        <hr></hr>
+        <p className="font-bold">Danger zone</p>
+        <div className="flex gap-1">
+          <Button className="flex-1" onClick={clickDeleteProject} confirm>
             Delete project
           </Button>
         </div>
@@ -134,10 +144,10 @@ export default function Project() {
       )}
       {settingsOpen && !started && (
         <Settings
-          base={{
+          projectSettings={{
             id: project.id,
             title: title,
-            setTitle: setTitle,
+            titleEditCallback: setTitle,
           }}
           closeCallback={closeSettings}
           className="fixed left-1/2 top-1/2 -translate-1/2"

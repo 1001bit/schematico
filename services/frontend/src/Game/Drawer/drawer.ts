@@ -41,78 +41,86 @@ function useDrawer(
     []
   );
 
-  const draw = useCallback((newWire?: [vector2, vector2]) => {
-    if (!ctx.current || !cam.current || !getState.current) return;
+  const draw = useCallback(
+    (newWire?: [vector2, vector2]) => {
+      if (!ctx.current || !cam.current || !getState.current) return;
 
-    ctx.current.fillStyle = config.bgColor || "#000000";
-    ctx.current.fillRect(0, 0, windowSize.w, windowSize.h);
+      ctx.current.fillStyle = config.bgColor || "#000000";
+      ctx.current.fillRect(0, 0, windowSize.w, windowSize.h);
 
-    ctx.current.scale(cam.current.scale, cam.current.scale);
+      ctx.current.scale(cam.current.scale, cam.current.scale);
 
-    if (cam.current.scale >= config.minGridScale)
-      drawGrid(
-        ctx.current,
-        cam.current.x,
-        cam.current.y,
-        windowSize.w / cam.current.scale,
-        windowSize.h / cam.current.scale,
-        config.tileSize
-      );
-
-    const order = startedRef.current ? ["wires", "tiles"] : ["tiles", "wires"];
-    for (const toDraw of order) {
-      if (toDraw === "wires") {
-        drawWires(
+      if (cam.current.scale >= config.minGridScale)
+        drawGrid(
           ctx.current,
-          map,
           cam.current.x,
           cam.current.y,
           windowSize.w / cam.current.scale,
           windowSize.h / cam.current.scale,
-          config.tileSize,
-          getState.current
+          config.tileSize
         );
-      } else {
-        drawTileMap(
+
+      const order = startedRef.current
+        ? ["wires", "tiles"]
+        : ["tiles", "wires"];
+      for (const toDraw of order) {
+        if (toDraw === "wires") {
+          drawWires(
+            ctx.current,
+            map,
+            cam.current.x,
+            cam.current.y,
+            windowSize.w / cam.current.scale,
+            windowSize.h / cam.current.scale,
+            config.tileSize,
+            getState.current
+          );
+        } else {
+          drawTileMap(
+            ctx.current,
+            map,
+            cam.current.x,
+            cam.current.y,
+            windowSize.w / cam.current.scale,
+            windowSize.h / cam.current.scale,
+            config.tileSize,
+            getState.current
+          );
+        }
+      }
+
+      if (
+        cam.current.scale >= config.minTileLabelScale &&
+        !startedRef.current
+      ) {
+        drawTileLabels(
           ctx.current,
           map,
           cam.current.x,
           cam.current.y,
           windowSize.w / cam.current.scale,
           windowSize.h / cam.current.scale,
-          config.tileSize,
-          getState.current
+          config.tileSize
         );
       }
-    }
 
-    if (cam.current.scale >= config.minTileLabelScale && !startedRef.current) {
-      drawTileLabels(
-        ctx.current,
-        map,
-        cam.current.x,
-        cam.current.y,
-        windowSize.w / cam.current.scale,
-        windowSize.h / cam.current.scale,
-        config.tileSize
-      );
-    }
+      if (newWire) {
+        const [start, end] = newWire;
+        drawGhostWire(
+          ctx.current,
+          map,
+          start,
+          end,
+          cam.current.x,
+          cam.current.y,
+          config.tileSize
+        );
+      }
 
-    if (newWire) {
-      const [start, end] = newWire;
-      drawGhostWire(
-        ctx.current,
-        map,
-        start,
-        end,
-        cam.current.x,
-        cam.current.y,
-        config.tileSize
-      );
-    }
-
-    ctx.current.scale(1 / cam.current.scale, 1 / cam.current.scale);
-  }, []);
+      ctx.current.scale(1 / cam.current.scale, 1 / cam.current.scale);
+    },
+    [windowSize]
+  );
 
   useEffect(() => {
     draw();

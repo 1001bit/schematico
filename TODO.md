@@ -18,7 +18,7 @@ Frontend
         [X] Refactor
         [X] Draw wires under tiles
         [X] TPS slider
-    [ ] Project Settings
+    [X] Project Settings
         [X] Settings open button
         [X] Settings window
             [X] Element
@@ -28,10 +28,11 @@ Frontend
             [X] Submit
             [X] Local title save
             [X] Reactive title change
-        [ ] Clear map
+        [X] Delete project
             [X] Button
-            [ ] Clear map
-        [ ] Delete project
-            [X] Button
-            [ ] Delete the project
-            [ ] Redirect
+            [X] Delete the project
+            [X] Redirect
+
+Backend
+    [ ] User management
+    [ ] Projects management

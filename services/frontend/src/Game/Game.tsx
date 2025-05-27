@@ -9,7 +9,7 @@ import useWindowSize from "../hooks/window";
 import useMapEditor from "./MapEditor/editor";
 import useDrawer from "./Drawer/drawer";
 import useDebouncedCallback from "../hooks/debouncedCallback";
-import { saveLocalProjectMapAndCam } from "../projectStorage/save";
+import { saveLocalProjectMapAndCam } from "../projectStorage/edit";
 import useMapPlayer from "./MapPlayer/player";
 import Slider from "./Slider";
 
@@ -56,7 +56,7 @@ function Game({ projectId, projectMap, projectCam, started }: GameProps) {
   // Draw
   const config = {
     minGridScale: 0.4,
-    minTileLabelScale: 2,
+    minTileLabelScale: 1.5,
     tileSize: tileSize,
   };
   const drawerHook = useDrawer(map.current, config, windowSize, started);
@@ -177,9 +177,7 @@ function Game({ projectId, projectMap, projectCam, started }: GameProps) {
           currItem={currItem}
           onSelect={setCurrItem}
           className="
-            sm:bottom-2
-            bottom-15
-            absolute left-1/2 z-6 -translate-x-1/2
+            bottom-2 absolute left-1/2 z-6 -translate-x-1/2
           "
         />
       )}
@@ -192,9 +190,7 @@ function Game({ projectId, projectMap, projectCam, started }: GameProps) {
           onChange={setTps}
           label="tps: "
           className="
-            sm:bottom-2
-            bottom-15
-            absolute left-1/2 z-6 -translate-x-1/2
+            bottom-2 absolute left-1/2 z-6 -translate-x-1/2
           "
         ></Slider>
       )}

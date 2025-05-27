@@ -39,6 +39,8 @@ function Toolbar(props: ToolbarProps) {
     <div
       className={`
       flex flex-row gap-6
+      flex-wrap
+      justify-center
       ${props.className}
     `}
     >
