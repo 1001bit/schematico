@@ -1,10 +1,32 @@
+import { useState } from "react";
+
 interface ButtonProps {
-  onClick: () => void;
+  onClick?: () => void;
   children?: React.ReactNode;
   className?: string;
+  confirm?: boolean;
 }
 
-export default function Button({ onClick, children, className }: ButtonProps) {
+export default function Button({
+  onClick: clickCallback,
+  children,
+  className,
+  confirm,
+}: ButtonProps) {
+  const [confirmation, setConfirmation] = useState(false);
+
+  const onClick = () => {
+    if (!confirm) {
+      clickCallback && clickCallback();
+    } else if (confirmation) {
+      clickCallback && clickCallback();
+      setConfirmation(false);
+    } else {
+      setConfirmation(true);
+      setTimeout(() => setConfirmation(false), 5000);
+    }
+  };
+
   return (
     <button
       className={`
@@ -27,6 +49,7 @@ export default function Button({ onClick, children, className }: ButtonProps) {
       onClick={onClick}
     >
       {children}
+      {confirmation && " (confirm)"}
     </button>
   );
 }

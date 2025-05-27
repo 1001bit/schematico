@@ -1,7 +1,7 @@
 import Toolbar, { ToolbarItem, ToolType } from "./Toolbar/Toolbar";
 import Locator from "./Locator";
 import Canvas from "./Canvas";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import vector2, { vector2Equal, vector2ToStr } from "./vector2";
 import { TileMapType, TileType } from "./tilemap";
 import useCamera, { Camera } from "./Camera/camera";
@@ -10,7 +10,6 @@ import useMapEditor from "./MapEditor/editor";
 import useDrawer from "./Drawer/drawer";
 import useDebouncedCallback from "../hooks/debouncedCallback";
 import { saveLocalProjectMapAndCam } from "../projectStorage/save";
-import Button from "../components/Button/Button";
 import useMapPlayer from "./MapPlayer/player";
 import Slider from "./Slider";
 
@@ -18,14 +17,12 @@ interface GameProps {
   projectId: string;
   projectMap: TileMapType;
   projectCam: Camera;
+  started: boolean;
 }
 
-function Game({ projectId, projectMap, projectCam }: GameProps) {
+function Game({ projectId, projectMap, projectCam, started }: GameProps) {
   // TileSize
   const tileSize = 30;
-
-  // Game started
-  const [started, setStarted] = useState(false);
 
   // Current toolbar item
   const [currItem, setCurrItem] = useState<ToolbarItem>({
@@ -92,6 +89,11 @@ function Game({ projectId, projectMap, projectCam }: GameProps) {
     stateUpdateCallback
   );
 
+  useEffect(() => {
+    started ? mapPlayerHook.start() : mapPlayerHook.stop();
+    drawerHook.draw();
+  }, [started]);
+
   // Map Editor
   function mapUpdateCallback(newWire?: [vector2, vector2]) {
     debounceSave(map.current, camHook.cam);
@@ -146,14 +148,6 @@ function Game({ projectId, projectMap, projectCam }: GameProps) {
     const pointer = { x: e.clientX, y: e.clientY };
     camHook.zoom(pointer, e.deltaY);
   }
-
-  // Play button press
-  function switchMode() {
-    started ? mapPlayerHook.stop() : mapPlayerHook.start();
-    setStarted(!started);
-  }
-
-  // Slider Change
 
   // Cursor
   const cursorStyle = useMemo(() => {
@@ -213,9 +207,6 @@ function Game({ projectId, projectMap, projectCam }: GameProps) {
           absolute left-1/2 z-6 -translate-x-1/2
         "
       />
-      <Button onClick={switchMode} className="fixed right-5 bottom-2">
-        {started ? "edit" : "play"}
-      </Button>
       <Canvas
         w={windowSize.w}
         h={windowSize.h}

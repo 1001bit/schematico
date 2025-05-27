@@ -70,14 +70,23 @@ function Settings({ base, className, closeCallback }: SettingsProps) {
     >
       <div className="flex flex-col gap-2">
         <p className="font-bold">Project title</p>
-        <div className="flex gap-1">
+        <div className="flex gap-1 w-full">
           <TextInput
             value={titleInput}
             placeholder="title"
             length={32}
             onChange={setTitleInput}
+            className="w-full"
           ></TextInput>
           <Button onClick={submitTitle}>Enter</Button>
+        </div>
+        <div className="flex gap-1 w-100">
+          <Button className="flex-1" confirm>
+            Clear map
+          </Button>
+          <Button className="flex-1" confirm>
+            Delete project
+          </Button>
         </div>
       </div>
     </div>
@@ -106,12 +115,24 @@ export default function Project() {
     setSettingsOpen(false);
   }, []);
 
+  const [started, setStarted] = useState(false);
+  function switchMode() {
+    setStarted(!started);
+    closeSettings();
+  }
+
   return (
     <>
-      <Button onClick={openSettings} className="fixed left-5 bottom-2">
-        settings
-      </Button>
-      {settingsOpen && (
+      {settingsOpen ? (
+        <p className="fixed left-5 bottom-2">close</p>
+      ) : (
+        !started && (
+          <Button onClick={openSettings} className="fixed left-5 bottom-2">
+            settings
+          </Button>
+        )
+      )}
+      {settingsOpen && !started && (
         <Settings
           base={{
             id: project.id,
@@ -122,10 +143,14 @@ export default function Project() {
           className="fixed left-1/2 top-1/2 -translate-1/2"
         />
       )}
+      <Button onClick={switchMode} className="fixed right-5 bottom-2">
+        {started ? "edit" : "play"}
+      </Button>
       <Game
         projectMap={project.map}
         projectId={project.id}
         projectCam={project.camera}
+        started={started}
       ></Game>
     </>
   );

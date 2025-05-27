@@ -29,4 +29,9 @@ Frontend
             [X] Local title save
             [X] Reactive title change
         [ ] Clear map
+            [X] Button
+            [ ] Clear map
         [ ] Delete project
+            [X] Button
+            [ ] Delete the project
+            [ ] Redirect

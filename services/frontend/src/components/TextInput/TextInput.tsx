@@ -6,6 +6,7 @@ interface TextInputProps {
   length: number;
   name?: string;
   error?: boolean;
+  className?: string;
 }
 
 export default function TextInput(props: TextInputProps) {
@@ -50,6 +51,7 @@ export default function TextInput(props: TextInputProps) {
             hover:border-acc
             `
         }
+        ${props.className}
       `}
       placeholder={props.placeholder}
     ></input>
