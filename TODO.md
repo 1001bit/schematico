@@ -22,7 +22,7 @@ Frontend
         [X] Settings open button
         [X] Settings window
             [X] Element
-            [X] Close on outside click
+            [X] Close
         [X] Title
             [X] Input and button
             [X] Submit

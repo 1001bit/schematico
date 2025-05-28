@@ -1,6 +1,6 @@
 import { useLoaderData, useNavigate } from "react-router";
 import { useTitle } from "../hooks/title";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Game from "../Game/Game";
 import getLocalProject from "../projectStorage/get";
 import ProjectInterface from "../projectStorage/project";
@@ -28,31 +28,11 @@ interface ProjectSettings {
 
 interface SettingsProps {
   projectSettings: ProjectSettings;
-  closeCallback: () => void;
   className?: string;
 }
 
-function Settings({
-  projectSettings,
-  className,
-  closeCallback,
-}: SettingsProps) {
-  const windowRef = useRef<HTMLDivElement>(null);
+function Settings({ projectSettings, className }: SettingsProps) {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    function handleClick(event: MouseEvent) {
-      if (
-        windowRef.current &&
-        !windowRef.current.contains(event.target as Node)
-      ) {
-        closeCallback();
-      }
-    }
-
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
 
   const [titleInput, setTitleInput] = useState(projectSettings.title);
   const submitTitle = useCallback(() => {
@@ -77,7 +57,6 @@ function Settings({
         h-fit
         ${className}
       `}
-      ref={windowRef}
     >
       <div className="flex flex-col gap-8">
         <p className="font-bold">Project title</p>
@@ -118,30 +97,21 @@ export default function Project() {
   }, [title]);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const openSettings = useCallback(() => {
-    setSettingsOpen(true);
-  }, []);
-  const closeSettings = useCallback(() => {
-    setSettingsOpen(false);
+  const switchSettings = useCallback(() => {
+    setSettingsOpen((s) => !s);
   }, []);
 
   const [started, setStarted] = useState(false);
   function switchMode() {
     setStarted(!started);
-    closeSettings();
+    setSettingsOpen(false);
   }
 
   return (
     <>
-      {settingsOpen ? (
-        <p className="fixed left-5 bottom-2">close</p>
-      ) : (
-        !started && (
-          <Button onClick={openSettings} className="fixed left-5 bottom-2">
-            settings
-          </Button>
-        )
-      )}
+      <Button onClick={switchSettings} className="fixed left-5 bottom-2">
+        {settingsOpen ? "close" : "settings"}
+      </Button>
       {settingsOpen && !started && (
         <Settings
           projectSettings={{
@@ -149,7 +119,6 @@ export default function Project() {
             title: title,
             titleEditCallback: setTitle,
           }}
-          closeCallback={closeSettings}
           className="fixed left-1/2 top-1/2 -translate-1/2"
         />
       )}
