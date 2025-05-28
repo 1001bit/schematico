@@ -59,7 +59,7 @@ function Settings({ projectSettings, className }: SettingsProps) {
       `}
     >
       <div className="flex flex-col gap-8">
-        <p className="font-bold">Project title</p>
+        <p className="font-bold">Project name</p>
         <div className="flex gap-1 w-full">
           <TextInput
             value={titleInput}

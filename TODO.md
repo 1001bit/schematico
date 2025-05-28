@@ -34,5 +34,5 @@ Frontend
             [X] Redirect
 
 Backend
-    [ ] User management
     [ ] Projects management
+    [ ] User management
