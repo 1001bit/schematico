@@ -46,7 +46,12 @@ function useDrawer(
       if (!ctx.current || !cam.current || !getState.current) return;
 
       ctx.current.fillStyle = config.bgColor || "#000000";
-      ctx.current.fillRect(0, 0, windowSize.w, windowSize.h);
+      ctx.current.fillRect(
+        0,
+        0,
+        windowSize.w / cam.current.scale,
+        windowSize.h / cam.current.scale
+      );
 
       ctx.current.scale(cam.current.scale, cam.current.scale);
 
