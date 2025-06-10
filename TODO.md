@@ -34,5 +34,9 @@ Frontend
             [X] Redirect
 
 Backend
-    [ ] Projects management
-    [ ] User management
+    Projects management
+        [ ] Available for all projects
+        [ ] Project access control after user management creation
+    User management
+        [ ] Service with endpoint
+        [ ] Database with schema
