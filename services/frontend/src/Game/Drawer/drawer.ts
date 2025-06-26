@@ -45,16 +45,14 @@ function useDrawer(
     (newWire?: [vector2, vector2]) => {
       if (!ctx.current || !cam.current || !getState.current) return;
 
+      // Clean the screen
       ctx.current.fillStyle = config.bgColor || "#000000";
-      ctx.current.fillRect(
-        0,
-        0,
-        windowSize.w / cam.current.scale,
-        windowSize.h / cam.current.scale
-      );
+      ctx.current.fillRect(0, 0, windowSize.w, windowSize.h);
 
+      // Scale to the camera
       ctx.current.scale(cam.current.scale, cam.current.scale);
 
+      // Grid
       if (cam.current.scale >= config.minGridScale)
         drawGrid(
           ctx.current,
@@ -65,6 +63,7 @@ function useDrawer(
           config.tileSize
         );
 
+      // Draw tiles and wires
       const order = startedRef.current
         ? ["wires", "tiles"]
         : ["tiles", "wires"];
@@ -94,6 +93,7 @@ function useDrawer(
         }
       }
 
+      // Draw tile labels
       if (
         cam.current.scale >= config.minTileLabelScale &&
         !startedRef.current
@@ -109,6 +109,7 @@ function useDrawer(
         );
       }
 
+      // Draw new wire
       if (newWire) {
         const [start, end] = newWire;
         drawGhostWire(
