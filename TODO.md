@@ -33,10 +33,13 @@ Frontend
             [X] Delete the project
             [X] Redirect
 
-Backend
-    Projects management
-        [ ] Available for all projects
-        [ ] Project access control after user management creation
-    User management
-        [ ] Service with endpoint
-        [ ] Database with schema
+Projects management
+    [X] Dummy endpoint
+    [X] Database with schema
+
+    [ ] Projects available for everybody
+    [ ] Project access control after user management creation
+
+User management
+    [ ] Dummy endpoint
+    [ ] Database with schema
