@@ -36,8 +36,9 @@ Frontend
 Projects management
     [X] Dummy endpoint
     [X] Database with schema
-
     [ ] Projects available for everybody
+        [ ] Project creation
+
     [ ] Project access control after user management creation
 
 User management

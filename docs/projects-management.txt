@@ -1,0 +1,22 @@
+How project saving is going to be managed:
+Create:
+    Local:
+        press create button in home page
+        add project to /map<id, {title, map, cam}> projects/ (id like "local-1", "local-2")
+    Server:
+        press publish button in settings
+        add project to /projects <id, title>/ (id serial)
+        add project tilemap to /maps <id, map>/ (map json)
+        rebind old id to new id on local and redirect
+
+Get list:
+    Get projects from server then add unique ones from local
+
+Save:
+    Local:
+        wait 5 seconds after editing
+        save project to projects
+    Server:
+        press save button in settings
+        save project name to projects
+        save project map to maps
