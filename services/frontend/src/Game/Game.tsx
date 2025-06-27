@@ -9,9 +9,9 @@ import useWindowSize from "../hooks/window";
 import useMapEditor from "./MapEditor/editor";
 import useDrawer from "./Drawer/drawer";
 import useDebouncedCallback from "../hooks/debouncedCallback";
-import { saveLocalProjectMapAndCam } from "../projectStorage/edit";
 import useMapPlayer from "./MapPlayer/player";
 import Slider from "./Slider";
+import setLocalProject from "../projectStorage/edit";
 
 interface GameProps {
   projectId: string;
@@ -45,7 +45,7 @@ function Game({ projectId, projectMap, projectCam, started }: GameProps) {
   // Local Save
   const debounceSave = useDebouncedCallback(
     (saveMap: TileMapType, saveCam: Camera) => {
-      saveLocalProjectMapAndCam(projectId, saveMap, saveCam);
+      setLocalProject(projectId, { map: saveMap, cam: saveCam });
     },
     500
   );

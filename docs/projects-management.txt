@@ -1,5 +1,5 @@
 How project saving is going to be managed:
-Create:
+Create/Publish:
     Local:
         press create button in home page
         add project to /map<id, {title, map, cam}> projects/ (id like "local-1", "local-2")

@@ -37,7 +37,10 @@ Projects management
     [X] Dummy endpoint
     [X] Database with schema
     [ ] Projects available for everybody
-        [ ] Project creation
+        [ ] Project publish
+            [ ] Settings button sending a post request
+            [ ] Endpoint
+            [ ] Model
 
     [ ] Project access control after user management creation
 

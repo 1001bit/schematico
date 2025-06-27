@@ -6,8 +6,8 @@ import getLocalProject from "../projectStorage/get";
 import ProjectInterface from "../projectStorage/project";
 import Button from "../components/Button/Button";
 import TextInput from "../components/TextInput/TextInput";
-import { saveLocalProjectTitle } from "../projectStorage/edit";
 import deleteProject from "../projectStorage/delete";
+import setLocalProject from "../projectStorage/edit";
 
 export async function loader({
   params,
@@ -37,7 +37,7 @@ function Settings({ projectSettings, className }: SettingsProps) {
   const [titleInput, setTitleInput] = useState(projectSettings.title);
   const submitTitle = useCallback(() => {
     projectSettings.titleEditCallback(titleInput);
-    saveLocalProjectTitle(projectSettings.id, titleInput);
+    setLocalProject(projectSettings.id, { title: titleInput });
   }, [titleInput]);
 
   const clickDeleteProject = useCallback(() => {
