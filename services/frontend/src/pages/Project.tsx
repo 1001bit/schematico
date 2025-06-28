@@ -1,6 +1,6 @@
 import { useLoaderData, useNavigate } from "react-router";
 import { useTitle } from "../hooks/title";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import Game from "../Game/Game";
 import getLocalProject from "../projectStorage/get";
 import ProjectInterface from "../projectStorage/project";
@@ -88,13 +88,7 @@ export default function Project() {
     return <p className="px-5">Project not found!</p>;
   }
 
-  const titleHook = useTitle();
-
-  const [title, setTitle] = useState(project.title);
-
-  useEffect(() => {
-    titleHook.setTitle(title);
-  }, [title]);
+  const titleHook = useTitle(project.title);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const switchSettings = useCallback(() => {
@@ -116,8 +110,8 @@ export default function Project() {
         <Settings
           projectSettings={{
             id: project.id,
-            title: title,
-            titleEditCallback: setTitle,
+            title: project.title,
+            titleEditCallback: titleHook.setTitle,
           }}
           className="fixed left-1/2 top-1/2 -translate-1/2"
         />
@@ -125,12 +119,7 @@ export default function Project() {
       <Button onClick={switchMode} className="fixed right-5 bottom-2">
         {started ? "edit" : "play"}
       </Button>
-      <Game
-        projectMap={project.map}
-        projectId={project.id}
-        projectCam={project.camera}
-        started={started}
-      ></Game>
+      <Game project={project} started={started}></Game>
     </>
   );
 }
