@@ -15,11 +15,12 @@ import setLocalProject from "../projectStorage/edit";
 import ProjectInterface from "../projectStorage/project";
 
 interface GameProps {
+  projectId: string;
   project: ProjectInterface;
   started: boolean;
 }
 
-function Game({ project, started }: GameProps) {
+function Game({ projectId, project, started }: GameProps) {
   // TileSize
   const tileSize = 30;
 
@@ -44,7 +45,7 @@ function Game({ project, started }: GameProps) {
   // Local Save
   const debounceSave = useDebouncedCallback(
     (saveMap: TileMapType, saveCam: Camera) => {
-      setLocalProject(project.id, { map: saveMap, cam: saveCam });
+      setLocalProject(projectId, { map: saveMap, cam: saveCam });
     },
     500
   );

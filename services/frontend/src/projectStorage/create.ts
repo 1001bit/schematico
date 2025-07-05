@@ -17,7 +17,6 @@ function createLocalProject(id?: string) {
   }
   const project = {
     title: "new project",
-    id: id,
     map: {},
     camera: {
       scale: 1,

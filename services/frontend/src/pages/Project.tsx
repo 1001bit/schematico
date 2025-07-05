@@ -7,27 +7,40 @@ import ProjectInterface from "../projectStorage/project";
 import Button from "../components/Button/Button";
 import Settings from "../components/ProjectSettings/settings";
 
+interface ProjectData {
+  id: string;
+  project: ProjectInterface;
+}
+
 export async function loader({
   params,
-}: any): Promise<ProjectInterface | undefined> {
+}: any): Promise<ProjectData | undefined> {
   const id = params.projectId;
   if (!id) {
     return;
   }
 
-  return getLocalProject(id);
+  const project = getLocalProject(id);
+  if (!project) {
+    return;
+  }
+
+  return {
+    id: id,
+    project: project,
+  };
 }
 
 export default function Project() {
-  const initProject = useLoaderData() as ProjectInterface | undefined;
-  if (!initProject) {
+  const initProjectData = useLoaderData() as ProjectData | undefined;
+  if (!initProjectData) {
     return <p className="px-5">Project not found!</p>;
   }
 
-  const [title, setTitle] = useState(initProject.title);
+  const [title, setTitle] = useState(initProjectData.project.title);
   useTitle(title);
 
-  const [id, setId] = useState(initProject.id);
+  const [id, setId] = useState(initProjectData.id);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const switchSettings = useCallback(() => {
@@ -59,7 +72,11 @@ export default function Project() {
       <Button onClick={switchMode} className="fixed right-5 bottom-2">
         {started ? "edit" : "play"}
       </Button>
-      <Game project={initProject} started={started}></Game>
+      <Game
+        projectId={initProjectData.id}
+        project={initProjectData.project}
+        started={started}
+      ></Game>
     </>
   );
 }
