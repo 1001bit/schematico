@@ -23,8 +23,9 @@ func main() {
 	}
 
 	projstorage := projectmodel.NewProjectStorage(db)
+	server := server.New(projstorage)
 
-	if err := server.Run(port, projstorage); err != nil {
+	if err := server.Run(port); err != nil {
 		slog.Error("error running server", "err", err)
 	}
 }

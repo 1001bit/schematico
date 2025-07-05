@@ -1,4 +1,4 @@
-FROM golang:1.24.1 AS builder
+FROM golang:1.24.4-alpine AS builder
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ COPY . .
 RUN go build -o main main.go
 
 # Final stage
-FROM debian:bookworm-slim
+FROM alpine:latest
 
 WORKDIR /app
 

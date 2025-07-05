@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import setLocalProject from "../../projectStorage/edit";
 import deleteProject from "../../projectStorage/delete";
 import publishServerProject from "../../serverStorage/publish";
 import TextInput from "../TextInput/TextInput";
 import Button from "../Button/Button";
+import saveServerProject from "../../serverStorage/save";
 
 function DeleteButton({
   id,
@@ -25,41 +26,55 @@ function DeleteButton({
   );
 }
 
-function PublishButton({
+function SaveButton({
   id,
   publishCallback,
 }: {
   id: string;
   publishCallback: (newId: string) => void;
 }) {
-  // Publish
-  const [publishMsg, setPublishMsg] = useState("");
+  const isLocal = useMemo(() => {
+    return id[0] == "l";
+  }, [id]);
+
+  const [msg, setMsg] = useState("");
+  useEffect(() => {
+    if (msg) {
+      const timeout = setTimeout(() => {
+        setMsg("");
+      }, 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [msg]);
+
   const publishProject = useCallback(async () => {
     try {
       const newId = await publishServerProject(id);
       if (!newId) {
         throw new Error("couldn't get new id");
       }
-      setPublishMsg("Success");
+      setMsg("Success");
       publishCallback(newId);
     } catch (err) {
-      setPublishMsg("Error");
+      setMsg("Error");
       throw err;
     }
   }, [id]);
-  useEffect(() => {
-    if (publishMsg) {
-      const timeout = setTimeout(() => {
-        setPublishMsg("");
-      }, 2000);
-      return () => clearTimeout(timeout);
-    }
-  }, [publishMsg]);
 
-  return (
-    <Button onClick={publishProject}>
-      {publishMsg != "" ? publishMsg : "Publish"}
-    </Button>
+  const saveProject = useCallback(async () => {
+    try {
+      await saveServerProject(id);
+      setMsg("Success");
+    } catch (err) {
+      setMsg("Error");
+      throw err;
+    }
+  }, [id]);
+
+  return isLocal ? (
+    <Button onClick={publishProject}>{msg != "" ? msg : "Publish"}</Button>
+  ) : (
+    <Button onClick={saveProject}>{msg != "" ? msg : "Save"}</Button>
   );
 }
 
@@ -143,10 +158,10 @@ function Settings({
           ></TitleInput>
         </div>
         <div className="flex flex-col gap-2">
-          <PublishButton
+          <SaveButton
             id={projectSettings.id}
             publishCallback={publishCallback}
-          ></PublishButton>
+          ></SaveButton>
           <DeleteButton
             id={projectSettings.id}
             deleteCallback={deleteCallback}
