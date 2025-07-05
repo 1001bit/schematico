@@ -14,13 +14,10 @@ func newRouter(h *handler.Handler) http.Handler {
 	r := chi.NewRouter()
 
 	r.Use(chimw.Logger)
-	r.Use(chimw.RedirectSlashes)
 	r.Use(chimw.Timeout(10 * time.Second))
 	r.Use(chimw.CleanPath)
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hi :3"))
-	})
+	r.Post("/", h.PublishProject)
 
 	return cors.New(cors.Options{
 		AllowedOrigins:   []string{"https://localhost"},

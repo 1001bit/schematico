@@ -1,13 +1,11 @@
-import { useLoaderData, useNavigate } from "react-router";
+import { useLoaderData } from "react-router";
 import { useTitle } from "../hooks/title";
 import { useCallback, useState } from "react";
 import Game from "../Game/Game";
 import getLocalProject from "../projectStorage/get";
 import ProjectInterface from "../projectStorage/project";
 import Button from "../components/Button/Button";
-import TextInput from "../components/TextInput/TextInput";
-import deleteProject from "../projectStorage/delete";
-import setLocalProject from "../projectStorage/edit";
+import Settings from "../components/ProjectSettings/settings";
 
 export async function loader({
   params,
@@ -20,75 +18,16 @@ export async function loader({
   return getLocalProject(id);
 }
 
-interface ProjectSettings {
-  id: string;
-  title: string;
-  titleEditCallback: (title: string) => void;
-}
-
-interface SettingsProps {
-  projectSettings: ProjectSettings;
-  className?: string;
-}
-
-function Settings({ projectSettings, className }: SettingsProps) {
-  const navigate = useNavigate();
-
-  const [titleInput, setTitleInput] = useState(projectSettings.title);
-  const submitTitle = useCallback(() => {
-    projectSettings.titleEditCallback(titleInput);
-    setLocalProject(projectSettings.id, { title: titleInput });
-  }, [titleInput]);
-
-  const clickDeleteProject = useCallback(() => {
-    deleteProject(projectSettings.id);
-    navigate("/");
-  }, []);
-
-  return (
-    <div
-      className={`
-        p-5
-        bg-acc-bg
-        border-1
-        border-acc-dim
-        backdrop-blur-xs
-        w-fit
-        h-fit
-        ${className}
-      `}
-    >
-      <div className="flex flex-col gap-8">
-        <p className="font-bold">Project name</p>
-        <div className="flex gap-1 w-full">
-          <TextInput
-            value={titleInput}
-            placeholder="title"
-            length={32}
-            onChange={setTitleInput}
-            className="w-full"
-          ></TextInput>
-          <Button onClick={submitTitle}>Enter</Button>
-        </div>
-        <hr></hr>
-        <p className="font-bold">Danger zone</p>
-        <div className="flex gap-1">
-          <Button className="flex-1" onClick={clickDeleteProject} confirm>
-            Delete project
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function Project() {
-  const project = useLoaderData() as ProjectInterface | undefined;
-  if (!project) {
+  const initProject = useLoaderData() as ProjectInterface | undefined;
+  if (!initProject) {
     return <p className="px-5">Project not found!</p>;
   }
 
-  const titleHook = useTitle(project.title);
+  const [title, setTitle] = useState(initProject.title);
+  useTitle(title);
+
+  const [id, setId] = useState(initProject.id);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const switchSettings = useCallback(() => {
@@ -109,9 +48,10 @@ export default function Project() {
       {settingsOpen && !started && (
         <Settings
           projectSettings={{
-            id: project.id,
-            title: project.title,
-            titleEditCallback: titleHook.setTitle,
+            id: id,
+            setId: setId,
+            title: title,
+            setTitle: setTitle,
           }}
           className="fixed left-1/2 top-1/2 -translate-1/2"
         />
@@ -119,7 +59,7 @@ export default function Project() {
       <Button onClick={switchMode} className="fixed right-5 bottom-2">
         {started ? "edit" : "play"}
       </Button>
-      <Game project={project} started={started}></Game>
+      <Game project={initProject} started={started}></Game>
     </>
   );
 }

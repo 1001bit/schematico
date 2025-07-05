@@ -28,7 +28,7 @@ export const useTitle = (title?: string) => {
 
   useEffect(() => {
     title && context.setTitle(title);
-  }, []);
+  }, [title]);
 
   return context;
 };

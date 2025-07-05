@@ -1,18 +1,20 @@
 import ProjectInterface from "./project";
 
-function createLocalProject() {
+function createLocalProject(id?: string) {
   const projectsStr = localStorage.getItem("projects");
   let projects = {} as Record<string, ProjectInterface>;
   if (projectsStr) {
     projects = JSON.parse(projectsStr) as Record<string, ProjectInterface>;
   }
 
-  let idNum = 1;
-  while (projects[`local-${idNum}`]) {
-    idNum++;
-  }
+  if (!id) {
+    let idNum = 1;
+    while (projects[`local-${idNum}`]) {
+      idNum++;
+    }
 
-  const id = `local-${idNum}`;
+    id = `local-${idNum}`;
+  }
   const project = {
     title: "new project",
     id: id,
