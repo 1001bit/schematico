@@ -43,7 +43,7 @@ Projects management
                 [X] Request
             [X] Endpoint
             [X] Model
-        [ ] Project map publish
+        [X] Project map publish
         [ ] Project save
         [ ] Project load
         [ ] Project delete

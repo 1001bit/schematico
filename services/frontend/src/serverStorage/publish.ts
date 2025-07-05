@@ -13,7 +13,8 @@ async function publishServerProject(oldId: string): Promise<string> {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      name: project?.title,
+      name: project.title,
+      map: JSON.stringify(project.map),
     }),
   }).then((res) => {
     if (!res.ok) {
