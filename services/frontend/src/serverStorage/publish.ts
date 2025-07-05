@@ -1,7 +1,5 @@
-import createLocalProject from "../projectStorage/create";
-import deleteProject from "../projectStorage/delete";
-import setLocalProject from "../projectStorage/edit";
 import getLocalProject from "../projectStorage/get";
+import migrateProjectId from "../projectStorage/migrate";
 
 async function publishServerProject(oldId: string): Promise<string> {
   const project = getLocalProject(oldId);
@@ -29,13 +27,7 @@ async function publishServerProject(oldId: string): Promise<string> {
     throw new Error("Couldn't get newId from response");
   }
 
-  deleteProject(oldId);
-  createLocalProject(newId);
-  setLocalProject(newId, {
-    title: project.title,
-    map: project.map,
-    cam: project.camera,
-  });
+  migrateProjectId(oldId, newId);
 
   return newId;
 }

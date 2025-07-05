@@ -37,14 +37,15 @@ Projects management
     [X] Dummy endpoint
     [X] Database with schema
     [ ] Projects available for everybody
-        [X] Project publish
+        [X] Project data publish
             [X] Settings button sending a post request
                 [X] Button
                 [X] Request
             [X] Endpoint
             [X] Model
-        [ ] Project load
+        [ ] Project map publish
         [ ] Project save
+        [ ] Project load
         [ ] Project delete
 
     [ ] Project access control after user management creation
