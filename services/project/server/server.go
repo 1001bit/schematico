@@ -30,6 +30,7 @@ func (s *Server) Run(port string) error {
 
 	r.Post("/", s.publishProject)
 	r.Put("/", s.saveProject)
+	r.Get("/{id}", s.loadProject)
 
 	rSecure := cors.New(cors.Options{
 		AllowedOrigins:   []string{"https://localhost"},

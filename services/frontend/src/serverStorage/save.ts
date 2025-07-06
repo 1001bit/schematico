@@ -6,7 +6,7 @@ async function saveServerProject(id: string) {
     throw new Error("Couldn't get local project");
   }
 
-  return fetch("/api/project/", {
+  const res = await fetch("/api/project/", {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -17,6 +17,9 @@ async function saveServerProject(id: string) {
       map: JSON.stringify(project.map),
     }),
   });
+  if (!res.ok) {
+    throw new Error("Error saving a project");
+  }
 }
 
 export default saveServerProject;

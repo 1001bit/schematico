@@ -45,7 +45,8 @@ Projects management
             [X] Model
         [X] Project map publish
         [X] Project save
-        [ ] Project load
+        [X] Project load
+        [ ] Project list
         [ ] Project delete
 
     [ ] Project access control after user management creation

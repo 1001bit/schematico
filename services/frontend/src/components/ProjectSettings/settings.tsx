@@ -6,6 +6,7 @@ import publishServerProject from "../../serverStorage/publish";
 import TextInput from "../TextInput/TextInput";
 import Button from "../Button/Button";
 import saveServerProject from "../../serverStorage/save";
+import loadServerProject from "../../serverStorage/load";
 
 function DeleteButton({
   id,
@@ -78,6 +79,37 @@ function SaveButton({
   );
 }
 
+function LoadButton({
+  id,
+  loadCallback,
+}: {
+  id: string;
+  loadCallback: () => void;
+}) {
+  const [msg, setMsg] = useState("");
+  useEffect(() => {
+    if (msg) {
+      const timeout = setTimeout(() => {
+        setMsg("");
+      }, 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [msg]);
+
+  const loadProject = useCallback(async () => {
+    try {
+      await loadServerProject(id);
+      loadCallback();
+      setMsg("Success");
+    } catch (err) {
+      setMsg("Error");
+      throw err;
+    }
+  }, [id]);
+
+  return <Button onClick={loadProject}>{msg != "" ? msg : "Load"}</Button>;
+}
+
 function TitleInput({
   id,
   title,
@@ -135,6 +167,11 @@ function Settings({
     navigate(`/project/${newId}`, { replace: true });
   }, []);
 
+  // Load
+  const loadCallback = useCallback(() => {
+    navigate(0);
+  }, []);
+
   return (
     <div
       className={`
@@ -162,6 +199,12 @@ function Settings({
             id={projectSettings.id}
             publishCallback={publishCallback}
           ></SaveButton>
+          {projectSettings.id[0] != "l" && (
+            <LoadButton
+              id={projectSettings.id}
+              loadCallback={loadCallback}
+            ></LoadButton>
+          )}
           <DeleteButton
             id={projectSettings.id}
             deleteCallback={deleteCallback}

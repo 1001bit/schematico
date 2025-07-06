@@ -7,7 +7,7 @@ async function publishServerProject(oldId: string): Promise<string> {
     throw new Error("Couldn't get local project");
   }
 
-  const data = await fetch("/api/project/", {
+  const res = await fetch("/api/project/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -16,13 +16,11 @@ async function publishServerProject(oldId: string): Promise<string> {
       name: project.title,
       map: JSON.stringify(project.map),
     }),
-  }).then((res) => {
-    if (!res.ok) {
-      throw new Error("HTTP Error");
-    }
-    return res.json();
   });
-
+  if (!res.ok) {
+    throw new Error("HTTP Error publishing a project");
+  }
+  const data = await res.json();
   const newId = data.id;
   if (!newId) {
     throw new Error("Couldn't get newId from response");
