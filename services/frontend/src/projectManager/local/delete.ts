@@ -1,6 +1,6 @@
-import ProjectInterface from "./project";
+import { ProjectInterface } from "../project";
 
-function deleteProject(id: string) {
+function deleteLocalProject(id: string) {
   const projectsStr = localStorage.getItem("projects");
   let projects = {} as Record<string, ProjectInterface>;
   if (projectsStr) {
@@ -11,4 +11,4 @@ function deleteProject(id: string) {
   localStorage.setItem("projects", JSON.stringify(projects));
 }
 
-export default deleteProject;
+export default deleteLocalProject;

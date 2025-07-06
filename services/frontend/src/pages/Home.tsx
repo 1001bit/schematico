@@ -4,8 +4,8 @@ import { useTitle } from "../hooks/title";
 import Button from "../components/Button/Button";
 import AnimatedBackground from "../components/Background/Background";
 import ProjectList from "../components/ProjectList/ProjectList";
-import createLocalProject from "../projectStorage/create";
-import ProjectInterface from "../projectStorage/project";
+import { ProjectInterface } from "../projectManager/project";
+import createLocalProject from "../projectManager/local/create";
 
 export async function loader(): Promise<Record<string, ProjectInterface>> {
   const projectsStr = localStorage.getItem("projects") || "{}";

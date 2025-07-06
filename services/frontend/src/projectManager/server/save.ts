@@ -1,11 +1,6 @@
-import getLocalProject from "../projectStorage/get";
+import { ProjectInterface } from "../project";
 
-async function saveServerProject(id: string) {
-  const project = getLocalProject(id);
-  if (!project) {
-    throw new Error("Couldn't get local project");
-  }
-
+async function saveServerProject(id: string, project: ProjectInterface) {
   const res = await fetch("/api/project/", {
     method: "PUT",
     headers: {

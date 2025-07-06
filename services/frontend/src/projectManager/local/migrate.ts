@@ -1,4 +1,4 @@
-import ProjectInterface from "./project";
+import { ProjectInterface } from "../project";
 
 function migrateProjectId(oldId: string, newId: string) {
   const projectsStr = localStorage.getItem("projects");

@@ -1,4 +1,4 @@
-import ProjectInterface from "./project";
+import { ProjectInterface } from "../project";
 
 function getLocalProject(id: string) {
   const projectsStr = localStorage.getItem("projects");

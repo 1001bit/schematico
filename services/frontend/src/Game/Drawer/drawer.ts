@@ -125,7 +125,7 @@ function useDrawer(
 
       ctx.current.scale(1 / cam.current.scale, 1 / cam.current.scale);
     },
-    [windowSize]
+    [windowSize, map]
   );
 
   useEffect(() => {

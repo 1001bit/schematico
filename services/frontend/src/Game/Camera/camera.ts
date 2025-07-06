@@ -8,12 +8,11 @@ export interface Camera {
 }
 
 function useCamera(
-  initCamera: Camera,
+  cam: Camera,
   scaleBounds: [number, number],
   scaleFactor: number,
   updateCallback: () => void
 ) {
-  const cam = useRef(initCamera);
   const draggingPos = useRef<vector2 | undefined>(undefined);
 
   const [dragging, setDragging] = useState(false);
@@ -23,8 +22,8 @@ function useCamera(
       return;
     }
 
-    cam.current.x += (draggingPos.current.x - pointer.x) / cam.current.scale;
-    cam.current.y += (draggingPos.current.y - pointer.y) / cam.current.scale;
+    cam.x += (draggingPos.current.x - pointer.x) / cam.scale;
+    cam.y += (draggingPos.current.y - pointer.y) / cam.scale;
 
     draggingPos.current = pointer;
 
@@ -44,26 +43,24 @@ function useCamera(
   const zoom = (pointer: vector2, deltaY: number) => {
     const scaleBy = scaleFactor * Math.abs(deltaY / 100);
 
-    const newScale =
-      deltaY < 0 ? cam.current.scale * scaleBy : cam.current.scale / scaleBy;
+    const newScale = deltaY < 0 ? cam.scale * scaleBy : cam.scale / scaleBy;
 
     const [lowBound, highBound] = scaleBounds;
-    if (lowBound > newScale || newScale > highBound) return cam.current;
+    if (lowBound > newScale || newScale > highBound) return cam;
 
     const mouseWorldPos = {
-      x: cam.current.x + pointer.x / cam.current.scale,
-      y: cam.current.y + pointer.y / cam.current.scale,
+      x: cam.x + pointer.x / cam.scale,
+      y: cam.y + pointer.y / cam.scale,
     };
 
-    cam.current.scale = newScale;
-    cam.current.x = mouseWorldPos.x - pointer.x / newScale;
-    cam.current.y = mouseWorldPos.y - pointer.y / newScale;
+    cam.scale = newScale;
+    cam.x = mouseWorldPos.x - pointer.x / newScale;
+    cam.y = mouseWorldPos.y - pointer.y / newScale;
 
     updateCallback();
   };
 
   return {
-    cam: cam.current,
     drag,
     dragging,
     startDrag,

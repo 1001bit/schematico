@@ -46,6 +46,7 @@ Projects management
         [X] Project map publish
         [X] Project save
         [X] Project load
+        [ ] Server project load on first entrance  
         [ ] Project list
         [ ] Project delete
 

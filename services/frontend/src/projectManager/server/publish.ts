@@ -1,12 +1,8 @@
-import getLocalProject from "../projectStorage/get";
-import migrateProjectId from "../projectStorage/migrate";
+import { ProjectInterface } from "../project";
 
-async function publishServerProject(oldId: string): Promise<string> {
-  const project = getLocalProject(oldId);
-  if (!project) {
-    throw new Error("Couldn't get local project");
-  }
-
+async function publishServerProject(
+  project: ProjectInterface
+): Promise<string> {
   const res = await fetch("/api/project/", {
     method: "POST",
     headers: {
@@ -25,8 +21,6 @@ async function publishServerProject(oldId: string): Promise<string> {
   if (!newId) {
     throw new Error("Couldn't get newId from response");
   }
-
-  migrateProjectId(oldId, newId);
 
   return newId;
 }

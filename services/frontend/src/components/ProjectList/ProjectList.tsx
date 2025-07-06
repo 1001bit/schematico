@@ -1,4 +1,4 @@
-import ProjectInterface from "../../projectStorage/project";
+import { ProjectInterface } from "../../projectManager/project";
 import ProjectCard from "./ProjectCard";
 
 export interface ProjectListData {
