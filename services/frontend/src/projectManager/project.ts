@@ -9,6 +9,7 @@ import loadServerProject from "./server/load";
 import publishServerProject from "./server/publish";
 import saveServerProject from "./server/save";
 import useDebouncedCallback from "../hooks/debouncedCallback";
+import deleteServerProject from "./server/delete";
 
 export interface ProjectInterface {
   title: string;
@@ -44,7 +45,10 @@ function useProjectManager(initProject: ProjectInterface, initId: string) {
   }, [project]);
 
   // Delete
-  const deleteProject = useCallback(() => {
+  const deleteProject = useCallback(async () => {
+    if (!isLocal) {
+      await deleteServerProject(id);
+    }
     deleteLocalProject(id);
     navigate("/", { replace: true });
   }, [id]);
@@ -52,6 +56,9 @@ function useProjectManager(initProject: ProjectInterface, initId: string) {
   // Load from Server
   const loadProject = useCallback(async () => {
     const data = await loadServerProject(id);
+    if (!data) {
+      return;
+    }
     setProject({
       ...project,
       title: data.name,

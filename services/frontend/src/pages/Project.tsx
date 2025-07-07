@@ -6,6 +6,9 @@ import getLocalProject from "../projectManager/local/get";
 import Button from "../components/Button/Button";
 import Settings from "../components/ProjectSettings/Settings";
 import useProjectManager, { ProjectInterface } from "../projectManager/project";
+import loadServerProject from "../projectManager/server/load";
+import { Camera } from "../Game/Camera/camera";
+import createLocalProject from "../projectManager/local/create";
 
 interface ProjectData {
   id: string;
@@ -20,9 +23,22 @@ export async function loader({
     return;
   }
 
-  const project = getLocalProject(id);
+  let project = getLocalProject(id);
   if (!project) {
-    return;
+    const data = await loadServerProject(id);
+    if (!data) {
+      return;
+    }
+    project = {
+      map: data.map,
+      title: data.name,
+      camera: {
+        x: 0,
+        y: 0,
+        scale: 1,
+      } as Camera,
+    } as ProjectInterface;
+    createLocalProject(id, project);
   }
 
   return {

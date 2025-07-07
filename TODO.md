@@ -36,7 +36,7 @@ Frontend
 Projects management
     [X] Dummy endpoint
     [X] Database with schema
-    [ ] Projects available for everybody
+    [X] Projects available for everybody
         [X] Project data publish
             [X] Settings button sending a post request
                 [X] Button
@@ -46,9 +46,8 @@ Projects management
         [X] Project map publish
         [X] Project save
         [X] Project load
-        [ ] Server project load on first entrance  
-        [ ] Project list
-        [ ] Project delete
+        [X] Server project load on first entrance
+        [X] Project delete
 
     [ ] Project access control after user management creation
 

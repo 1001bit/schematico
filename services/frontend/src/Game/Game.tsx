@@ -48,16 +48,13 @@ function Game({ project, setProject, started }: GameProps) {
   };
   const drawerHook = useDrawer(project.map, config, windowSize, started);
 
-  useEffect(() => {
-    drawerHook.draw();
-  }, [project]);
-
   // Camera
   function camUpdateCallback() {
     setProject({
       ...project,
       camera: project.camera,
     });
+    drawerHook.draw();
   }
   const camHook = useCamera(project.camera, [0.1, 5], 1.1, camUpdateCallback);
 
