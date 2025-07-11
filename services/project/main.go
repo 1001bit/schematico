@@ -17,10 +17,10 @@ func main() {
 	port := os.Getenv("PORT")
 
 	db, err := database.New(os.Getenv("POSTGRES_URL"))
-	// TODO: try to reconnect on error
 	if err != nil {
 		slog.Error("error creating database", "err", err)
 	}
+	defer db.Close()
 
 	projstorage := projectmodel.NewProjectStorage(db)
 	server := server.New(projstorage)
