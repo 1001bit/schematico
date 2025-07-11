@@ -9,7 +9,8 @@ function useMapEditor(
   map: TileMapType,
   mouseTile: vector2,
   currItem: ToolbarItem,
-  updateCallback: (newWire?: [vector2, vector2]) => void
+  mapUpdateCallback: () => void,
+  newWireUpdateCallback: (newWire: [vector2, vector2]) => void
 ) {
   const newWire = useRef<[vector2, vector2] | undefined>(undefined);
   const mouseDown = useRef(false);
@@ -20,17 +21,17 @@ function useMapEditor(
     if (currItem.item === "tool") {
       if (currItem.type === ToolType.Erase) {
         mapTilesErase(map, mouseTile);
-        updateCallback();
+        mapUpdateCallback();
       } else if (currItem.type === ToolType.Wire) {
         if (!newWire.current) {
           newWire.current = [mouseTile, mouseTile];
         }
         newWire.current[1] = mouseTile;
-        updateCallback(newWire.current);
+        newWireUpdateCallback(newWire.current);
       }
     } else {
       mapTilesEdit(map, mouseTile, currItem.type);
-      updateCallback();
+      mapUpdateCallback();
     }
   }, [currItem, mouseTile]);
 
@@ -48,7 +49,7 @@ function useMapEditor(
       placeWire(map, start, end);
       newWire.current = undefined;
 
-      updateCallback();
+      mapUpdateCallback();
     }
   }, [currItem, mouseTile]);
 

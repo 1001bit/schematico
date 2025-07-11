@@ -63,28 +63,34 @@ function useMapPlayer(
     deltaActiveInputs.current = newDeltaActiveInputs;
 
     stateUpdateCallback();
-  }, []);
+  }, [map]);
 
   const ticker = useTicker(
     tick,
     useMemo(() => 1000 / tps, [tps])
   );
 
-  const inputSwitch = useCallback((posStr: string) => {
-    const tile = map[posStr];
-    const tileState = tilesStates.current.get(posStr);
-    if (!tile || !tileState || tile.type !== TileType.Input) return;
+  const inputSwitch = useCallback(
+    (posStr: string) => {
+      const tile = map[posStr];
+      const tileState = tilesStates.current.get(posStr);
+      if (!tile || !tileState || tile.type !== TileType.Input) return;
 
-    const newState = !tileState.state;
-    for (const [wireEndStr, _] of Object.entries(tile.connections)) {
-      const newDelta = deltaActiveInputs.current.get(wireEndStr) || 0;
-      deltaActiveInputs.current.set(wireEndStr, newDelta + (newState ? 1 : -1));
-    }
+      const newState = !tileState.state;
+      for (const [wireEndStr, _] of Object.entries(tile.connections)) {
+        const newDelta = deltaActiveInputs.current.get(wireEndStr) || 0;
+        deltaActiveInputs.current.set(
+          wireEndStr,
+          newDelta + (newState ? 1 : -1)
+        );
+      }
 
-    tileState.state = newState;
+      tileState.state = newState;
 
-    stateUpdateCallback();
-  }, []);
+      stateUpdateCallback();
+    },
+    [map]
+  );
 
   const init = useCallback(() => {
     // init maps
@@ -106,7 +112,7 @@ function useMapPlayer(
         tileState.inputs += 1;
       }
     }
-  }, []);
+  }, [map]);
 
   const clear = useCallback(() => {
     deltaActiveInputs.current.clear();
@@ -131,7 +137,7 @@ function useMapPlayer(
     if (pointingTile.type === TileType.Input) {
       inputSwitch(mouseTileStr);
     }
-  }, [mouseTile]);
+  }, [mouseTile, map]);
 
   const getState = useCallback((posStr: string) => {
     const tileState = tilesStates.current.get(posStr);
