@@ -48,6 +48,7 @@ Projects management
         [X] Project load
         [X] Server project load on first entrance
         [X] Project delete
+    [X] DB Migrations
 
     [ ] Project access control after user management creation
 

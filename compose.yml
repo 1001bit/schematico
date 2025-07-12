@@ -34,6 +34,8 @@ services:
     depends_on:
       project-postgres:
         condition: service_healthy
+      project-migrate:
+        condition: service_healthy
     restart: always
 
   project-postgres:
@@ -45,7 +47,6 @@ services:
     networks:
       - network
     volumes:
-      - ./sql/project-init.sql:/docker-entrypoint-initdb.d/init.sql:ro
       - project-postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
@@ -54,6 +55,20 @@ services:
       retries: 3
       start_period: 30s
     restart: always
+
+  project-migrate:
+    image: flyway/flyway:latest
+    depends_on:
+      - project-postgres
+    environment:
+      FLYWAY_URL: jdbc:postgresql://project-postgres:5432/${POSTGRES_DB}
+      FLYWAY_USER: ${POSTGRES_USER}
+      FLYWAY_PASSWORD: ${POSTGRES_PASSWORD}
+    command: -locations=filesystem:/migrations migrate
+    volumes:
+      - ./migrations:/migrations:ro
+    networks:
+      - network
 
   # ADMIN
   adminer:

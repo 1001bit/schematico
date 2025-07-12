@@ -6,4 +6,4 @@ CREATE TABLE projects (
 CREATE TABLE project_maps (
     id INTEGER PRIMARY KEY REFERENCES projects(id) ON DELETE CASCADE,
     map JSONB NOT NULL 
-)
+);
