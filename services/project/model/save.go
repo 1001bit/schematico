@@ -1,4 +1,4 @@
-package projectmodel
+package model
 
 import "context"
 

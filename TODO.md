@@ -53,5 +53,6 @@ Projects management
     [ ] Project access control after user management creation
 
 User management
+    [X] Go module
     [ ] Dummy endpoint
     [ ] Database with schema
