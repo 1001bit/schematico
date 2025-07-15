@@ -5,19 +5,19 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/1001bit/schematico/services/project/model"
+	"github.com/1001bit/schematico/backend/user/model"
 	"github.com/go-chi/chi/v5"
 	chimw "github.com/go-chi/chi/v5/middleware"
 	"github.com/rs/cors"
 )
 
 type Server struct {
-	projStorage *model.ProjectStorage
+	userStorage *model.UserStorage
 }
 
-func New(projStorage *model.ProjectStorage) *Server {
+func New(us *model.UserStorage) *Server {
 	return &Server{
-		projStorage: projStorage,
+		userStorage: us,
 	}
 }
 
@@ -27,11 +27,6 @@ func (s *Server) Run(port string) error {
 	r.Use(chimw.Logger)
 	r.Use(chimw.Timeout(10 * time.Second))
 	r.Use(chimw.CleanPath)
-
-	r.Post("/", s.publishProject)
-	r.Put("/", s.saveProject)
-	r.Get("/{id}", s.loadProject)
-	r.Delete("/", s.deleteProject)
 
 	rSecure := cors.New(cors.Options{
 		AllowedOrigins:   []string{"https://localhost"},

@@ -5,7 +5,7 @@ start:
 restart: down start
 
 frontend-run:
-	npm --prefix services/frontend run dev
+	npm --prefix frontend run dev
 
 certs-gen:
 	rm -rf certs/*

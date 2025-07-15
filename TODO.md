@@ -52,6 +52,8 @@ Projects management
 
     [ ] Project access control after user management creation
 
+[ ] Readme
+
 User management
     [X] Go module
     [ ] Dummy endpoint

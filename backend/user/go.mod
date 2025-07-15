@@ -1,4 +1,4 @@
-module github.com/1001bit/schematico/services/project
+module github.com/1001bit/schematico/backend/user
 
 go 1.24.4
 

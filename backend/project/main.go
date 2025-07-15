@@ -4,9 +4,9 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/1001bit/schematico/services/user/database"
-	"github.com/1001bit/schematico/services/user/model"
-	"github.com/1001bit/schematico/services/user/server"
+	"github.com/1001bit/schematico/backend/project/database"
+	"github.com/1001bit/schematico/backend/project/model"
+	"github.com/1001bit/schematico/backend/project/server"
 )
 
 func main() {
@@ -18,8 +18,8 @@ func main() {
 	}
 	defer db.Close()
 
-	userstorage := model.NewUserStorage(db)
-	server := server.New(userstorage)
+	projstorage := model.NewProjectStorage(db)
+	server := server.New(projstorage)
 
 	if err := server.Run(port); err != nil {
 		slog.Error("error running server", "err", err)
