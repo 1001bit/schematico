@@ -28,6 +28,10 @@ func (s *Server) Run(port string) error {
 	r.Use(chimw.Timeout(10 * time.Second))
 	r.Use(chimw.CleanPath)
 
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hi"))
+	})
+
 	rSecure := cors.New(cors.Options{
 		AllowedOrigins:   []string{"https://localhost"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},

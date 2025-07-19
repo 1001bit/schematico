@@ -56,5 +56,8 @@ Projects management
 
 User management
     [X] Go module
-    [ ] Dummy endpoint
-    [ ] Database with schema
+    [X] Database
+    [X] Dummy endpoint
+    
+    [ ] Log in window
+    [ ] Login and Register requests and endpoints
